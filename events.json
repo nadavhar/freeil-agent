@@ -26,6 +26,19 @@
     "source": "imj.org.il"
   },
   {
+    "title": "Israel Museum - Free Activities for Children",
+    "date": "2026-02-04",
+    "date_display": "During museum hours",
+    "location": "Israel Museum, Youth Wing, Jerusalem",
+    "city": "Jerusalem",
+    "latitude": 31.7741,
+    "longitude": 35.2042,
+    "event_type": "family",
+    "description": "Free children's activities at the Israel Museum Youth Wing. Art workshops and interactive exhibits for kids.",
+    "is_free": true,
+    "source": "imj.org.il"
+  },
+  {
     "title": "Yad Vashem Holocaust Museum - Free Admission",
     "date": "2026-02-04",
     "date_display": "Sun-Wed 9am-5pm, Thu 9am-8pm, Fri 9am-2pm",
@@ -50,6 +63,32 @@
     "description": "Free admission and free guided tours (book in advance). Collections include archaeology, art, and maritime history.",
     "is_free": true,
     "source": "hecht.haifa.ac.il"
+  },
+  {
+    "title": "Genia Schreiber University Art Gallery - Free",
+    "date": "2026-02-04",
+    "date_display": "Sun-Thu during university hours",
+    "location": "Tel Aviv University Campus",
+    "city": "Tel Aviv",
+    "latitude": 32.1133,
+    "longitude": 34.8044,
+    "event_type": "art",
+    "description": "Free university art gallery focusing on modern art and Israeli artists. Rotating exhibitions throughout the year.",
+    "is_free": true,
+    "source": "tau.ac.il"
+  },
+  {
+    "title": "Rothschild Boulevard Art Galleries - Free Entry",
+    "date": "2026-02-04",
+    "date_display": "Gallery hours vary",
+    "location": "Rothschild Boulevard, Tel Aviv",
+    "city": "Tel Aviv",
+    "latitude": 32.0636,
+    "longitude": 34.7729,
+    "event_type": "art",
+    "description": "Free entry to contemporary art galleries along Rothschild Boulevard. Gordon Gallery, Stern Gallery, Alon Segev Gallery and more.",
+    "is_free": true,
+    "source": "timeout.com"
   },
   {
     "title": "Free Yoga in Yarkon Park",
@@ -221,6 +260,19 @@
     "source": "touristisrael.com"
   },
   {
+    "title": "Sarona Market - Free Entry",
+    "date": "2026-02-04",
+    "date_display": "Open 7 days a week",
+    "location": "Sarona Complex, Tel Aviv",
+    "city": "Tel Aviv",
+    "latitude": 32.0722,
+    "longitude": 34.7872,
+    "event_type": "market",
+    "description": "Israel's largest indoor culinary market. Free entry to browse gourmet food stalls, restaurants, and shops.",
+    "is_free": true,
+    "source": "timeout.com"
+  },
+  {
     "title": "Stella Maris Monastery - Free Entry",
     "date": "2026-02-04",
     "date_display": "Daily during visiting hours",
@@ -247,6 +299,71 @@
     "source": "israel21c.org"
   },
   {
+    "title": "Beit Avi Chai - Free Events & Lectures",
+    "date": "2026-02-04",
+    "date_display": "Check website for schedule",
+    "location": "44 King George Street, Jerusalem",
+    "city": "Jerusalem",
+    "latitude": 31.7802,
+    "longitude": 35.2192,
+    "event_type": "lecture",
+    "description": "Free lectures, exhibitions, and cultural events on Jewish-Israeli philosophy, art, history. Free parking for attendees.",
+    "is_free": true,
+    "source": "bac.org.il"
+  },
+  {
+    "title": "TEDxTelAvivUniversity",
+    "date": "2026-03-15",
+    "date_display": "Check ted.com for dates",
+    "location": "Smolarz Auditorium, Tel Aviv University",
+    "city": "Tel Aviv",
+    "latitude": 32.1133,
+    "longitude": 34.8044,
+    "event_type": "lecture",
+    "description": "TEDx conference at Tel Aviv University - first TEDx with full orchestra. Free/low-cost tickets available.",
+    "is_free": true,
+    "source": "ted.com"
+  },
+  {
+    "title": "TEDxWhiteCity",
+    "date": "2026-04-20",
+    "date_display": "Check ted.com for dates",
+    "location": "Israeli Opera, Tel Aviv Performing Arts Center",
+    "city": "Tel Aviv",
+    "latitude": 32.0731,
+    "longitude": 34.7858,
+    "event_type": "lecture",
+    "description": "TEDx event at the Israeli Opera featuring inspiring talks on innovation and ideas.",
+    "is_free": true,
+    "source": "ted.com"
+  },
+  {
+    "title": "Tel Aviv Tayelet (Promenade) - Free",
+    "date": "2026-02-04",
+    "date_display": "Open 24/7",
+    "location": "Tel Aviv Beachfront Promenade",
+    "city": "Tel Aviv",
+    "latitude": 32.0853,
+    "longitude": 34.7644,
+    "event_type": "tour",
+    "description": "Iconic seaside promenade stretching from Tel Aviv to Jaffa. Free walking, biking, and stunning Mediterranean views.",
+    "is_free": true,
+    "source": "timeout.com"
+  },
+  {
+    "title": "Yarkon Park - Free Entry & Activities",
+    "date": "2026-02-04",
+    "date_display": "Open daily",
+    "location": "Ganei Yehoshua (Yarkon Park), Tel Aviv",
+    "city": "Tel Aviv",
+    "latitude": 32.0997,
+    "longitude": 34.8186,
+    "event_type": "family",
+    "description": "Tel Aviv's largest park with free playgrounds, gardens, running/biking paths, basketball courts, and picnic areas.",
+    "is_free": true,
+    "source": "timeout.com"
+  },
+  {
     "title": "Purim Events 2026 - Free Street Celebrations",
     "date": "2026-03-02",
     "date_display": "March 2-4, 2026",
@@ -260,6 +377,19 @@
     "source": "popit.events"
   },
   {
+    "title": "Adloyada Holon - Purim Parade",
+    "date": "2026-03-03",
+    "date_display": "March 3, 2026",
+    "location": "Holon (south of Tel Aviv)",
+    "city": "Tel Aviv",
+    "latitude": 32.0167,
+    "longitude": 34.7667,
+    "event_type": "festival",
+    "description": "Israel's biggest Purim parade! Free carnival celebration perfect for families and kids. Costumes, floats, and festivities.",
+    "is_free": true,
+    "source": "touristisrael.com"
+  },
+  {
     "title": "Free Passover Museums & Sites",
     "date": "2026-04-01",
     "date_display": "April 1-8, 2026 (Passover)",
@@ -271,5 +401,122 @@
     "description": "Every Passover, Bank Hapoalim sponsors free entrance to over 40 museums, national parks, and heritage sites across Israel.",
     "is_free": true,
     "source": "touristisrael.com"
+  },
+  {
+    "title": "Shavuot Night Learning - Jerusalem",
+    "date": "2026-05-19",
+    "date_display": "May 19, 2026 (Shavuot Eve)",
+    "location": "Various venues, Jerusalem",
+    "city": "Jerusalem",
+    "latitude": 31.7802,
+    "longitude": 35.2192,
+    "event_type": "lecture",
+    "description": "Free all-night learning sessions and lectures across Jerusalem for Shavuot. Open to all.",
+    "is_free": true,
+    "source": "itraveljerusalem.com"
+  },
+  {
+    "title": "Light Up Tel Aviv - Hanukkah Festival",
+    "date": "2026-12-14",
+    "date_display": "December 2026 (Hanukkah)",
+    "location": "Various locations, Tel Aviv",
+    "city": "Tel Aviv",
+    "latitude": 32.0808,
+    "longitude": 34.7814,
+    "event_type": "festival",
+    "description": "Free Hanukkah celebration with face painting, sufganiyot (donuts), music, and public candle lighting for families.",
+    "is_free": true,
+    "source": "touristisrael.com"
+  },
+  {
+    "title": "Red Canyon Hike - Free Entry",
+    "date": "2026-02-04",
+    "date_display": "Open daily, daylight hours",
+    "location": "Red Canyon, Eilat Mountains",
+    "city": "Eilat",
+    "latitude": 29.6833,
+    "longitude": 34.9167,
+    "event_type": "tour",
+    "description": "Beautiful free hiking trail in the Eilat Mountains. Green trail is family-friendly, black trail more challenging.",
+    "is_free": true,
+    "source": "hike-israel.com"
+  },
+  {
+    "title": "Israel National Trail - Free Hiking",
+    "date": "2026-02-04",
+    "date_display": "Open year-round",
+    "location": "Various trailheads across Israel",
+    "city": "Tel Aviv",
+    "latitude": 32.0636,
+    "longitude": 34.7729,
+    "event_type": "tour",
+    "description": "Over 1,000km of marked hiking trails from north to south. Free access to all sections of the Israel National Trail.",
+    "is_free": true,
+    "source": "alltrails.com"
+  },
+  {
+    "title": "Bahai Gardens Viewpoint - Free",
+    "date": "2026-02-04",
+    "date_display": "Daily 9am-5pm",
+    "location": "Yefe Nof Street, Haifa",
+    "city": "Haifa",
+    "latitude": 32.8192,
+    "longitude": 35.0004,
+    "event_type": "tour",
+    "description": "Free panoramic views of the stunning Bahai Gardens terraces from the upper viewpoint. One of Israel's most photographed sites.",
+    "is_free": true,
+    "source": "tripadvisor.com"
+  },
+  {
+    "title": "Neve Tzedek Walking Tour - Free",
+    "date": "2026-02-04",
+    "date_display": "Self-guided anytime",
+    "location": "Neve Tzedek neighborhood, Tel Aviv",
+    "city": "Tel Aviv",
+    "latitude": 32.0589,
+    "longitude": 34.7656,
+    "event_type": "tour",
+    "description": "Free self-guided walking tour through Tel Aviv's charming historic neighborhood. Beautiful Bauhaus architecture and boutiques.",
+    "is_free": true,
+    "source": "secrettelaviv.com"
+  },
+  {
+    "title": "Nachalat Binyamin Arts & Crafts Fair",
+    "date": "2026-02-04",
+    "date_display": "Tuesdays & Fridays",
+    "location": "Nachalat Binyamin Street, Tel Aviv",
+    "city": "Tel Aviv",
+    "latitude": 32.0667,
+    "longitude": 34.7700,
+    "event_type": "art",
+    "description": "Free outdoor arts and crafts market featuring local artists. Live street performances and handmade goods.",
+    "is_free": true,
+    "source": "secrettelaviv.com"
+  },
+  {
+    "title": "Mahane Yehuda Market (Shuk) - Free Entry",
+    "date": "2026-02-04",
+    "date_display": "Sun-Thu 8am-7pm, Fri 8am-3pm",
+    "location": "Mahane Yehuda, Jerusalem",
+    "city": "Jerusalem",
+    "latitude": 31.7847,
+    "longitude": 35.2125,
+    "event_type": "market",
+    "description": "Jerusalem's famous outdoor market. Free entry to explore food stalls, spices, and local culture. Nightlife on Thu/Fri evenings.",
+    "is_free": true,
+    "source": "itraveljerusalem.com"
+  },
+  {
+    "title": "Old Jaffa Flea Market - Free Entry",
+    "date": "2026-02-04",
+    "date_display": "Daily except Saturday",
+    "location": "Shuk HaPishpeshim, Jaffa",
+    "city": "Tel Aviv",
+    "latitude": 32.0533,
+    "longitude": 34.7550,
+    "event_type": "market",
+    "description": "Historic flea market in Old Jaffa. Free to browse antiques, vintage items, and local treasures.",
+    "is_free": true,
+    "source": "timeout.com"
   }
 ]
