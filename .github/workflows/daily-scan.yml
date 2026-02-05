@@ -1,0 +1,43 @@
+name: Daily Free Event Scan
+
+on:
+  schedule:
+    # 06:00 UTC = 08:00 Israel time
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Manual trigger from Actions tab
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run auto scanner
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python auto_scan.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add events.json
+          if git diff --cached --quiet; then
+            echo "No changes to events.json"
+          else
+            EVENT_COUNT=$(python -c "import json; print(len(json.load(open('events.json'))))")
+            git commit -m "Auto-scan: update free events (total: $EVENT_COUNT)"
+            git push
+          fi
