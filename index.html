@@ -197,53 +197,111 @@
             font-weight: 500;
         }
 
-        /* Filters Section */
+        /* Filters Section - Modern Compact Design */
         .filters-container {
             background: #fff;
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 0.875rem 0;
+            border-bottom: 1px solid #e5e7eb;
             width: 100%;
             max-width: 100vw;
         }
-        .filter-section { margin-bottom: 0.5rem; }
+        .filter-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .filter-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .reset-filters {
+            display: none;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            background: #fef2f2;
+            border: none;
+            border-radius: 20px;
+            color: #dc2626;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .reset-filters.visible {
+            display: inline-flex;
+        }
+        .reset-filters:hover {
+            background: #fee2e2;
+        }
+        .filter-section {
+            margin-bottom: 0.625rem;
+            padding: 0 1rem;
+        }
         .filter-section:last-child { margin-bottom: 0; }
         .filter-label {
-            font-size: 0.7rem;
-            color: #888;
+            font-size: 0.65rem;
+            color: #94a3b8;
             text-transform: uppercase;
-            font-weight: 600;
-            margin-bottom: 4px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
         }
         .filter-bar {
             display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            max-width: 100%;
+            gap: 8px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            margin: 0 -1rem;
+            padding: 0 1rem 4px;
         }
-        .filter-btn {
-            border: 1px solid #d0d5db;
-            background: #fff;
-            padding: 6px 10px;
-            border-radius: 16px;
-            font-size: 0.72rem;
+        .filter-bar::-webkit-scrollbar {
+            display: none;
+        }
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            padding: 8px 14px;
+            border-radius: 24px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #475569;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all 0.2s ease;
             touch-action: manipulation;
             white-space: nowrap;
             flex-shrink: 0;
         }
-        .filter-btn.active, .filter-btn:hover {
-            background: #1a1a2e;
-            color: white;
-            border-color: #1a1a2e;
+        .filter-chip:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
         }
-        .filter-btn.city-filter.active, .filter-btn.city-filter:hover {
-            background: #1565c0;
-            border-color: #1565c0;
-        }
-        .filter-btn.date-filter.active, .filter-btn.date-filter:hover {
+        .filter-chip.active {
             background: #00d4aa;
+            color: white;
             border-color: #00d4aa;
+            transform: scale(1.02);
+        }
+        .filter-chip .chip-icon {
+            font-size: 0.9rem;
+            line-height: 1;
+        }
+        .filter-chip.date-chip.active {
+            background: #0f172a;
+            border-color: #0f172a;
+        }
+        .filter-chip.city-chip.active {
+            background: #0369a1;
+            border-color: #0369a1;
         }
 
         /* Map Toggle Button */
@@ -476,15 +534,21 @@
                 padding: 0 16px;
                 height: 40px;
             }
-            .filters-container { padding: 1rem 2rem; }
+            .filters-container { padding: 1rem 0; }
+            .filter-header { padding: 0 2rem; }
             .filter-section {
-                display: inline-block;
-                margin-right: 1.5rem;
-                margin-bottom: 0;
+                padding: 0 2rem;
+                margin-bottom: 0.5rem;
             }
-            .filter-btn {
-                padding: 6px 12px;
-                font-size: 0.75rem;
+            .filter-bar {
+                flex-wrap: wrap;
+                overflow-x: visible;
+                margin: 0;
+                padding: 0;
+            }
+            .filter-chip {
+                padding: 8px 16px;
+                font-size: 0.82rem;
             }
             .map-toggle-container { display: none; }
             .map-container {
@@ -533,6 +597,16 @@
 
     <!-- Filters Section -->
     <div class="filters-container">
+        <div class="filter-header">
+            <span id="filter-title" class="filter-title">סינון אירועים</span>
+            <button id="reset-filters" class="reset-filters" onclick="resetAllFilters()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                    <path d="M3 3v5h5"/>
+                </svg>
+                <span id="reset-text">איפוס</span>
+            </button>
+        </div>
         <div class="filter-section">
             <div id="date-filter-label" class="filter-label">מתי</div>
             <div class="filter-bar" id="date-filters"></div>
@@ -542,7 +616,7 @@
             <div class="filter-bar" id="city-filters"></div>
         </div>
         <div class="filter-section">
-            <div id="type-filter-label" class="filter-label">סוג אירוע</div>
+            <div id="type-filter-label" class="filter-label">קטגוריה</div>
             <div class="filter-bar" id="type-filters"></div>
         </div>
     </div>
@@ -580,6 +654,9 @@
                 filterToday: 'היום',
                 filterWeek: 'השבוע',
                 filterMonth: 'החודש',
+                filterTitle: 'סינון אירועים',
+                resetFilters: 'איפוס',
+                filterCategory: 'קטגוריה',
                 showMap: 'הצג מפה',
                 hideMap: 'הסתר מפה',
                 shareWhatsApp: 'שתף בוואטסאפ',
@@ -651,6 +728,9 @@
                 filterToday: 'Today',
                 filterWeek: 'This Week',
                 filterMonth: 'This Month',
+                filterTitle: 'Filter Events',
+                resetFilters: 'Reset',
+                filterCategory: 'Category',
                 showMap: 'Show Map',
                 hideMap: 'Hide Map',
                 shareWhatsApp: 'Share on WhatsApp',
@@ -779,9 +859,11 @@
             document.title = t('pageTitle');
             document.getElementById('tagline').textContent = t('tagline');
             document.getElementById('lang-text').textContent = currentLang === 'he' ? 'EN' : 'עב';
+            document.getElementById('filter-title').textContent = t('filterTitle');
+            document.getElementById('reset-text').textContent = t('resetFilters');
             document.getElementById('date-filter-label').textContent = t('filterDate');
             document.getElementById('city-filter-label').textContent = t('filterCity');
-            document.getElementById('type-filter-label').textContent = t('filterType');
+            document.getElementById('type-filter-label').textContent = t('filterCategory');
             updateMapToggleText();
             if (typeof allEvents !== 'undefined') updateEventCounter(allEvents.length);
             buildFilters();
@@ -989,23 +1071,57 @@
             }
         }
 
+        // Icons for event types
+        const typeIcons = {
+            concert: '🎵',
+            festival: '🎪',
+            market: '🛍️',
+            exhibition: '🖼️',
+            tour: '🚶',
+            workshop: '🔧',
+            sport: '⚽',
+            community: '👥',
+            culture: '🎭',
+            food: '🍔',
+            nature: '🌿',
+            nightlife: '🌙',
+            family: '👨‍👩‍👧',
+            museum: '🏛️',
+            lecture: '📚',
+            yoga: '🧘',
+            art: '🎨',
+            theater: '🎭',
+            dance: '💃',
+            film: '🎬',
+            comedy: '😂',
+            kids: '👶',
+            outdoor: '🏕️',
+            wellness: '💆',
+            tech: '💻',
+            photography: '📷',
+            meditation: '🧘',
+            beach: '🏖️',
+            volunteering: '🤝',
+            other: '📌'
+        };
+
         function buildFilters() {
             // Date filters
             const dateBar = document.getElementById('date-filters');
             dateBar.innerHTML = '';
 
             const dateOptions = [
-                { key: 'all', label: t('filterAll') },
-                { key: 'today', label: t('filterToday') },
-                { key: 'week', label: t('filterWeek') },
-                { key: 'month', label: t('filterMonth') }
+                { key: 'all', label: t('filterAll'), icon: '✨' },
+                { key: 'today', label: t('filterToday'), icon: '📅' },
+                { key: 'week', label: t('filterWeek'), icon: '🗓️' },
+                { key: 'month', label: t('filterMonth'), icon: '📆' }
             ];
 
             dateOptions.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = 'filter-btn date-filter' + (activeDateFilter === opt.key ? ' active' : '');
+                btn.className = 'filter-chip date-chip' + (activeDateFilter === opt.key ? ' active' : '');
                 btn.dataset.date = opt.key;
-                btn.textContent = opt.label;
+                btn.innerHTML = `<span class="chip-icon">${opt.icon}</span>${opt.label}`;
                 btn.onclick = () => { activeDateFilter = opt.key; applyFilter(); };
                 dateBar.appendChild(btn);
             });
@@ -1016,16 +1132,16 @@
             cityBar.innerHTML = '';
 
             const allCityBtn = document.createElement('button');
-            allCityBtn.className = 'filter-btn city-filter active';
+            allCityBtn.className = 'filter-chip city-chip active';
             allCityBtn.dataset.city = 'all';
-            allCityBtn.textContent = t('filterAll');
+            allCityBtn.innerHTML = `<span class="chip-icon">🌍</span>${t('filterAll')}`;
             allCityBtn.onclick = () => { activeCityFilter = 'all'; applyFilter(); };
             cityBar.appendChild(allCityBtn);
 
             cities.forEach(c => {
                 const btn = document.createElement('button');
-                btn.className = 'filter-btn city-filter';
-                btn.textContent = getCityLabel(c);
+                btn.className = 'filter-chip city-chip';
+                btn.innerHTML = `<span class="chip-icon">📍</span>${getCityLabel(c)}`;
                 btn.dataset.city = c;
                 btn.onclick = () => { activeCityFilter = c; applyFilter(); };
                 cityBar.appendChild(btn);
@@ -1037,32 +1153,47 @@
             typeBar.innerHTML = '';
 
             const allTypeBtn = document.createElement('button');
-            allTypeBtn.className = 'filter-btn active';
+            allTypeBtn.className = 'filter-chip active';
             allTypeBtn.dataset.type = 'all';
-            allTypeBtn.textContent = t('filterAll');
+            allTypeBtn.innerHTML = `<span class="chip-icon">✨</span>${t('filterAll')}`;
             allTypeBtn.onclick = () => { activeTypeFilter = 'all'; applyFilter(); };
             typeBar.appendChild(allTypeBtn);
 
             types.forEach(type => {
                 const btn = document.createElement('button');
-                btn.className = 'filter-btn';
-                btn.textContent = getTypeLabel(type);
+                btn.className = 'filter-chip';
+                const icon = typeIcons[type] || '📌';
+                btn.innerHTML = `<span class="chip-icon">${icon}</span>${getTypeLabel(type)}`;
                 btn.dataset.type = type;
                 btn.onclick = () => { activeTypeFilter = type; applyFilter(); };
                 typeBar.appendChild(btn);
             });
         }
 
+        function resetAllFilters() {
+            activeDateFilter = 'all';
+            activeCityFilter = 'all';
+            activeTypeFilter = 'all';
+            applyFilter();
+        }
+
+        function updateResetButton() {
+            const resetBtn = document.getElementById('reset-filters');
+            const isFiltered = activeDateFilter !== 'all' || activeCityFilter !== 'all' || activeTypeFilter !== 'all';
+            resetBtn.classList.toggle('visible', isFiltered);
+        }
+
         function applyFilter() {
-            document.querySelectorAll('#date-filters .filter-btn').forEach(b => {
+            document.querySelectorAll('#date-filters .filter-chip').forEach(b => {
                 b.classList.toggle('active', (b.dataset.date || 'all') === activeDateFilter);
             });
-            document.querySelectorAll('#city-filters .filter-btn').forEach(b => {
+            document.querySelectorAll('#city-filters .filter-chip').forEach(b => {
                 b.classList.toggle('active', (b.dataset.city || 'all') === activeCityFilter);
             });
-            document.querySelectorAll('#type-filters .filter-btn').forEach(b => {
+            document.querySelectorAll('#type-filters .filter-chip').forEach(b => {
                 b.classList.toggle('active', (b.dataset.type || 'all') === activeTypeFilter);
             });
+            updateResetButton();
 
             let filtered = allEvents;
             if (activeDateFilter === 'today') {
@@ -1087,9 +1218,11 @@
         document.title = t('pageTitle');
         document.getElementById('tagline').textContent = t('tagline');
         document.getElementById('lang-text').textContent = currentLang === 'he' ? 'EN' : 'עב';
+        document.getElementById('filter-title').textContent = t('filterTitle');
+        document.getElementById('reset-text').textContent = t('resetFilters');
         document.getElementById('date-filter-label').textContent = t('filterDate');
         document.getElementById('city-filter-label').textContent = t('filterCity');
-        document.getElementById('type-filter-label').textContent = t('filterType');
+        document.getElementById('type-filter-label').textContent = t('filterCategory');
         document.getElementById('map-toggle-text').textContent = t('showMap');
         document.getElementById('loading').textContent = t('loading');
 
