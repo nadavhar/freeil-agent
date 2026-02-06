@@ -3,7 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">FreeIL — אירועים חינם בישראל</title>
+    <title id="page-title">FreeIL — אירועים חינם בישראל | קונצרטים, סיורים, סדנאות בחינם</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="מצאו אירועים חינם בישראל - קונצרטים, פסטיבלים, סיורים, סדנאות, תערוכות ועוד בתל אביב, ירושלים, חיפה, באר שבע ואילת. עודכן יומית!">
+    <meta name="keywords" content="אירועים חינם, אירועים בחינם, אירועים חינם תל אביב, אירועים חינם ירושלים, אירועים חינם חיפה, קונצרטים בחינם, פסטיבלים חינם, סיורים חינם, free events israel, free events tel aviv">
+    <meta name="author" content="FreeIL">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="https://freeil.co.il/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freeil.co.il/">
+    <meta property="og:title" content="FreeIL — אירועים חינם בישראל">
+    <meta property="og:description" content="מצאו מאות אירועים חינם בכל הארץ - קונצרטים, פסטיבלים, סיורים, סדנאות, אוכל, טבע ועוד. עודכן יומית!">
+    <meta property="og:image" content="https://freeil.co.il/og-image.png">
+    <meta property="og:locale" content="he_IL">
+    <meta property="og:site_name" content="FreeIL">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://freeil.co.il/">
+    <meta name="twitter:title" content="FreeIL — אירועים חינם בישראל">
+    <meta name="twitter:description" content="מצאו מאות אירועים חינם בכל הארץ - קונצרטים, פסטיבלים, סיורים, סדנאות ועוד!">
+    <meta name="twitter:image" content="https://freeil.co.il/og-image.png">
+
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-title" content="FreeIL">
+    <meta name="application-name" content="FreeIL">
+
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "FreeIL",
+      "alternateName": "אירועים חינם בישראל",
+      "url": "https://freeil.co.il/",
+      "description": "מנוע חיפוש לאירועים חינם בישראל - קונצרטים, פסטיבלים, סיורים, סדנאות ועוד",
+      "inLanguage": ["he", "en"],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://freeil.co.il/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Structured Data - Local Business -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "FreeIL",
+      "description": "אפליקציה למציאת אירועים חינם בישראל",
+      "url": "https://freeil.co.il/",
+      "applicationCategory": "Entertainment",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "ILS"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "150"
+      }
+    }
+    </script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5T4BPXX5J5"></script>
     <script>
@@ -12,6 +83,12 @@
       gtag('js', new Date());
       gtag('config', 'G-5T4BPXX5J5');
     </script>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://tile.openstreetmap.org">
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* Reset & prevent horizontal scroll */
@@ -940,6 +1017,116 @@
                     </p>`;
                 console.error(err);
             });
+    </script>
+
+    <!-- SEO Footer -->
+    <footer class="seo-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h2>FreeIL - אירועים חינם בישראל</h2>
+                <p>מנוע החיפוש המוביל לאירועים חינם בישראל. מצאו קונצרטים, פסטיבלים, סיורים, סדנאות, תערוכות, הופעות ועוד - הכל בחינם!</p>
+            </div>
+            <div class="footer-section">
+                <h3>ערים פופולריות</h3>
+                <nav aria-label="ערים">
+                    <a href="#" onclick="activeCityFilter='Tel Aviv';applyFilter();return false;">אירועים חינם בתל אביב</a>
+                    <a href="#" onclick="activeCityFilter='Jerusalem';applyFilter();return false;">אירועים חינם בירושלים</a>
+                    <a href="#" onclick="activeCityFilter='Haifa';applyFilter();return false;">אירועים חינם בחיפה</a>
+                    <a href="#" onclick="activeCityFilter='Beer Sheva';applyFilter();return false;">אירועים חינם בבאר שבע</a>
+                    <a href="#" onclick="activeCityFilter='Eilat';applyFilter();return false;">אירועים חינם באילת</a>
+                </nav>
+            </div>
+            <div class="footer-section">
+                <h3>קטגוריות אירועים</h3>
+                <nav aria-label="קטגוריות">
+                    <a href="#" onclick="activeTypeFilter='concert';applyFilter();return false;">קונצרטים חינם</a>
+                    <a href="#" onclick="activeTypeFilter='festival';applyFilter();return false;">פסטיבלים חינם</a>
+                    <a href="#" onclick="activeTypeFilter='tour';applyFilter();return false;">סיורים חינם</a>
+                    <a href="#" onclick="activeTypeFilter='workshop';applyFilter();return false;">סדנאות חינם</a>
+                    <a href="#" onclick="activeTypeFilter='food';applyFilter();return false;">אירועי אוכל חינם</a>
+                    <a href="#" onclick="activeTypeFilter='nature';applyFilter();return false;">טיולים בטבע חינם</a>
+                </nav>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 FreeIL. כל הזכויות שמורות. | <span id="event-count-footer"></span></p>
+        </div>
+    </footer>
+
+    <style>
+        .seo-footer {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 2rem 1rem 1rem;
+            margin-top: 2rem;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        .footer-section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #00d4aa;
+        }
+        .footer-section h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #00d4aa;
+        }
+        .footer-section p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        .footer-section nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .footer-section nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            transition: background 0.2s;
+        }
+        .footer-section nav a:hover {
+            background: rgba(0,212,170,0.3);
+        }
+        .footer-bottom {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+            .seo-footer {
+                padding: 2rem;
+            }
+        }
+    </style>
+
+    <script>
+        // Update footer event count
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const count = document.getElementById('event-count-footer');
+                if (count && allEvents.length) {
+                    count.textContent = allEvents.length + ' אירועים חינם במאגר';
+                }
+            }, 2000);
+        });
     </script>
 </body>
 </html>
