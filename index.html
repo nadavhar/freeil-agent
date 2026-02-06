@@ -148,6 +148,14 @@
             font-size: 0.75rem;
             opacity: 0.7;
         }
+        .event-counter {
+            background: #00d4aa;
+            color: #1a1a2e;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
         .header-actions {
             display: flex;
             align-items: center;
@@ -449,6 +457,7 @@
             <p id="tagline" class="header-tagline">אירועים חינם בתל אביב, ירושלים, חיפה, באר שבע ועוד</p>
         </div>
         <div class="header-actions">
+            <div id="event-counter" class="event-counter">0 אירועים</div>
             <div id="header-badge" class="header-badge">חינם | Free</div>
             <button id="lang-toggle" onclick="setLanguage(currentLang === 'he' ? 'en' : 'he')">EN / עב</button>
         </div>
@@ -509,6 +518,7 @@
                 foundOnFreeIL: 'מצאתי ב-FreeIL:',
                 loading: 'טוען אירועים חינם...',
                 statsFormat: '{count} אירועים חינם',
+                eventCounter: '{count} אירועים',
                 noResults: 'לא נמצאו אירועים.',
                 free: 'חינם',
                 freePopup: 'חינם / Free',
@@ -579,6 +589,7 @@
                 foundOnFreeIL: 'Found on FreeIL:',
                 loading: 'Loading free events...',
                 statsFormat: '{count} free events',
+                eventCounter: '{count} events',
                 noResults: 'No events found.',
                 free: 'Free',
                 freePopup: 'Free / חינם',
@@ -691,6 +702,11 @@
             }
         }
 
+        function updateEventCounter(count) {
+            document.getElementById('event-counter').textContent =
+                t('eventCounter').replace('{count}', count);
+        }
+
         function updateUI() {
             document.title = t('pageTitle');
             document.getElementById('tagline').textContent = t('tagline');
@@ -699,6 +715,7 @@
             document.getElementById('city-filter-label').textContent = t('filterCity');
             document.getElementById('type-filter-label').textContent = t('filterType');
             updateMapToggleText();
+            if (typeof allEvents !== 'undefined') updateEventCounter(allEvents.length);
             buildFilters();
             applyFilter();
         }
@@ -1006,6 +1023,7 @@
             })
             .then(data => {
                 allEvents = data;
+                updateEventCounter(allEvents.length);
                 buildFilters();
                 renderEvents(allEvents);
             })
