@@ -110,6 +110,10 @@
             background: #1565c0;
             border-color: #1565c0;
         }
+        .filter-btn.date-filter.active, .filter-btn.date-filter:hover {
+            background: #00d4aa;
+            border-color: #00d4aa;
+        }
         .stats {
             font-size: 0.82rem;
             color: #666;
@@ -154,6 +158,10 @@
         <div id="map"></div>
         <div class="sidebar">
             <div class="filter-section">
+                <div id="date-filter-label" class="filter-label">מתי</div>
+                <div class="filter-bar" id="date-filters"></div>
+            </div>
+            <div class="filter-section">
                 <div id="city-filter-label" class="filter-label">עיר</div>
                 <div class="filter-bar" id="city-filters"></div>
             </div>
@@ -174,9 +182,12 @@
                 pageTitle: 'FreeIL — אירועים חינם בישראל',
                 tagline: 'אירועים חינם בתל אביב, ירושלים, חיפה, באר שבע ועוד',
                 headerBadge: 'חינם | כניסה חופשית | Free',
+                filterDate: 'מתי',
                 filterCity: 'עיר',
                 filterType: 'סוג אירוע',
                 filterAll: 'הכל',
+                filterToday: 'היום',
+                filterWeek: 'השבוע',
                 loading: 'טוען אירועים חינם...',
                 statsFormat: '{count} אירועים חינם',
                 noResults: 'לא נמצאו אירועים.',
@@ -224,9 +235,12 @@
                 pageTitle: 'FreeIL — Free Events in Israel',
                 tagline: 'Free events in Tel Aviv, Jerusalem, Haifa, Beer Sheva & more',
                 headerBadge: 'Free | No Charge | חינם',
+                filterDate: 'When',
                 filterCity: 'City',
                 filterType: 'Event Type',
                 filterAll: 'All',
+                filterToday: 'Today',
+                filterWeek: 'This Week',
                 loading: 'Loading free events...',
                 statsFormat: '{count} free events',
                 noResults: 'No events found.',
@@ -299,6 +313,7 @@
             document.title = t('pageTitle');
             document.getElementById('tagline').textContent = t('tagline');
             document.getElementById('header-badge').textContent = t('headerBadge');
+            document.getElementById('date-filter-label').textContent = t('filterDate');
             document.getElementById('city-filter-label').textContent = t('filterCity');
             document.getElementById('type-filter-label').textContent = t('filterType');
             buildFilters();
@@ -351,6 +366,28 @@
         let markers = [];
         let activeTypeFilter = 'all';
         let activeCityFilter = 'all';
+        let activeDateFilter = 'all';
+
+        // --- Date filter helpers ---
+        function getDateString(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function isToday(dateStr) {
+            if (!dateStr) return false;
+            const today = getDateString(new Date());
+            return dateStr.startsWith(today);
+        }
+
+        function isThisWeek(dateStr) {
+            if (!dateStr) return false;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const endOfWeek = new Date(today);
+            endOfWeek.setDate(today.getDate() + 7);
+            const eventDate = new Date(dateStr);
+            return eventDate >= today && eventDate < endOfWeek;
+        }
 
         function renderEvents(events) {
             const list = document.getElementById('event-list');
@@ -417,6 +454,25 @@
         }
 
         function buildFilters() {
+            // Date filters
+            const dateBar = document.getElementById('date-filters');
+            dateBar.innerHTML = '';
+
+            const dateOptions = [
+                { key: 'all', label: t('filterAll') },
+                { key: 'today', label: t('filterToday') },
+                { key: 'week', label: t('filterWeek') }
+            ];
+
+            dateOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn date-filter' + (activeDateFilter === opt.key ? ' active' : '');
+                btn.dataset.date = opt.key;
+                btn.textContent = opt.label;
+                btn.onclick = () => { activeDateFilter = opt.key; applyFilter(); };
+                dateBar.appendChild(btn);
+            });
+
             // City filters
             const cities = [...new Set(allEvents.map(e => e.city).filter(Boolean))];
             const cityBar = document.getElementById('city-filters');
@@ -461,6 +517,9 @@
         }
 
         function applyFilter() {
+            document.querySelectorAll('#date-filters .filter-btn').forEach(b => {
+                b.classList.toggle('active', (b.dataset.date || 'all') === activeDateFilter);
+            });
             document.querySelectorAll('#city-filters .filter-btn').forEach(b => {
                 b.classList.toggle('active', (b.dataset.city || 'all') === activeCityFilter);
             });
@@ -469,6 +528,11 @@
             });
 
             let filtered = allEvents;
+            if (activeDateFilter === 'today') {
+                filtered = filtered.filter(e => isToday(e.date));
+            } else if (activeDateFilter === 'week') {
+                filtered = filtered.filter(e => isThisWeek(e.date));
+            }
             if (activeCityFilter !== 'all') {
                 filtered = filtered.filter(e => e.city === activeCityFilter);
             }
@@ -484,6 +548,7 @@
         document.title = t('pageTitle');
         document.getElementById('tagline').textContent = t('tagline');
         document.getElementById('header-badge').textContent = t('headerBadge');
+        document.getElementById('date-filter-label').textContent = t('filterDate');
         document.getElementById('city-filter-label').textContent = t('filterCity');
         document.getElementById('type-filter-label').textContent = t('filterType');
         document.getElementById('loading').textContent = t('loading');
