@@ -102,84 +102,99 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f5f7fa;
             color: #1a1a2e;
-            padding-top: 56px; /* Space for sticky header */
+            padding-top: 64px; /* Space for sticky header */
         }
 
-        /* Header - Mobile First */
+        /* Header - Modern Glassmorphism */
         header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             color: white;
-            height: 56px;
-            padding: 0 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.875rem 1rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 100%;
-            max-width: 100vw;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         .header-logo {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
         header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.6rem;
+            font-weight: 800;
             margin: 0;
             line-height: 1;
+            letter-spacing: -0.02em;
         }
         header h1 span {
             color: #00d4aa;
         }
-        .header-tagline {
-            display: none; /* Hidden on mobile */
-            opacity: 0.85;
-            font-size: 0.8rem;
-            margin: 0;
-        }
-        .header-badge {
-            display: none; /* Hidden on mobile */
-            font-size: 0.75rem;
-            opacity: 0.7;
-        }
         .event-counter {
-            background: #00d4aa;
-            color: #1a1a2e;
-            padding: 4px 12px;
-            border-radius: 16px;
+            background: rgba(0, 212, 170, 0.12);
+            color: #00d4aa;
+            padding: 6px 14px;
+            border-radius: 20px;
             font-size: 0.8rem;
-            font-weight: 700;
+            font-weight: 600;
+            border: 1px solid rgba(0, 212, 170, 0.2);
         }
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         #lang-toggle {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 0 16px;
-            min-height: 44px;
-            min-width: 44px;
-            border-radius: 22px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0 14px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 0.8rem;
+            font-weight: 500;
             touch-action: manipulation;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
         }
-        #lang-toggle:hover, #lang-toggle:active {
-            background: rgba(255,255,255,0.25);
+        #lang-toggle:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+        #lang-toggle svg {
+            flex-shrink: 0;
+        }
+        #lang-text {
+            font-size: 0.8rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 1.25rem 1rem;
+            text-align: center;
+        }
+        .hero-tagline {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            margin: 0;
+            font-weight: 500;
         }
 
         /* Filters Section */
@@ -411,19 +426,19 @@
         /* Desktop enhancements */
         @media (min-width: 768px) {
             body {
-                padding-top: 70px; /* Larger header on desktop */
+                padding-top: 68px; /* Larger header on desktop */
             }
-            header {
-                height: 70px;
-                padding: 0 2rem;
+            .header-inner {
+                padding: 0.9rem 2rem;
             }
-            header h1 { font-size: 1.7rem; }
-            .header-tagline {
-                display: block; /* Show on desktop */
+            header h1 { font-size: 1.8rem; }
+            .event-counter {
+                padding: 7px 16px;
                 font-size: 0.85rem;
             }
-            .header-badge {
-                display: block; /* Show on desktop */
+            #lang-toggle {
+                padding: 0 16px;
+                height: 40px;
             }
             .filters-container { padding: 1rem 2rem; }
             .filter-section {
@@ -452,16 +467,28 @@
 </head>
 <body>
     <header>
-        <div class="header-logo">
-            <h1>Free<span>IL</span></h1>
-            <p id="tagline" class="header-tagline">אירועים חינם בתל אביב, ירושלים, חיפה, באר שבע ועוד</p>
-        </div>
-        <div class="header-actions">
-            <div id="event-counter" class="event-counter">0 אירועים</div>
-            <div id="header-badge" class="header-badge">חינם | Free</div>
-            <button id="lang-toggle" onclick="setLanguage(currentLang === 'he' ? 'en' : 'he')">EN / עב</button>
+        <div class="header-inner">
+            <div class="header-logo">
+                <h1>Free<span>IL</span></h1>
+                <div id="event-counter" class="event-counter">0 אירועים</div>
+            </div>
+            <div class="header-actions">
+                <button id="lang-toggle" onclick="setLanguage(currentLang === 'he' ? 'en' : 'he')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 6px;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                    <span id="lang-text">EN</span>
+                </button>
+            </div>
         </div>
     </header>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <p id="tagline" class="hero-tagline">אירועים חינם בתל אביב, ירושלים, חיפה, באר שבע ועוד</p>
+    </div>
 
     <!-- Filters Section -->
     <div class="filters-container">
@@ -710,7 +737,7 @@
         function updateUI() {
             document.title = t('pageTitle');
             document.getElementById('tagline').textContent = t('tagline');
-            document.getElementById('header-badge').textContent = t('headerBadge');
+            document.getElementById('lang-text').textContent = currentLang === 'he' ? 'EN' : 'עב';
             document.getElementById('date-filter-label').textContent = t('filterDate');
             document.getElementById('city-filter-label').textContent = t('filterCity');
             document.getElementById('type-filter-label').textContent = t('filterType');
@@ -1008,7 +1035,7 @@
         document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
         document.title = t('pageTitle');
         document.getElementById('tagline').textContent = t('tagline');
-        document.getElementById('header-badge').textContent = t('headerBadge');
+        document.getElementById('lang-text').textContent = currentLang === 'he' ? 'EN' : 'עב';
         document.getElementById('date-filter-label').textContent = t('filterDate');
         document.getElementById('city-filter-label').textContent = t('filterCity');
         document.getElementById('type-filter-label').textContent = t('filterType');
