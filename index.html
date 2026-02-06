@@ -72,6 +72,13 @@
             color: #999;
             margin-top: 0.3rem;
         }
+        .event-card .source-tag a {
+            color: #1565c0;
+            text-decoration: none;
+        }
+        .event-card .source-tag a:hover {
+            text-decoration: underline;
+        }
         .badge {
             display: inline-block;
             padding: 2px 8px;
@@ -431,7 +438,7 @@
                 const cityBadge = ev.city ? `<span class="badge badge-city">${getCityLabel(ev.city)}</span>` : '';
                 const typeBadge = ev.event_type ? `<span class="badge badge-type">${getTypeLabel(ev.event_type)}</span>` : '';
                 const dateStr = ev.date_display || ev.date || '';
-                const sourceStr = ev.source ? `<div class="source-tag">${t('source')}: ${ev.source}</div>` : '';
+                const sourceStr = ev.source ? `<div class="source-tag">${t('source')}: <a href="https://${ev.source}" target="_blank" rel="noopener">${ev.source}</a></div>` : '';
 
                 card.innerHTML = `
                     <h3>${ev.title || t('noTitle')} <span class="badge badge-free">${t('free')}</span></h3>
