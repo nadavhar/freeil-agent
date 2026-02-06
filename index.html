@@ -87,9 +87,7 @@
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="https://www.googletagmanager.com">
-    <link rel="dns-prefetch" href="https://tile.openstreetmap.org">
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* Reset & prevent horizontal scroll */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -304,53 +302,6 @@
             border-color: #0369a1;
         }
 
-        /* Map Toggle Button */
-        .map-toggle-container {
-            background: #fff;
-            padding: 0.5rem 1rem;
-            border-bottom: 1px solid #e0e0e0;
-            width: 100%;
-            max-width: 100vw;
-        }
-        #map-toggle {
-            width: 100%;
-            padding: 10px 16px;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            touch-action: manipulation;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        #map-toggle:hover {
-            opacity: 0.9;
-        }
-
-        /* Map Section */
-        .map-container {
-            width: 100%;
-            max-width: 100vw;
-            overflow: hidden;
-            transition: height 0.3s ease-in-out;
-        }
-        .map-container.collapsed {
-            height: 0 !important;
-        }
-        .map-container.expanded {
-            height: 50vh;
-        }
-        #map {
-            width: 100%;
-            height: 100%;
-            min-height: 0;
-        }
-
         /* Event List Section */
         .event-list-container {
             padding: 1rem;
@@ -550,13 +501,6 @@
                 padding: 8px 16px;
                 font-size: 0.82rem;
             }
-            .map-toggle-container { display: none; }
-            .map-container {
-                height: 45vh !important;
-            }
-            .map-container.collapsed {
-                height: 45vh !important;
-            }
             .event-list-container { padding: 1rem 2rem; }
             .event-card {
                 padding: 1.5rem;
@@ -621,25 +565,12 @@
         </div>
     </div>
 
-    <!-- Map Toggle (mobile only) -->
-    <div class="map-toggle-container">
-        <button id="map-toggle" onclick="toggleMap()">
-            <span id="map-toggle-text">הצג מפה</span> <span id="map-toggle-icon">🗺️</span>
-        </button>
-    </div>
-
-    <!-- Map Section -->
-    <div class="map-container collapsed" id="map-container">
-        <div id="map"></div>
-    </div>
-
     <!-- Event List Section -->
     <div class="event-list-container">
         <div class="stats" id="stats"></div>
         <div id="event-list"><div id="loading"></div></div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // --- Translations ---
         const translations = {
@@ -818,40 +749,6 @@
             updateUI();
         }
 
-        // --- Map toggle ---
-        let mapExpanded = false;
-
-        function toggleMap() {
-            const container = document.getElementById('map-container');
-            const toggleText = document.getElementById('map-toggle-text');
-            const toggleIcon = document.getElementById('map-toggle-icon');
-
-            mapExpanded = !mapExpanded;
-
-            if (mapExpanded) {
-                container.classList.remove('collapsed');
-                container.classList.add('expanded');
-                toggleText.textContent = t('hideMap');
-                toggleIcon.textContent = '✕';
-                // Refresh map tiles after expand
-                setTimeout(() => {
-                    map.invalidateSize();
-                }, 350);
-            } else {
-                container.classList.remove('expanded');
-                container.classList.add('collapsed');
-                toggleText.textContent = t('showMap');
-                toggleIcon.textContent = '🗺️';
-            }
-        }
-
-        function updateMapToggleText() {
-            const toggleText = document.getElementById('map-toggle-text');
-            if (toggleText) {
-                toggleText.textContent = mapExpanded ? t('hideMap') : t('showMap');
-            }
-        }
-
         function updateEventCounter(count) {
             document.getElementById('event-counter').textContent =
                 t('eventCounter').replace('{count}', count);
@@ -866,70 +763,12 @@
             document.getElementById('date-filter-label').textContent = t('filterDate');
             document.getElementById('city-filter-label').textContent = t('filterCity');
             document.getElementById('type-filter-label').textContent = t('filterCategory');
-            updateMapToggleText();
             if (typeof allEvents !== 'undefined') updateEventCounter(allEvents.length);
             buildFilters();
             applyFilter();
         }
 
-        // --- Map setup ---
-        const map = L.map('map', {
-            zoomControl: true
-        }).setView([31.8, 34.9], 9);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors',
-            maxZoom: 18,
-        }).addTo(map);
-
-        const typeColors = {
-            concert: '#e91e63',
-            festival: '#ff9800',
-            market: '#795548',
-            exhibition: '#9c27b0',
-            tour: '#2196f3',
-            workshop: '#8338ec',
-            sport: '#f72585',
-            community: '#00bcd4',
-            culture: '#673ab7',
-            food: '#ff5722',
-            nature: '#2d6a4f',
-            nightlife: '#311b92',
-            family: '#4caf50',
-            museum: '#1565c0',
-            lecture: '#00897b',
-            yoga: '#7cb342',
-            art: '#d81b60',
-            theater: '#b71c1c',
-            dance: '#f50057',
-            film: '#37474f',
-            comedy: '#ffc107',
-            kids: '#ff6f00',
-            outdoor: '#33691e',
-            wellness: '#26a69a',
-            tech: '#0288d1',
-            photography: '#5d4037',
-            meditation: '#7e57c2',
-            beach: '#00acc1',
-            volunteering: '#43a047',
-            other: '#6c757d',
-        };
-
-        function makeIcon(type) {
-            const color = typeColors[type] || typeColors.other;
-            return L.divIcon({
-                className: '',
-                html: `<div style="
-                    width:14px;height:14px;border-radius:50%;
-                    background:${color};border:2px solid white;
-                    box-shadow:0 1px 4px rgba(0,0,0,0.3);
-                "></div>`,
-                iconSize: [14, 14],
-                iconAnchor: [7, 7],
-            });
-        }
-
         let allEvents = [];
-        let markers = [];
         let activeTypeFilter = 'all';
         let activeCityFilter = 'all';
         let activeDateFilter = 'all';
@@ -987,8 +826,6 @@
         function renderEvents(events) {
             const list = document.getElementById('event-list');
             list.innerHTML = '';
-            markers.forEach(m => map.removeLayer(m));
-            markers = [];
 
             document.getElementById('stats').textContent =
                 t('statsFormat').replace('{count}', events.length);
@@ -1039,38 +876,9 @@
                     shareToWhatsApp(ev);
                 });
 
-                // Map view click
-                card.addEventListener('click', () => {
-                    if (ev.latitude && ev.longitude) {
-                        map.setView([ev.latitude, ev.longitude], 14);
-                        markers[i]?.openPopup();
-                    }
-                });
                 list.appendChild(card);
-
-                // Marker
-                if (ev.latitude && ev.longitude) {
-                    const marker = L.marker([ev.latitude, ev.longitude], {
-                        icon: makeIcon(ev.event_type),
-                    }).addTo(map).bindPopup(`
-                        <strong>${ev.title}</strong><br>
-                        <span style="color:#00d4aa;font-weight:bold">${t('freePopup')}</span><br>
-                        ${dateStr}<br>
-                        ${ev.location || ''}<br>
-                        <em>${ev.description || ''}</em>
-                    `);
-                    markers.push(marker);
-                } else {
-                    markers.push(null);
-                }
             });
 
-            // Fit map to visible markers
-            const validMarkers = markers.filter(Boolean);
-            if (validMarkers.length) {
-                const group = L.featureGroup(validMarkers);
-                map.fitBounds(group.getBounds(), { padding: [30, 30] });
-            }
         }
 
         // Icons for event types
@@ -1114,17 +922,17 @@
             dateBar.innerHTML = '';
 
             const dateOptions = [
-                { key: 'all', label: t('filterAll'), icon: '' },
-                { key: 'today', label: t('filterToday'), icon: '📅' },
-                { key: 'week', label: t('filterWeek'), icon: '🗓️' },
-                { key: 'month', label: t('filterMonth'), icon: '📆' }
+                { key: 'all', label: t('filterAll') },
+                { key: 'today', label: t('filterToday') },
+                { key: 'week', label: t('filterWeek') },
+                { key: 'month', label: t('filterMonth') }
             ];
 
             dateOptions.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.className = 'filter-chip date-chip' + (activeDateFilter === opt.key ? ' active' : '');
                 btn.dataset.date = opt.key;
-                btn.innerHTML = opt.icon ? `<span class="chip-icon">${opt.icon}</span>${opt.label}` : opt.label;
+                btn.textContent = opt.label;
                 btn.onclick = () => { activeDateFilter = opt.key; applyFilter(); };
                 dateBar.appendChild(btn);
             });
@@ -1144,7 +952,7 @@
             cities.forEach(c => {
                 const btn = document.createElement('button');
                 btn.className = 'filter-chip city-chip';
-                btn.innerHTML = `<span class="chip-icon">📍</span>${getCityLabel(c)}`;
+                btn.textContent = getCityLabel(c);
                 btn.dataset.city = c;
                 btn.onclick = () => { activeCityFilter = c; applyFilter(); };
                 cityBar.appendChild(btn);
@@ -1226,7 +1034,6 @@
         document.getElementById('date-filter-label').textContent = t('filterDate');
         document.getElementById('city-filter-label').textContent = t('filterCity');
         document.getElementById('type-filter-label').textContent = t('filterCategory');
-        document.getElementById('map-toggle-text').textContent = t('showMap');
         document.getElementById('loading').textContent = t('loading');
 
         // --- Load events ---
