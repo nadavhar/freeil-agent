@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FreeIL — אירועים חינם בישראל</title>
+    <title id="page-title">FreeIL — אירועים חינם בישראל</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -125,34 +125,186 @@
         @media (max-width: 768px) {
             .container { grid-template-columns: 1fr; grid-template-rows: 50vh 1fr; }
         }
+        #lang-toggle {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        #lang-toggle:hover {
+            background: rgba(255,255,255,0.25);
+        }
     </style>
 </head>
 <body>
     <header>
         <div>
             <h1>Free<span>IL</span></h1>
-            <p>אירועים חינם בתל אביב, ירושלים, ראשון לציון, חיפה ובאר שבע</p>
+            <p id="tagline">אירועים חינם בתל אביב, ירושלים, חיפה, באר שבע ועוד</p>
         </div>
-        <div style="font-size:0.8rem;opacity:0.7">חינם | כניסה חופשית | Free</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+            <div id="header-badge" style="font-size:0.8rem;opacity:0.7">חינם | כניסה חופשית | Free</div>
+            <button id="lang-toggle" onclick="setLanguage(currentLang === 'he' ? 'en' : 'he')">EN / עב</button>
+        </div>
     </header>
     <div class="container">
         <div id="map"></div>
         <div class="sidebar">
             <div class="filter-section">
-                <div class="filter-label">עיר</div>
+                <div id="city-filter-label" class="filter-label">עיר</div>
                 <div class="filter-bar" id="city-filters"></div>
             </div>
             <div class="filter-section">
-                <div class="filter-label">סוג אירוע</div>
+                <div id="type-filter-label" class="filter-label">סוג אירוע</div>
                 <div class="filter-bar" id="type-filters"></div>
             </div>
             <div class="stats" id="stats"></div>
-            <div id="event-list"><div id="loading">טוען אירועים חינם...</div></div>
+            <div id="event-list"><div id="loading"></div></div>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // --- Translations ---
+        const translations = {
+            he: {
+                pageTitle: 'FreeIL — אירועים חינם בישראל',
+                tagline: 'אירועים חינם בתל אביב, ירושלים, חיפה, באר שבע ועוד',
+                headerBadge: 'חינם | כניסה חופשית | Free',
+                filterCity: 'עיר',
+                filterType: 'סוג אירוע',
+                filterAll: 'הכל',
+                loading: 'טוען אירועים חינם...',
+                statsFormat: '{count} אירועים חינם',
+                noResults: 'לא נמצאו אירועים.',
+                free: 'חינם',
+                freePopup: 'חינם / Free',
+                source: 'מקור',
+                noTitle: 'ללא שם',
+                errorLoad: 'לא ניתן לטעון את events.json.',
+                errorHint: 'הריצו python main.py --demo כדי ליצור אותו.',
+                cities: {
+                    'Tel Aviv': 'תל אביב',
+                    'Jerusalem': 'ירושלים',
+                    'Haifa': 'חיפה',
+                    'Beer Sheva': 'באר שבע',
+                    'Eilat': 'אילת',
+                    'Tiberias': 'טבריה',
+                    'Nazareth': 'נצרת',
+                    'Safed': 'צפת',
+                    'Akko': 'עכו',
+                    'Rishon LeZion': 'ראשון לציון',
+                    'Other': 'אחר',
+                },
+                types: {
+                    concert: 'קונצרטים',
+                    festival: 'פסטיבלים',
+                    market: 'שווקים',
+                    exhibition: 'תערוכות',
+                    tour: 'סיורים',
+                    workshop: 'סדנאות',
+                    sport: 'ספורט',
+                    community: 'קהילה',
+                    culture: 'תרבות',
+                    food: 'אוכל',
+                    nature: 'טבע',
+                    nightlife: 'חיי לילה',
+                    family: 'משפחה',
+                    museum: 'מוזיאונים',
+                    lecture: 'הרצאות',
+                    yoga: 'יוגה',
+                    art: 'אמנות',
+                    other: 'אחר',
+                }
+            },
+            en: {
+                pageTitle: 'FreeIL — Free Events in Israel',
+                tagline: 'Free events in Tel Aviv, Jerusalem, Haifa, Beer Sheva & more',
+                headerBadge: 'Free | No Charge | חינם',
+                filterCity: 'City',
+                filterType: 'Event Type',
+                filterAll: 'All',
+                loading: 'Loading free events...',
+                statsFormat: '{count} free events',
+                noResults: 'No events found.',
+                free: 'Free',
+                freePopup: 'Free / חינם',
+                source: 'Source',
+                noTitle: 'Untitled',
+                errorLoad: 'Could not load events.json.',
+                errorHint: 'Run python main.py --demo to create it.',
+                cities: {
+                    'Tel Aviv': 'Tel Aviv',
+                    'Jerusalem': 'Jerusalem',
+                    'Haifa': 'Haifa',
+                    'Beer Sheva': 'Beer Sheva',
+                    'Eilat': 'Eilat',
+                    'Tiberias': 'Tiberias',
+                    'Nazareth': 'Nazareth',
+                    'Safed': 'Safed',
+                    'Akko': 'Akko',
+                    'Rishon LeZion': 'Rishon LeZion',
+                    'Other': 'Other',
+                },
+                types: {
+                    concert: 'Concerts',
+                    festival: 'Festivals',
+                    market: 'Markets',
+                    exhibition: 'Exhibitions',
+                    tour: 'Tours',
+                    workshop: 'Workshops',
+                    sport: 'Sports',
+                    community: 'Community',
+                    culture: 'Culture',
+                    food: 'Food',
+                    nature: 'Nature',
+                    nightlife: 'Nightlife',
+                    family: 'Family',
+                    museum: 'Museums',
+                    lecture: 'Lectures',
+                    yoga: 'Yoga',
+                    art: 'Art',
+                    other: 'Other',
+                }
+            }
+        };
+
+        // --- Language state & helpers ---
+        let currentLang = localStorage.getItem('freeil-lang') || 'he';
+
+        function t(key) {
+            return translations[currentLang][key] || key;
+        }
+
+        function getCityLabel(city) {
+            return translations[currentLang].cities[city] || city;
+        }
+
+        function getTypeLabel(type) {
+            return translations[currentLang].types[type] || type;
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('freeil-lang', lang);
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+            updateUI();
+        }
+
+        function updateUI() {
+            document.title = t('pageTitle');
+            document.getElementById('tagline').textContent = t('tagline');
+            document.getElementById('header-badge').textContent = t('headerBadge');
+            document.getElementById('city-filter-label').textContent = t('filterCity');
+            document.getElementById('type-filter-label').textContent = t('filterType');
+            buildFilters();
+            applyFilter();
+        }
+
         // --- Map setup ---
         const map = L.map('map').setView([31.8, 34.9], 9);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -181,36 +333,6 @@
             other: '#6c757d',
         };
 
-        const typeLabels = {
-            concert: 'קונצרטים',
-            festival: 'פסטיבלים',
-            market: 'שווקים',
-            exhibition: 'תערוכות',
-            tour: 'סיורים',
-            workshop: 'סדנאות',
-            sport: 'ספורט',
-            community: 'קהילה',
-            culture: 'תרבות',
-            food: 'אוכל',
-            nature: 'טבע',
-            nightlife: 'חיי לילה',
-            family: 'משפחה',
-            museum: 'מוזיאונים',
-            lecture: 'הרצאות',
-            yoga: 'יוגה',
-            art: 'אמנות',
-            other: 'אחר',
-        };
-
-        const cityLabels = {
-            'Tel Aviv': 'תל אביב',
-            'Jerusalem': 'ירושלים',
-            'Rishon LeZion': 'ראשון לציון',
-            'Haifa': 'חיפה',
-            'Beer Sheva': 'באר שבע',
-            'Other': 'אחר',
-        };
-
         function makeIcon(type) {
             const color = typeColors[type] || typeColors.other;
             return L.divIcon({
@@ -237,10 +359,10 @@
             markers = [];
 
             document.getElementById('stats').textContent =
-                `${events.length} אירועים חינם`;
+                t('statsFormat').replace('{count}', events.length);
 
             if (!events.length) {
-                list.innerHTML = '<p style="padding:1rem;color:#888">לא נמצאו אירועים.</p>';
+                list.innerHTML = `<p style="padding:1rem;color:#888">${t('noResults')}</p>`;
                 return;
             }
 
@@ -249,13 +371,13 @@
                 const card = document.createElement('div');
                 card.className = 'event-card';
 
-                const cityBadge = ev.city ? `<span class="badge badge-city">${cityLabels[ev.city] || ev.city}</span>` : '';
-                const typeBadge = ev.event_type ? `<span class="badge badge-type">${typeLabels[ev.event_type] || ev.event_type}</span>` : '';
+                const cityBadge = ev.city ? `<span class="badge badge-city">${getCityLabel(ev.city)}</span>` : '';
+                const typeBadge = ev.event_type ? `<span class="badge badge-type">${getTypeLabel(ev.event_type)}</span>` : '';
                 const dateStr = ev.date_display || ev.date || '';
-                const sourceStr = ev.source ? `<div class="source-tag">מקור: ${ev.source}</div>` : '';
+                const sourceStr = ev.source ? `<div class="source-tag">${t('source')}: ${ev.source}</div>` : '';
 
                 card.innerHTML = `
-                    <h3>${ev.title || 'ללא שם'} <span class="badge badge-free">חינם</span></h3>
+                    <h3>${ev.title || t('noTitle')} <span class="badge badge-free">${t('free')}</span></h3>
                     <div>${cityBadge}${typeBadge}</div>
                     <div class="meta">${dateStr} &mdash; ${ev.location || ''}</div>
                     <div class="desc">${ev.description || ''}</div>
@@ -275,7 +397,7 @@
                         icon: makeIcon(ev.event_type),
                     }).addTo(map).bindPopup(`
                         <strong>${ev.title}</strong><br>
-                        <span style="color:#00d4aa;font-weight:bold">חינם / Free</span><br>
+                        <span style="color:#00d4aa;font-weight:bold">${t('freePopup')}</span><br>
                         ${dateStr}<br>
                         ${ev.location || ''}<br>
                         <em>${ev.description || ''}</em>
@@ -303,14 +425,14 @@
             const allCityBtn = document.createElement('button');
             allCityBtn.className = 'filter-btn city-filter active';
             allCityBtn.dataset.city = 'all';
-            allCityBtn.textContent = 'הכל';
+            allCityBtn.textContent = t('filterAll');
             allCityBtn.onclick = () => { activeCityFilter = 'all'; applyFilter(); };
             cityBar.appendChild(allCityBtn);
 
             cities.forEach(c => {
                 const btn = document.createElement('button');
                 btn.className = 'filter-btn city-filter';
-                btn.textContent = cityLabels[c] || c;
+                btn.textContent = getCityLabel(c);
                 btn.dataset.city = c;
                 btn.onclick = () => { activeCityFilter = c; applyFilter(); };
                 cityBar.appendChild(btn);
@@ -324,16 +446,16 @@
             const allTypeBtn = document.createElement('button');
             allTypeBtn.className = 'filter-btn active';
             allTypeBtn.dataset.type = 'all';
-            allTypeBtn.textContent = 'הכל';
+            allTypeBtn.textContent = t('filterAll');
             allTypeBtn.onclick = () => { activeTypeFilter = 'all'; applyFilter(); };
             typeBar.appendChild(allTypeBtn);
 
-            types.forEach(t => {
+            types.forEach(type => {
                 const btn = document.createElement('button');
                 btn.className = 'filter-btn';
-                btn.textContent = typeLabels[t] || t;
-                btn.dataset.type = t;
-                btn.onclick = () => { activeTypeFilter = t; applyFilter(); };
+                btn.textContent = getTypeLabel(type);
+                btn.dataset.type = type;
+                btn.onclick = () => { activeTypeFilter = type; applyFilter(); };
                 typeBar.appendChild(btn);
             });
         }
@@ -356,6 +478,16 @@
             renderEvents(filtered);
         }
 
+        // --- Initialize language ---
+        document.documentElement.lang = currentLang;
+        document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
+        document.title = t('pageTitle');
+        document.getElementById('tagline').textContent = t('tagline');
+        document.getElementById('header-badge').textContent = t('headerBadge');
+        document.getElementById('city-filter-label').textContent = t('filterCity');
+        document.getElementById('type-filter-label').textContent = t('filterType');
+        document.getElementById('loading').textContent = t('loading');
+
         // --- Load events ---
         fetch('events.json')
             .then(r => {
@@ -370,8 +502,8 @@
             .catch(err => {
                 document.getElementById('event-list').innerHTML = `
                     <p style="padding:1rem;color:#c0392b">
-                        לא ניתן לטעון את events.json.<br>
-                        הריצו <code>python main.py --demo</code> כדי ליצור אותו.
+                        ${t('errorLoad')}<br>
+                        <code>${t('errorHint')}</code>
                     </p>`;
                 console.error(err);
             });
