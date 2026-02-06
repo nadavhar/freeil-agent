@@ -188,6 +188,7 @@
                 filterAll: 'הכל',
                 filterToday: 'היום',
                 filterWeek: 'השבוע',
+                filterMonth: 'החודש',
                 loading: 'טוען אירועים חינם...',
                 statsFormat: '{count} אירועים חינם',
                 noResults: 'לא נמצאו אירועים.',
@@ -241,6 +242,7 @@
                 filterAll: 'All',
                 filterToday: 'Today',
                 filterWeek: 'This Week',
+                filterMonth: 'This Month',
                 loading: 'Loading free events...',
                 statsFormat: '{count} free events',
                 noResults: 'No events found.',
@@ -389,6 +391,16 @@
             return eventDate >= today && eventDate < endOfWeek;
         }
 
+        function isThisMonth(dateStr) {
+            if (!dateStr) return false;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const endOfMonth = new Date(today);
+            endOfMonth.setDate(today.getDate() + 30);
+            const eventDate = new Date(dateStr);
+            return eventDate >= today && eventDate < endOfMonth;
+        }
+
         function renderEvents(events) {
             const list = document.getElementById('event-list');
             list.innerHTML = '';
@@ -461,7 +473,8 @@
             const dateOptions = [
                 { key: 'all', label: t('filterAll') },
                 { key: 'today', label: t('filterToday') },
-                { key: 'week', label: t('filterWeek') }
+                { key: 'week', label: t('filterWeek') },
+                { key: 'month', label: t('filterMonth') }
             ];
 
             dateOptions.forEach(opt => {
@@ -532,6 +545,8 @@
                 filtered = filtered.filter(e => isToday(e.date));
             } else if (activeDateFilter === 'week') {
                 filtered = filtered.filter(e => isThisWeek(e.date));
+            } else if (activeDateFilter === 'month') {
+                filtered = filtered.filter(e => isThisMonth(e.date));
             }
             if (activeCityFilter !== 'all') {
                 filtered = filtered.filter(e => e.city === activeCityFilter);
