@@ -1111,7 +1111,7 @@
             dateBar.innerHTML = '';
 
             const dateOptions = [
-                { key: 'all', label: t('filterAll'), icon: '✨' },
+                { key: 'all', label: t('filterAll'), icon: '' },
                 { key: 'today', label: t('filterToday'), icon: '📅' },
                 { key: 'week', label: t('filterWeek'), icon: '🗓️' },
                 { key: 'month', label: t('filterMonth'), icon: '📆' }
@@ -1121,7 +1121,7 @@
                 const btn = document.createElement('button');
                 btn.className = 'filter-chip date-chip' + (activeDateFilter === opt.key ? ' active' : '');
                 btn.dataset.date = opt.key;
-                btn.innerHTML = `<span class="chip-icon">${opt.icon}</span>${opt.label}`;
+                btn.innerHTML = opt.icon ? `<span class="chip-icon">${opt.icon}</span>${opt.label}` : opt.label;
                 btn.onclick = () => { activeDateFilter = opt.key; applyFilter(); };
                 dateBar.appendChild(btn);
             });
@@ -1134,7 +1134,7 @@
             const allCityBtn = document.createElement('button');
             allCityBtn.className = 'filter-chip city-chip active';
             allCityBtn.dataset.city = 'all';
-            allCityBtn.innerHTML = `<span class="chip-icon">🌍</span>${t('filterAll')}`;
+            allCityBtn.innerHTML = t('filterAll');
             allCityBtn.onclick = () => { activeCityFilter = 'all'; applyFilter(); };
             cityBar.appendChild(allCityBtn);
 
@@ -1155,7 +1155,7 @@
             const allTypeBtn = document.createElement('button');
             allTypeBtn.className = 'filter-chip active';
             allTypeBtn.dataset.type = 'all';
-            allTypeBtn.innerHTML = `<span class="chip-icon">✨</span>${t('filterAll')}`;
+            allTypeBtn.innerHTML = t('filterAll');
             allTypeBtn.onclick = () => { activeTypeFilter = 'all'; applyFilter(); };
             typeBar.appendChild(allTypeBtn);
 
