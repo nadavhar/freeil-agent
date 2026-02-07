@@ -195,11 +195,16 @@
             font-weight: 500;
         }
 
-        /* Filters Section - Modern Compact Design */
+        /* Filters Section - Sticky Control Bar */
         .filters-container {
-            background: #fff;
-            padding: 0.875rem 0;
-            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 64px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
             width: 100%;
             max-width: 100vw;
         }
@@ -208,23 +213,47 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 1rem;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+        .filter-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .filter-title {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: #1e293b;
+        }
+        .live-counter {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            background: #ecfdf5;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #059669;
+            transition: transform 0.2s ease;
+        }
+        .live-counter.pulse {
+            animation: counterPulse 0.3s ease;
+        }
+        @keyframes counterPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
         }
         .reset-filters {
             display: none;
             align-items: center;
             gap: 4px;
-            padding: 6px 12px;
+            padding: 5px 10px;
             background: #fef2f2;
             border: none;
-            border-radius: 20px;
+            border-radius: 16px;
             color: #dc2626;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
@@ -235,18 +264,19 @@
         .reset-filters:hover {
             background: #fee2e2;
         }
-        .filter-section {
-            margin-bottom: 0.625rem;
+        .filter-row {
+            position: relative;
+            margin-bottom: 0.4rem;
             padding: 0 1rem;
         }
-        .filter-section:last-child { margin-bottom: 0; }
+        .filter-row:last-child { margin-bottom: 0; }
         .filter-label {
             font-size: 0.65rem;
             color: #94a3b8;
             text-transform: uppercase;
             font-weight: 700;
             letter-spacing: 0.05em;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .filter-bar {
             display: flex;
@@ -257,10 +287,20 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
             margin: 0 -1rem;
-            padding: 0 1rem 4px;
+            padding: 2px 1rem;
         }
         .filter-bar::-webkit-scrollbar {
             display: none;
+        }
+        .filter-row::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 24px;
+            background: linear-gradient(to right, rgba(255,255,255,0.95), transparent);
+            pointer-events: none;
         }
         .filter-chip {
             display: inline-flex;
@@ -308,14 +348,6 @@
             background: #fff;
             width: 100%;
             max-width: 100vw;
-        }
-        .stats {
-            font-size: 0.85rem;
-            color: #666;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 0.75rem;
-            font-weight: 600;
         }
         /* Event Card - Modern Clean Design */
         .event-card {
@@ -417,49 +449,59 @@
             margin-bottom: 1rem;
         }
 
-        /* Card Footer - Action Row */
+        /* Card Footer - Action Bar */
         .card-footer {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-top: 0.75rem;
+            padding-top: 0.875rem;
+            margin-top: 0.875rem;
             border-top: 1px solid #f1f5f9;
         }
-        .source-link {
-            font-size: 0.7rem;
-            color: #94a3b8;
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .source-link a {
-            color: #94a3b8;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .source-link a:hover {
-            color: #64748b;
-            text-decoration: underline;
-        }
-        .whatsapp-btn {
+        .action-btn {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
-            background: transparent;
-            border: 1px solid #25D366;
-            border-radius: 8px;
-            color: #25D366;
-            font-size: 0.8rem;
-            font-weight: 600;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: none;
             cursor: pointer;
             transition: all 0.2s ease;
             touch-action: manipulation;
         }
-        .whatsapp-btn:hover {
+        .action-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+        .action-btn.whatsapp {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        .action-btn.whatsapp:hover {
             background: #25D366;
             color: white;
         }
-        .whatsapp-btn svg {
-            width: 18px;
-            height: 18px;
+        .action-btn.navigate {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+        .action-btn.navigate:hover {
+            background: #3b82f6;
+            color: white;
+        }
+        .action-btn.source {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .action-btn.source:hover {
+            background: #e2e8f0;
+            color: #334155;
         }
 
         #loading {
@@ -485,17 +527,21 @@
                 padding: 0 16px;
                 height: 40px;
             }
-            .filters-container { padding: 1rem 0; }
+            .filters-container {
+                padding: 0.875rem 0;
+                top: 68px;
+            }
             .filter-header { padding: 0 2rem; }
-            .filter-section {
-                padding: 0 2rem;
+            .filter-row {
                 margin-bottom: 0.5rem;
+            }
+            .filter-row::after {
+                display: none;
             }
             .filter-bar {
                 flex-wrap: wrap;
                 overflow-x: visible;
-                margin: 0;
-                padding: 0;
+                padding: 2px 2rem;
             }
             .filter-chip {
                 padding: 8px 16px;
@@ -507,9 +553,6 @@
             }
             .event-card h3 {
                 font-size: 1.1rem;
-            }
-            .whatsapp-btn span {
-                display: inline; /* Show text on desktop */
             }
         }
     </style>
@@ -542,24 +585,27 @@
     <!-- Filters Section -->
     <div class="filters-container">
         <div class="filter-header">
-            <span id="filter-title" class="filter-title">סינון אירועים</span>
+            <div class="filter-header-left">
+                <span id="filter-title" class="filter-title">סינון</span>
+                <span id="live-counter" class="live-counter">0 אירועים</span>
+            </div>
             <button id="reset-filters" class="reset-filters" onclick="resetAllFilters()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                     <path d="M3 3v5h5"/>
                 </svg>
                 <span id="reset-text">איפוס</span>
             </button>
         </div>
-        <div class="filter-section">
+        <div class="filter-row">
             <div id="date-filter-label" class="filter-label">מתי</div>
             <div class="filter-bar" id="date-filters"></div>
         </div>
-        <div class="filter-section">
+        <div class="filter-row">
             <div id="city-filter-label" class="filter-label">עיר</div>
             <div class="filter-bar" id="city-filters"></div>
         </div>
-        <div class="filter-section">
+        <div class="filter-row">
             <div id="type-filter-label" class="filter-label">קטגוריה</div>
             <div class="filter-bar" id="type-filters"></div>
         </div>
@@ -567,7 +613,6 @@
 
     <!-- Event List Section -->
     <div class="event-list-container">
-        <div class="stats" id="stats"></div>
         <div id="event-list"><div id="loading"></div></div>
     </div>
 
@@ -823,12 +868,25 @@
             window.open(whatsappUrl, '_blank');
         }
 
+        function navigateToLocation(lat, lng, locationName) {
+            // Try Waze first, falls back to Google Maps
+            const wazeUrl = `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`;
+            const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+
+            // Open Waze (most users in Israel have it)
+            window.open(wazeUrl, '_blank');
+        }
+
         function renderEvents(events) {
             const list = document.getElementById('event-list');
             list.innerHTML = '';
 
-            document.getElementById('stats').textContent =
-                t('statsFormat').replace('{count}', events.length);
+            // Update live counter with animation
+            const liveCounter = document.getElementById('live-counter');
+            liveCounter.textContent = t('statsFormat').replace('{count}', events.length);
+            liveCounter.classList.remove('pulse');
+            void liveCounter.offsetWidth; // Trigger reflow
+            liveCounter.classList.add('pulse');
 
             if (!events.length) {
                 list.innerHTML = `<p style="padding:1rem;color:#888">${t('noResults')}</p>`;
@@ -843,12 +901,15 @@
                 const cityTag = ev.city ? `<span class="tag tag-city">${getCityLabel(ev.city)}</span>` : '';
                 const typeTag = ev.event_type ? `<span class="tag tag-type">${getTypeLabel(ev.event_type)}</span>` : '';
                 const dateStr = ev.date_display || ev.date || '';
-                const sourceStr = ev.source ? `<span class="source-link"><a href="https://${ev.source}" target="_blank" rel="noopener">${ev.source}</a></span>` : '';
+                const hasLocation = ev.latitude && ev.longitude;
+                const hasSource = ev.source;
 
-                // Icons for meta info
+                // Icons
                 const calendarIcon = `<svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
                 const locationIcon = `<svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>`;
                 const whatsappIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
+                const navigateIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>`;
+                const externalLinkIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`;
 
                 card.innerHTML = `
                     <div class="card-tags">${typeTag}${cityTag}</div>
@@ -862,19 +923,35 @@
                     </div>
                     <div class="card-desc">${ev.description || ''}</div>
                     <div class="card-footer">
-                        ${sourceStr}
-                        <button class="whatsapp-btn" data-index="${i}" title="${t('shareWhatsApp')}">
-                            ${whatsappIcon}
-                            <span>${t('shareWhatsApp')}</span>
-                        </button>
+                        <div class="action-buttons">
+                            <button class="action-btn whatsapp" title="${t('shareWhatsApp')}">${whatsappIcon}</button>
+                            ${hasLocation ? `<button class="action-btn navigate" title="ניווט">${navigateIcon}</button>` : ''}
+                            ${hasSource ? `<button class="action-btn source" title="${ev.source}">${externalLinkIcon}</button>` : ''}
+                        </div>
                     </div>
                 `;
 
                 // WhatsApp share click
-                card.querySelector('.whatsapp-btn').addEventListener('click', (e) => {
+                card.querySelector('.action-btn.whatsapp').addEventListener('click', (e) => {
                     e.stopPropagation();
                     shareToWhatsApp(ev);
                 });
+
+                // Navigation click
+                if (hasLocation) {
+                    card.querySelector('.action-btn.navigate').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        navigateToLocation(ev.latitude, ev.longitude, ev.location);
+                    });
+                }
+
+                // Source click
+                if (hasSource) {
+                    card.querySelector('.action-btn.source').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        window.open(`https://${ev.source}`, '_blank');
+                    });
+                }
 
                 list.appendChild(card);
             });
