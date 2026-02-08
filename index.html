@@ -977,97 +977,75 @@
         // --- Date filter helpers (Israel Time - Asia/Jerusalem) ---
         const ISRAEL_TZ = 'Asia/Jerusalem';
 
-        function getTodayInIsrael() {
-            // Get current date components in Israel timezone
-            const now = new Date();
-            const formatter = new Intl.DateTimeFormat('en-CA', {
+        function getDateInIsrael(date = new Date()) {
+            // Format any date to YYYY-MM-DD in Israel timezone
+            return new Intl.DateTimeFormat('en-CA', {
                 timeZone: ISRAEL_TZ,
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit'
-            });
-            return formatter.format(now); // Returns "YYYY-MM-DD"
-        }
-
-        function normalizeEventDate(dateStr) {
-            // Extract just the date part (YYYY-MM-DD) from the event date
-            // Handles both "2026-02-08" and "2026-02-08T20:00:00" formats
-            if (!dateStr) return null;
-
-            // If it's already just a date (YYYY-MM-DD), use it directly
-            if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-                return dateStr;
-            }
-
-            // If it has time component, extract just the date part
-            // This treats the date as-is (the date the event is listed for)
-            const match = dateStr.match(/^(\d{4}-\d{2}-\d{2})/);
-            return match ? match[1] : null;
+            }).format(date);
         }
 
         function isToday(dateStr) {
             if (!dateStr) return false;
 
-            // Get today's date in Israel (YYYY-MM-DD)
-            const todayInIsrael = getTodayInIsrael();
+            // 1. Get current date in Israel Time
+            const now = new Date();
+            const todayInIsrael = getDateInIsrael(now);
 
-            // Get the event's calendar date (ignore time component)
-            const eventDate = normalizeEventDate(dateStr);
+            // 2. Get event's date in Israel Time
+            // Add T12:00:00 to avoid UTC midnight edge cases
+            const eventDate = new Date(dateStr.includes('T') ? dateStr : dateStr + 'T12:00:00');
+            const eventDateInIsrael = getDateInIsrael(eventDate);
 
-            // Strict comparison: same calendar day
-            return todayInIsrael === eventDate;
+            // 3. Strict String Comparison
+            const isMatch = todayInIsrael === eventDateInIsrael;
+
+            // Debug: only log matches or Feb 7 events
+            if (isMatch || eventDateInIsrael === '2026-02-07') {
+                console.log('🗓️ Today:', todayInIsrael, '| Event:', eventDateInIsrael, '| Match:', isMatch);
+            }
+
+            return isMatch;
         }
 
         function isThisWeek(dateStr) {
             if (!dateStr) return false;
 
-            const todayInIsrael = getTodayInIsrael();
-            const eventDate = normalizeEventDate(dateStr);
-            if (!eventDate) return false;
+            const now = new Date();
+            const todayInIsrael = getDateInIsrael(now);
 
-            // Calculate dates for the next 7 days in Israel
-            const today = new Date();
-            const dates = [];
-            for (let i = 0; i < 7; i++) {
-                const d = new Date(today);
-                d.setDate(today.getDate() + i);
-                const formatter = new Intl.DateTimeFormat('en-CA', {
-                    timeZone: ISRAEL_TZ,
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                });
-                dates.push(formatter.format(d));
-            }
+            // Event date in Israel
+            const eventDate = new Date(dateStr.includes('T') ? dateStr : dateStr + 'T12:00:00');
+            const eventDateInIsrael = getDateInIsrael(eventDate);
 
-            // Check if event falls within this week
-            return dates.includes(eventDate);
+            // Calculate end of week (7 days from today) in Israel
+            const endOfWeek = new Date(now);
+            endOfWeek.setDate(now.getDate() + 7);
+            const endOfWeekInIsrael = getDateInIsrael(endOfWeek);
+
+            // Compare: today <= event < endOfWeek
+            return eventDateInIsrael >= todayInIsrael && eventDateInIsrael < endOfWeekInIsrael;
         }
 
         function isThisMonth(dateStr) {
             if (!dateStr) return false;
 
-            const todayInIsrael = getTodayInIsrael();
-            const eventDate = normalizeEventDate(dateStr);
-            if (!eventDate) return false;
+            const now = new Date();
+            const todayInIsrael = getDateInIsrael(now);
 
-            // Calculate dates for the next 30 days in Israel
-            const today = new Date();
-            const dates = [];
-            for (let i = 0; i < 30; i++) {
-                const d = new Date(today);
-                d.setDate(today.getDate() + i);
-                const formatter = new Intl.DateTimeFormat('en-CA', {
-                    timeZone: ISRAEL_TZ,
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                });
-                dates.push(formatter.format(d));
-            }
+            // Event date in Israel
+            const eventDate = new Date(dateStr.includes('T') ? dateStr : dateStr + 'T12:00:00');
+            const eventDateInIsrael = getDateInIsrael(eventDate);
 
-            // Check if event falls within this month
-            return dates.includes(eventDate);
+            // Calculate end of month (30 days from today) in Israel
+            const endOfMonth = new Date(now);
+            endOfMonth.setDate(now.getDate() + 30);
+            const endOfMonthInIsrael = getDateInIsrael(endOfMonth);
+
+            // Compare: today <= event < endOfMonth
+            return eventDateInIsrael >= todayInIsrael && eventDateInIsrael < endOfMonthInIsrael;
         }
 
         // --- WhatsApp Share ---
@@ -1393,7 +1371,10 @@
 
             let filtered = allEvents;
             if (activeDateFilter === 'today') {
+                console.log('🔍 Filtering for TODAY from', allEvents.length, 'events');
                 filtered = filtered.filter(e => isToday(e.date));
+                console.log('✅ Found', filtered.length, 'events for today');
+                console.log('📋 Today events:', filtered.map(e => e.date + ' - ' + e.title));
             } else if (activeDateFilter === 'week') {
                 filtered = filtered.filter(e => isThisWeek(e.date));
             } else if (activeDateFilter === 'month') {
