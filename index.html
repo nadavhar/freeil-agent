@@ -532,74 +532,36 @@
             color: #334155;
         }
 
-        /* Favorite Heart Button */
+        /* Favorite Heart Button - Bottom Left of Card */
         .favorite-btn {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
-            border: none;
-            cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
-            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #fef2f2;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #fca5a5;
             transition: all 0.2s ease;
-            z-index: 10;
         }
         .favorite-btn:hover {
-            background: rgba(0, 0, 0, 0.5);
-            transform: scale(1.1);
+            background: #fee2e2;
+            transform: scale(1.05);
         }
         .favorite-btn.active {
             color: #ef4444;
-            background: rgba(255, 255, 255, 0.9);
+            background: #fee2e2;
         }
         .favorite-btn.pop {
             animation: heartPop 0.3s ease;
         }
         @keyframes heartPop {
             0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
+            50% { transform: scale(1.2); }
             100% { transform: scale(1); }
-        }
-
-        /* Like/Dislike Voting Buttons */
-        .vote-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            min-width: 44px;
-            height: 44px;
-            padding: 0 12px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: #f1f5f9;
-            color: #64748b;
-            font-size: 1rem;
-        }
-        .vote-btn:hover {
-            background: #e2e8f0;
-        }
-        .vote-btn.like.active {
-            background: #dcfce7;
-            color: #16a34a;
-        }
-        .vote-btn.dislike.active {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-        .vote-count {
-            font-size: 0.75rem;
-            font-weight: 600;
         }
 
         #loading {
@@ -978,14 +940,6 @@
             btn.classList.add('pop');
         }
 
-        function setVote(eventId, vote, likeBtn, dislikeBtn) {
-            const actions = getUserActions(eventId);
-            const newVote = actions.vote === vote ? null : vote;
-            setUserAction(eventId, 'vote', newVote);
-
-            likeBtn.classList.toggle('active', newVote === 'like');
-            dislikeBtn.classList.toggle('active', newVote === 'dislike');
-        }
 
         function toggleFavoriteCategory(type) {
             const index = favoriteCategories.indexOf(type);
@@ -1117,12 +1071,10 @@
                 const navigateIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>`;
                 const externalLinkIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`;
 
-                // Favorite and vote states
+                // Favorite state
                 const isFavorite = userActions.favorite;
-                const voteStatus = userActions.vote;
 
                 card.innerHTML = `
-                    <button class="favorite-btn${isFavorite ? ' active' : ''}" data-event-id="${eventId}">${isFavorite ? '♥' : '♡'}</button>
                     <div class="card-tags">${typeTag}${cityTag}</div>
                     <div class="card-title-row">
                         <h3>${ev.title || t('noTitle')}</h3>
@@ -1135,13 +1087,12 @@
                     <div class="card-desc">${ev.description || ''}</div>
                     <div class="card-footer">
                         <div class="action-buttons">
+                            <button class="favorite-btn${isFavorite ? ' active' : ''}" data-event-id="${eventId}">${isFavorite ? '♥' : '♡'}</button>
+                        </div>
+                        <div class="action-buttons">
                             <button class="action-btn whatsapp" title="${t('shareWhatsApp')}">${whatsappIcon}</button>
                             ${hasLocation ? `<button class="action-btn navigate" title="ניווט">${navigateIcon}</button>` : ''}
                             ${hasSource ? `<button class="action-btn source" title="${ev.source}">${externalLinkIcon}</button>` : ''}
-                        </div>
-                        <div class="action-buttons">
-                            <button class="vote-btn like${voteStatus === 'like' ? ' active' : ''}" data-event-id="${eventId}">👍</button>
-                            <button class="vote-btn dislike${voteStatus === 'dislike' ? ' active' : ''}" data-event-id="${eventId}">👎</button>
                         </div>
                     </div>
                 `;
@@ -1151,20 +1102,6 @@
                 favBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     toggleFavorite(eventId, favBtn);
-                });
-
-                // Like/Dislike button clicks
-                const likeBtn = card.querySelector('.vote-btn.like');
-                const dislikeBtn = card.querySelector('.vote-btn.dislike');
-
-                likeBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    setVote(eventId, 'like', likeBtn, dislikeBtn);
-                });
-
-                dislikeBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    setVote(eventId, 'dislike', likeBtn, dislikeBtn);
                 });
 
                 // WhatsApp share click
