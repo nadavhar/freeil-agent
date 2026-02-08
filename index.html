@@ -1000,14 +1000,7 @@
             const eventDateInIsrael = getDateInIsrael(eventDate);
 
             // 3. Strict String Comparison
-            const isMatch = todayInIsrael === eventDateInIsrael;
-
-            // Debug: only log matches or Feb 7 events
-            if (isMatch || eventDateInIsrael === '2026-02-07') {
-                console.log('🗓️ Today:', todayInIsrael, '| Event:', eventDateInIsrael, '| Match:', isMatch);
-            }
-
-            return isMatch;
+            return todayInIsrael === eventDateInIsrael;
         }
 
         function isThisWeek(dateStr) {
@@ -1371,10 +1364,7 @@
 
             let filtered = allEvents;
             if (activeDateFilter === 'today') {
-                console.log('🔍 Filtering for TODAY from', allEvents.length, 'events');
                 filtered = filtered.filter(e => isToday(e.date));
-                console.log('✅ Found', filtered.length, 'events for today');
-                console.log('📋 Today events:', filtered.map(e => e.date + ' - ' + e.title));
             } else if (activeDateFilter === 'week') {
                 filtered = filtered.filter(e => isThisWeek(e.date));
             } else if (activeDateFilter === 'month') {
