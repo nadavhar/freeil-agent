@@ -989,19 +989,37 @@
             }).format(date);
         }
 
-        function isToday(dateStr) {
-            if (!dateStr) return false;
+        function getIsraelDayOfWeek() {
+            // Get current day of week in Israel (0=Sunday, 6=Saturday)
+            const now = new Date();
+            const israelDateStr = new Intl.DateTimeFormat('en-US', {
+                timeZone: ISRAEL_TZ,
+                weekday: 'short'
+            }).format(now);
 
-            // 1. Get current date in Israel Time
+            const dayMap = { 'Sun': 0, 'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thu': 4, 'Fri': 5, 'Sat': 6 };
+            return dayMap[israelDateStr] ?? -1;
+        }
+
+        function isToday(dateStr, recurringDays = null) {
             const now = new Date();
             const todayInIsrael = getDateInIsrael(now);
+            const israelDayOfWeek = getIsraelDayOfWeek();
 
-            // 2. Get event's date in Israel Time
+            // CASE A: Recurring Event (e.g., "Every Saturday")
+            if (recurringDays && Array.isArray(recurringDays) && recurringDays.length > 0) {
+                return recurringDays.includes(israelDayOfWeek);
+            }
+
+            // CASE B: Specific Date Event
+            if (!dateStr) return false;
+
+            // Get event's date in Israel Time
             // Add T12:00:00 to avoid UTC midnight edge cases
             const eventDate = new Date(dateStr.includes('T') ? dateStr : dateStr + 'T12:00:00');
             const eventDateInIsrael = getDateInIsrael(eventDate);
 
-            // 3. Strict String Comparison
+            // Strict String Comparison
             return todayInIsrael === eventDateInIsrael;
         }
 
@@ -1366,7 +1384,7 @@
 
             let filtered = allEvents;
             if (activeDateFilter === 'today') {
-                filtered = filtered.filter(e => isToday(e.date));
+                filtered = filtered.filter(e => isToday(e.date, e.recurringDays));
             } else if (activeDateFilter === 'week') {
                 filtered = filtered.filter(e => isThisWeek(e.date));
             } else if (activeDateFilter === 'month') {
