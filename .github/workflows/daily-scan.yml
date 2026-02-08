@@ -31,6 +31,12 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python auto_scan.py
 
+      - name: Pull latest changes
+        run: |
+          git stash
+          git pull --rebase origin main
+          git stash pop || true
+
       - name: Get event count
         id: count
         run: echo "count=$(python -c "import json; print(len(json.load(open('events.json'))))")" >> $GITHUB_OUTPUT
