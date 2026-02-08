@@ -977,55 +977,97 @@
         // --- Date filter helpers (Israel Time - Asia/Jerusalem) ---
         const ISRAEL_TZ = 'Asia/Jerusalem';
 
-        function getIsraelDateString(date = new Date()) {
-            // Returns "YYYY-MM-DD" in Israel timezone
-            return date.toLocaleDateString('en-CA', { timeZone: ISRAEL_TZ });
+        function getTodayInIsrael() {
+            // Get current date components in Israel timezone
+            const now = new Date();
+            const formatter = new Intl.DateTimeFormat('en-CA', {
+                timeZone: ISRAEL_TZ,
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+            return formatter.format(now); // Returns "YYYY-MM-DD"
         }
 
-        function getEventDateInIsrael(dateStr) {
-            // Convert event date string to Israel date string
+        function normalizeEventDate(dateStr) {
+            // Extract just the date part (YYYY-MM-DD) from the event date
+            // Handles both "2026-02-08" and "2026-02-08T20:00:00" formats
             if (!dateStr) return null;
-            const eventDate = new Date(dateStr);
-            return eventDate.toLocaleDateString('en-CA', { timeZone: ISRAEL_TZ });
+
+            // If it's already just a date (YYYY-MM-DD), use it directly
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+                return dateStr;
+            }
+
+            // If it has time component, extract just the date part
+            // This treats the date as-is (the date the event is listed for)
+            const match = dateStr.match(/^(\d{4}-\d{2}-\d{2})/);
+            return match ? match[1] : null;
         }
 
         function isToday(dateStr) {
             if (!dateStr) return false;
-            const todayInIsrael = getIsraelDateString();
-            const eventDateInIsrael = getEventDateInIsrael(dateStr);
-            return todayInIsrael === eventDateInIsrael;
+
+            // Get today's date in Israel (YYYY-MM-DD)
+            const todayInIsrael = getTodayInIsrael();
+
+            // Get the event's calendar date (ignore time component)
+            const eventDate = normalizeEventDate(dateStr);
+
+            // Strict comparison: same calendar day
+            return todayInIsrael === eventDate;
         }
 
         function isThisWeek(dateStr) {
             if (!dateStr) return false;
-            const todayInIsrael = getIsraelDateString();
-            const eventDateInIsrael = getEventDateInIsrael(dateStr);
-            if (!eventDateInIsrael) return false;
 
-            // Calculate end of week (7 days from today) in Israel
+            const todayInIsrael = getTodayInIsrael();
+            const eventDate = normalizeEventDate(dateStr);
+            if (!eventDate) return false;
+
+            // Calculate dates for the next 7 days in Israel
             const today = new Date();
-            const endOfWeek = new Date(today);
-            endOfWeek.setDate(today.getDate() + 7);
-            const endOfWeekInIsrael = getIsraelDateString(endOfWeek);
+            const dates = [];
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(today);
+                d.setDate(today.getDate() + i);
+                const formatter = new Intl.DateTimeFormat('en-CA', {
+                    timeZone: ISRAEL_TZ,
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                });
+                dates.push(formatter.format(d));
+            }
 
-            // Compare date strings (YYYY-MM-DD format sorts correctly)
-            return eventDateInIsrael >= todayInIsrael && eventDateInIsrael < endOfWeekInIsrael;
+            // Check if event falls within this week
+            return dates.includes(eventDate);
         }
 
         function isThisMonth(dateStr) {
             if (!dateStr) return false;
-            const todayInIsrael = getIsraelDateString();
-            const eventDateInIsrael = getEventDateInIsrael(dateStr);
-            if (!eventDateInIsrael) return false;
 
-            // Calculate end of month (30 days from today) in Israel
+            const todayInIsrael = getTodayInIsrael();
+            const eventDate = normalizeEventDate(dateStr);
+            if (!eventDate) return false;
+
+            // Calculate dates for the next 30 days in Israel
             const today = new Date();
-            const endOfMonth = new Date(today);
-            endOfMonth.setDate(today.getDate() + 30);
-            const endOfMonthInIsrael = getIsraelDateString(endOfMonth);
+            const dates = [];
+            for (let i = 0; i < 30; i++) {
+                const d = new Date(today);
+                d.setDate(today.getDate() + i);
+                const formatter = new Intl.DateTimeFormat('en-CA', {
+                    timeZone: ISRAEL_TZ,
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                });
+                dates.push(formatter.format(d));
+            }
 
-            // Compare date strings (YYYY-MM-DD format sorts correctly)
-            return eventDateInIsrael >= todayInIsrael && eventDateInIsrael < endOfMonthInIsrael;
+            // Check if event falls within this month
+            return dates.includes(eventDate);
         }
 
         // --- WhatsApp Share ---
