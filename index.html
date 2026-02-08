@@ -333,6 +333,29 @@
             font-size: 0.9rem;
             line-height: 1;
         }
+        .filter-chip .fav-star {
+            font-size: 0.75rem;
+            margin-right: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 0.4;
+        }
+        .filter-chip .fav-star:hover {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+        .filter-chip .fav-star.active {
+            color: #f59e0b;
+            opacity: 1;
+        }
+        .filter-chip.favorited {
+            border-color: #fbbf24;
+            background: #fffbeb;
+        }
+        .filter-chip.favorited.active {
+            background: #00d4aa;
+            border-color: #00d4aa;
+        }
         .filter-chip.date-chip.active {
             background: #0f172a;
             border-color: #0f172a;
@@ -854,6 +877,29 @@
         let activeDateFilter = 'all';
         let activeRegionFilter = 'all';
 
+        // Favorite categories - persisted in localStorage
+        let favoriteCategories = JSON.parse(localStorage.getItem('freeil-fav-categories') || '[]');
+
+        function toggleFavoriteCategory(type) {
+            const index = favoriteCategories.indexOf(type);
+            if (index > -1) {
+                favoriteCategories.splice(index, 1);
+            } else {
+                favoriteCategories.push(type);
+            }
+            localStorage.setItem('freeil-fav-categories', JSON.stringify(favoriteCategories));
+            buildCategoryFilters();
+        }
+
+        function getSortedCategories(types) {
+            // Sort: favorites first (in order they were added), then non-favorites
+            const favorites = types.filter(t => favoriteCategories.includes(t));
+            const nonFavorites = types.filter(t => !favoriteCategories.includes(t));
+            // Sort favorites by their order in favoriteCategories array
+            favorites.sort((a, b) => favoriteCategories.indexOf(a) - favoriteCategories.indexOf(b));
+            return [...favorites, ...nonFavorites];
+        }
+
         // Region to cities mapping
         const regionCities = {
             north: ['Haifa', 'Tiberias', 'Nazareth', 'Safed', 'Akko'],
@@ -1122,25 +1168,52 @@
                 cityBar.appendChild(btn);
             });
 
-            // Type filters
+            // Type/Category filters - built separately for sorting
+            buildCategoryFilters();
+        }
+
+        function buildCategoryFilters() {
             const types = [...new Set(allEvents.map(e => e.event_type).filter(Boolean))];
+            const sortedTypes = getSortedCategories(types);
             const typeBar = document.getElementById('type-filters');
             typeBar.innerHTML = '';
 
+            // "All" button (always first, no star)
             const allTypeBtn = document.createElement('button');
-            allTypeBtn.className = 'filter-chip active';
+            allTypeBtn.className = 'filter-chip' + (activeTypeFilter === 'all' ? ' active' : '');
             allTypeBtn.dataset.type = 'all';
             allTypeBtn.innerHTML = t('filterAll');
             allTypeBtn.onclick = () => { activeTypeFilter = 'all'; applyFilter(); };
             typeBar.appendChild(allTypeBtn);
 
-            types.forEach(type => {
+            // Category buttons with star favorites
+            sortedTypes.forEach(type => {
                 const btn = document.createElement('button');
-                btn.className = 'filter-chip';
-                const icon = typeIcons[type] || '📌';
-                btn.innerHTML = `<span class="chip-icon">${icon}</span>${getTypeLabel(type)}`;
+                const isFavorite = favoriteCategories.includes(type);
+                const isActive = activeTypeFilter === type;
+                btn.className = 'filter-chip' + (isActive ? ' active' : '') + (isFavorite ? ' favorited' : '');
                 btn.dataset.type = type;
-                btn.onclick = () => { activeTypeFilter = type; applyFilter(); };
+
+                const icon = typeIcons[type] || '📌';
+                const starClass = isFavorite ? 'fav-star active' : 'fav-star';
+
+                btn.innerHTML = `<span class="${starClass}" data-type="${type}">★</span><span class="chip-icon">${icon}</span>${getTypeLabel(type)}`;
+
+                // Click on chip text selects filter
+                btn.onclick = (e) => {
+                    // Don't trigger filter if clicking the star
+                    if (e.target.classList.contains('fav-star')) return;
+                    activeTypeFilter = type;
+                    applyFilter();
+                };
+
+                // Star click toggles favorite
+                const star = btn.querySelector('.fav-star');
+                star.onclick = (e) => {
+                    e.stopPropagation();
+                    toggleFavoriteCategory(type);
+                };
+
                 typeBar.appendChild(btn);
             });
         }
