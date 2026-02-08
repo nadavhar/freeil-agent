@@ -41,7 +41,15 @@ jobs:
           else
             EVENT_COUNT=$(python -c "import json; print(len(json.load(open('events.json'))))")
             git commit -m "Auto-scan: update free events (total: $EVENT_COUNT)"
-            git fetch origin main
-            git rebase origin/main
-            git push
+            # Retry loop for push conflicts
+            for i in 1 2 3; do
+              git fetch origin main
+              git rebase origin/main
+              if git push; then
+                echo "Push succeeded"
+                break
+              fi
+              echo "Push failed, retrying ($i/3)..."
+              sleep 2
+            done
           fi
