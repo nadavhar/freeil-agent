@@ -337,6 +337,10 @@
             background: #0f172a;
             border-color: #0f172a;
         }
+        .filter-chip.region-chip.active {
+            background: #7c3aed;
+            border-color: #7c3aed;
+        }
         .filter-chip.city-chip.active {
             background: #0369a1;
             border-color: #0369a1;
@@ -602,6 +606,10 @@
             <div class="filter-bar" id="date-filters"></div>
         </div>
         <div class="filter-row">
+            <div id="region-filter-label" class="filter-label">אזור</div>
+            <div class="filter-bar" id="region-filters"></div>
+        </div>
+        <div class="filter-row">
             <div id="city-filter-label" class="filter-label">עיר</div>
             <div class="filter-bar" id="city-filters"></div>
         </div>
@@ -624,9 +632,14 @@
                 tagline: 'אירועים חינם בתל אביב, ירושלים, חיפה, באר שבע ועוד',
                 headerBadge: 'חינם | כניסה חופשית | Free',
                 filterDate: 'מתי',
+                filterRegion: 'אזור',
                 filterCity: 'עיר',
                 filterType: 'סוג אירוע',
                 filterAll: 'הכל',
+                regionNorth: 'צפון',
+                regionCenter: 'מרכז',
+                regionSouth: 'דרום',
+                regionJerusalem: 'ירושלים והסביבה',
                 filterToday: 'היום',
                 filterWeek: 'השבוע',
                 filterMonth: 'החודש',
@@ -706,9 +719,14 @@
                 tagline: 'Free events in Tel Aviv, Jerusalem, Haifa, Beer Sheva & more',
                 headerBadge: 'Free | No Charge | חינם',
                 filterDate: 'When',
+                filterRegion: 'Region',
                 filterCity: 'City',
                 filterType: 'Event Type',
                 filterAll: 'All',
+                regionNorth: 'North',
+                regionCenter: 'Center',
+                regionSouth: 'South',
+                regionJerusalem: 'Jerusalem Area',
                 filterToday: 'Today',
                 filterWeek: 'This Week',
                 filterMonth: 'This Month',
@@ -820,6 +838,7 @@
             document.getElementById('filter-title').textContent = t('filterTitle');
             document.getElementById('reset-text').textContent = t('resetFilters');
             document.getElementById('date-filter-label').textContent = t('filterDate');
+            document.getElementById('region-filter-label').textContent = t('filterRegion');
             document.getElementById('city-filter-label').textContent = t('filterCity');
             document.getElementById('type-filter-label').textContent = t('filterCategory');
             if (typeof allEvents !== 'undefined') updateEventCounter(allEvents.length);
@@ -831,6 +850,20 @@
         let activeTypeFilter = 'all';
         let activeCityFilter = 'all';
         let activeDateFilter = 'all';
+        let activeRegionFilter = 'all';
+
+        // Region to cities mapping
+        const regionCities = {
+            north: ['Haifa', 'Tiberias', 'Nazareth', 'Safed', 'Akko'],
+            center: ['Tel Aviv', 'Petah Tikva', 'Rishon LeZion', 'Holon', 'Bat Yam', 'Herzliya', 'Hod HaSharon', 'Kfar Saba'],
+            south: ['Beer Sheva', 'Eilat'],
+            jerusalem: ['Jerusalem']
+        };
+
+        function getCitiesForRegion(region) {
+            if (region === 'all') return null;
+            return regionCities[region] || null;
+        }
 
         // --- Date filter helpers ---
         function getDateString(date) {
@@ -1028,13 +1061,50 @@
                 dateBar.appendChild(btn);
             });
 
-            // City filters
-            const cities = [...new Set(allEvents.map(e => e.city).filter(Boolean))];
+            // Region filters
+            const regionBar = document.getElementById('region-filters');
+            regionBar.innerHTML = '';
+
+            const regionOptions = [
+                { key: 'all', label: t('filterAll') },
+                { key: 'north', label: t('regionNorth') },
+                { key: 'center', label: t('regionCenter') },
+                { key: 'jerusalem', label: t('regionJerusalem') },
+                { key: 'south', label: t('regionSouth') }
+            ];
+
+            regionOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-chip region-chip' + (activeRegionFilter === opt.key ? ' active' : '');
+                btn.dataset.region = opt.key;
+                btn.textContent = opt.label;
+                btn.onclick = () => {
+                    activeRegionFilter = opt.key;
+                    // Reset city filter when region changes
+                    activeCityFilter = 'all';
+                    buildCityFilters();
+                    applyFilter();
+                };
+                regionBar.appendChild(btn);
+            });
+
+            // City filters (depends on region)
+            buildCityFilters();
+        }
+
+        function buildCityFilters() {
+            // Get cities based on selected region
+            let cities = [...new Set(allEvents.map(e => e.city).filter(Boolean))];
+            const regionCitiesList = getCitiesForRegion(activeRegionFilter);
+            if (regionCitiesList) {
+                cities = cities.filter(c => regionCitiesList.includes(c));
+            }
+
             const cityBar = document.getElementById('city-filters');
             cityBar.innerHTML = '';
 
             const allCityBtn = document.createElement('button');
-            allCityBtn.className = 'filter-chip city-chip active';
+            allCityBtn.className = 'filter-chip city-chip' + (activeCityFilter === 'all' ? ' active' : '');
             allCityBtn.dataset.city = 'all';
             allCityBtn.innerHTML = t('filterAll');
             allCityBtn.onclick = () => { activeCityFilter = 'all'; applyFilter(); };
@@ -1042,7 +1112,7 @@
 
             cities.forEach(c => {
                 const btn = document.createElement('button');
-                btn.className = 'filter-chip city-chip';
+                btn.className = 'filter-chip city-chip' + (activeCityFilter === c ? ' active' : '');
                 btn.textContent = getCityLabel(c);
                 btn.dataset.city = c;
                 btn.onclick = () => { activeCityFilter = c; applyFilter(); };
@@ -1074,20 +1144,25 @@
 
         function resetAllFilters() {
             activeDateFilter = 'all';
+            activeRegionFilter = 'all';
             activeCityFilter = 'all';
             activeTypeFilter = 'all';
+            buildCityFilters();
             applyFilter();
         }
 
         function updateResetButton() {
             const resetBtn = document.getElementById('reset-filters');
-            const isFiltered = activeDateFilter !== 'all' || activeCityFilter !== 'all' || activeTypeFilter !== 'all';
+            const isFiltered = activeDateFilter !== 'all' || activeRegionFilter !== 'all' || activeCityFilter !== 'all' || activeTypeFilter !== 'all';
             resetBtn.classList.toggle('visible', isFiltered);
         }
 
         function applyFilter() {
             document.querySelectorAll('#date-filters .filter-chip').forEach(b => {
                 b.classList.toggle('active', (b.dataset.date || 'all') === activeDateFilter);
+            });
+            document.querySelectorAll('#region-filters .filter-chip').forEach(b => {
+                b.classList.toggle('active', (b.dataset.region || 'all') === activeRegionFilter);
             });
             document.querySelectorAll('#city-filters .filter-chip').forEach(b => {
                 b.classList.toggle('active', (b.dataset.city || 'all') === activeCityFilter);
@@ -1104,6 +1179,13 @@
                 filtered = filtered.filter(e => isThisWeek(e.date));
             } else if (activeDateFilter === 'month') {
                 filtered = filtered.filter(e => isThisMonth(e.date));
+            }
+            // Filter by region (if no specific city is selected)
+            if (activeRegionFilter !== 'all' && activeCityFilter === 'all') {
+                const regionCitiesList = getCitiesForRegion(activeRegionFilter);
+                if (regionCitiesList) {
+                    filtered = filtered.filter(e => regionCitiesList.includes(e.city));
+                }
             }
             if (activeCityFilter !== 'all') {
                 filtered = filtered.filter(e => e.city === activeCityFilter);
@@ -1123,6 +1205,7 @@
         document.getElementById('filter-title').textContent = t('filterTitle');
         document.getElementById('reset-text').textContent = t('resetFilters');
         document.getElementById('date-filter-label').textContent = t('filterDate');
+        document.getElementById('region-filter-label').textContent = t('filterRegion');
         document.getElementById('city-filter-label').textContent = t('filterCity');
         document.getElementById('type-filter-label').textContent = t('filterCategory');
         document.getElementById('loading').textContent = t('loading');
