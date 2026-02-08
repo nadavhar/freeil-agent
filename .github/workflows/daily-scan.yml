@@ -31,18 +31,23 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python auto_scan.py
 
-      - name: Pull latest changes
-        run: |
-          git stash
-          git pull --rebase origin main
-          git stash pop || true
-
       - name: Get event count
         id: count
         run: echo "count=$(python -c "import json; print(len(json.load(open('events.json'))))")" >> $GITHUB_OUTPUT
 
       - name: Commit and push if changed
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Auto-scan: update free events (total: ${{ steps.count.outputs.count }})"
-          file_pattern: events.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet events.json; then
+            echo "No changes to events.json"
+            exit 0
+          fi
+
+          git add events.json
+          git commit -m "Auto-scan: update free events (total: ${{ steps.count.outputs.count }})"
+
+          # Pull with autostash and rebase, then push
+          git pull --rebase --autostash origin main
+          git push origin main
