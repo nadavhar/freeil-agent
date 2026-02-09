@@ -371,6 +371,66 @@
             border-color: #0369a1;
         }
 
+        /* Search Bar */
+        .search-container {
+            padding: 0 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 44px 12px 44px;
+            border: 1px solid #e2e8f0;
+            border-radius: 50px;
+            background: #f8fafc;
+            font-size: 0.9rem;
+            color: #1e293b;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .search-input:focus {
+            border-color: #00d4aa;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+        }
+        .search-input::placeholder {
+            color: #94a3b8;
+        }
+        .search-icon {
+            position: absolute;
+            right: 14px;
+            color: #94a3b8;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+        }
+        .search-clear {
+            position: absolute;
+            left: 10px;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.2s ease;
+        }
+        .search-clear:hover {
+            background: #cbd5e1;
+            color: #475569;
+        }
+        .search-clear.visible {
+            display: flex;
+        }
+
         /* Event List Section */
         .event-list-container {
             padding: 1rem;
@@ -659,6 +719,24 @@
                 <span id="reset-text">איפוס</span>
             </button>
         </div>
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-wrapper">
+                <span class="search-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </svg>
+                </span>
+                <input type="text" id="search-input" class="search-input" placeholder="חפש אירוע, עיר או תיאור..." autocomplete="off">
+                <button id="search-clear" class="search-clear" onclick="clearSearch()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"></path>
+                        <path d="m6 6 12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
         <div class="filter-row">
             <div id="date-filter-label" class="filter-label">מתי</div>
             <div class="filter-bar" id="date-filters"></div>
@@ -704,6 +782,7 @@
                 filterTitle: 'סינון אירועים',
                 resetFilters: 'איפוס',
                 filterCategory: 'קטגוריה',
+                searchPlaceholder: 'חפש אירוע, עיר או תיאור...',
                 showMap: 'הצג מפה',
                 hideMap: 'הסתר מפה',
                 shareWhatsApp: 'שתף בוואטסאפ',
@@ -792,6 +871,7 @@
                 filterTitle: 'Filter Events',
                 resetFilters: 'Reset',
                 filterCategory: 'Category',
+                searchPlaceholder: 'Search event, city or description...',
                 showMap: 'Show Map',
                 hideMap: 'Hide Map',
                 shareWhatsApp: 'Share on WhatsApp',
@@ -901,6 +981,7 @@
             document.getElementById('region-filter-label').textContent = t('filterRegion');
             document.getElementById('city-filter-label').textContent = t('filterCity');
             document.getElementById('type-filter-label').textContent = t('filterCategory');
+            document.getElementById('search-input').placeholder = t('searchPlaceholder');
             if (typeof allEvents !== 'undefined') updateEventCounter(allEvents.length);
             buildFilters();
             applyFilter();
@@ -911,6 +992,8 @@
         let activeCityFilter = 'all';
         let activeDateFilter = 'all';
         let activeRegionFilter = 'all';
+        let searchQuery = '';
+        let searchDebounceTimer = null;
 
         // Favorite categories - persisted in localStorage
         let favoriteCategories = JSON.parse(localStorage.getItem('freeil-fav-categories') || '[]');
@@ -942,6 +1025,58 @@
             btn.classList.add('pop');
         }
 
+        // --- Search functionality with debounce ---
+        function normalizeSearchText(text) {
+            if (!text) return '';
+            return text.toLowerCase().trim();
+        }
+
+        function matchesSearch(event, query) {
+            if (!query) return true;
+            const normalizedQuery = normalizeSearchText(query);
+            const title = normalizeSearchText(event.title || '');
+            const description = normalizeSearchText(event.description || '');
+            const city = normalizeSearchText(event.city || '');
+            const cityLabel = normalizeSearchText(getCityLabel(event.city) || '');
+
+            return title.includes(normalizedQuery) ||
+                   description.includes(normalizedQuery) ||
+                   city.includes(normalizedQuery) ||
+                   cityLabel.includes(normalizedQuery);
+        }
+
+        function handleSearchInput(e) {
+            const value = e.target.value;
+            const clearBtn = document.getElementById('search-clear');
+
+            // Show/hide clear button
+            clearBtn.classList.toggle('visible', value.length > 0);
+
+            // Debounce: wait 300ms after user stops typing
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                searchQuery = value.trim();
+                applyFilter();
+            }, 300);
+        }
+
+        function clearSearch() {
+            const searchInput = document.getElementById('search-input');
+            const clearBtn = document.getElementById('search-clear');
+            searchInput.value = '';
+            clearBtn.classList.remove('visible');
+            searchQuery = '';
+            applyFilter();
+            searchInput.focus();
+        }
+
+        // Initialize search input listener
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearchInput);
+            }
+        });
 
         function toggleFavoriteCategory(type) {
             const index = favoriteCategories.indexOf(type);
@@ -1357,13 +1492,19 @@
             activeRegionFilter = 'all';
             activeCityFilter = 'all';
             activeTypeFilter = 'all';
+            // Also clear search
+            searchQuery = '';
+            const searchInput = document.getElementById('search-input');
+            const clearBtn = document.getElementById('search-clear');
+            if (searchInput) searchInput.value = '';
+            if (clearBtn) clearBtn.classList.remove('visible');
             buildCityFilters();
             applyFilter();
         }
 
         function updateResetButton() {
             const resetBtn = document.getElementById('reset-filters');
-            const isFiltered = activeDateFilter !== 'all' || activeRegionFilter !== 'all' || activeCityFilter !== 'all' || activeTypeFilter !== 'all';
+            const isFiltered = activeDateFilter !== 'all' || activeRegionFilter !== 'all' || activeCityFilter !== 'all' || activeTypeFilter !== 'all' || searchQuery !== '';
             resetBtn.classList.toggle('visible', isFiltered);
         }
 
@@ -1402,6 +1543,10 @@
             }
             if (activeTypeFilter !== 'all') {
                 filtered = filtered.filter(e => e.event_type === activeTypeFilter);
+            }
+            // Apply search filter
+            if (searchQuery) {
+                filtered = filtered.filter(e => matchesSearch(e, searchQuery));
             }
             renderEvents(filtered);
         }
