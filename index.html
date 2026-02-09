@@ -387,10 +387,15 @@
             border: 1px solid #e2e8f0;
             border-radius: 50px;
             background: #f8fafc;
-            font-size: 0.9rem;
+            font-size: 16px; /* Prevents iOS auto-zoom on focus */
             color: #1e293b;
             outline: none;
             transition: all 0.2s ease;
+        }
+        @media (min-width: 768px) {
+            .search-input {
+                font-size: 0.9rem;
+            }
         }
         .search-input:focus {
             border-color: #00d4aa;
