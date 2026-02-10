@@ -1201,12 +1201,32 @@
             return eventDateInIsrael >= todayInIsrael && eventDateInIsrael < endOfMonthInIsrael;
         }
 
+        // --- Smart Link Helper (Deep Linking Support) ---
+        function getSafeLink(event) {
+            // Priority: deep link > source URL
+            let url = event.url || event.link || event.source;
+
+            if (!url) return null;
+
+            // Ensure protocol exists
+            if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('//')) {
+                url = `https://${url}`;
+            }
+
+            // Handle protocol-relative URLs
+            if (url.startsWith('//')) {
+                url = `https:${url}`;
+            }
+
+            return url;
+        }
+
         // --- WhatsApp Share ---
         function shareToWhatsApp(event) {
             const title = event.title || t('noTitle');
             const date = event.date_display || event.date || '';
             const location = event.location || '';
-            const sourceUrl = event.source ? `https://${event.source}` : '';
+            const sourceUrl = getSafeLink(event) || '';
             const siteUrl = window.location.href;
 
             let message = `🎉 *${title}*\n\n`;
@@ -1258,7 +1278,7 @@
                 const typeTag = ev.event_type ? `<span class="tag tag-type">${getTypeLabel(ev.event_type)}</span>` : '';
                 const dateStr = ev.date_display || ev.date || '';
                 const hasLocation = ev.latitude && ev.longitude;
-                const hasSource = ev.source;
+                const sourceLink = getSafeLink(ev);
 
                 // Icons
                 const calendarIcon = `<svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
@@ -1288,7 +1308,7 @@
                         <div class="action-buttons">
                             <button class="action-btn whatsapp" title="${t('shareWhatsApp')}">${whatsappIcon}</button>
                             ${hasLocation ? `<button class="action-btn navigate" title="ניווט">${navigateIcon}</button>` : ''}
-                            ${hasSource ? `<button class="action-btn source" title="${ev.source}">${externalLinkIcon}</button>` : ''}
+                            ${sourceLink ? `<a href="${sourceLink}" target="_blank" rel="noopener noreferrer" class="action-btn source" title="${t('source')}" onclick="event.stopPropagation()">${externalLinkIcon}</a>` : ''}
                         </div>
                     </div>
                 `;
@@ -1311,14 +1331,6 @@
                     card.querySelector('.action-btn.navigate').addEventListener('click', (e) => {
                         e.stopPropagation();
                         navigateToLocation(ev.latitude, ev.longitude, ev.location);
-                    });
-                }
-
-                // Source click
-                if (hasSource) {
-                    card.querySelector('.action-btn.source').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        window.open(`https://${ev.source}`, '_blank');
                     });
                 }
 
