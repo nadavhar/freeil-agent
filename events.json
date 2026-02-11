@@ -4792,7 +4792,9 @@
     "title": "שוק האיכרים בקריות",
     "date": "2026-02-13",
     "date_display": "כל יום שישי 08:00-14:00",
-    "recurringDays": [5],
+    "recurringDays": [
+      5
+    ],
     "location": "מתחם הקניון, קריית ביאליק",
     "city": "Krayot",
     "latitude": 32.8333,
@@ -4806,7 +4808,9 @@
     "title": "יוגה בפארק קריית מוצקין",
     "date": "2026-02-14",
     "date_display": "כל שבת 08:00",
-    "recurringDays": [6],
+    "recurringDays": [
+      6
+    ],
     "location": "פארק העירייה, קריית מוצקין",
     "city": "Krayot",
     "latitude": 32.8375,
@@ -4833,7 +4837,9 @@
     "title": "הופעות רחוב בקניון קריון",
     "date": "2026-02-14",
     "date_display": "כל שבת 11:00-14:00",
-    "recurringDays": [6],
+    "recurringDays": [
+      6
+    ],
     "location": "קניון קריון, קריית ביאליק",
     "city": "Krayot",
     "latitude": 32.8292,
@@ -4847,7 +4853,9 @@
     "title": "פעילות ילדים בספריית קריית אתא",
     "date": "2026-02-18",
     "date_display": "כל רביעי 16:30",
-    "recurringDays": [3],
+    "recurringDays": [
+      3
+    ],
     "location": "הספרייה העירונית, קריית אתא",
     "city": "Krayot",
     "latitude": 32.8,
@@ -4861,7 +4869,9 @@
     "title": "ריצה קהילתית בקריות",
     "date": "2026-02-15",
     "date_display": "כל ראשון 07:00",
-    "recurringDays": [0],
+    "recurringDays": [
+      0
+    ],
     "location": "פארק הזיכרון, קריית מוצקין",
     "city": "Krayot",
     "latitude": 32.835,
@@ -4875,7 +4885,9 @@
     "title": "סדנת אמנות לילדים - בית יד לבנים",
     "date": "2026-02-17",
     "date_display": "כל שלישי 17:00",
-    "recurringDays": [2],
+    "recurringDays": [
+      2
+    ],
     "location": "בית יד לבנים, קריית ביאליק",
     "city": "Krayot",
     "latitude": 32.8317,
@@ -4902,7 +4914,9 @@
     "title": "יוגה בחוף אשדוד",
     "date": "2026-02-14",
     "date_display": "כל שבת 07:30",
-    "recurringDays": [6],
+    "recurringDays": [
+      6
+    ],
     "location": "חוף לידו, אשדוד",
     "city": "Ashdod",
     "latitude": 31.8044,
@@ -4916,7 +4930,9 @@
     "title": "סיור בנמל אשדוד",
     "date": "2026-02-15",
     "date_display": "כל ראשון 10:00",
-    "recurringDays": [0],
+    "recurringDays": [
+      0
+    ],
     "location": "נמל אשדוד",
     "city": "Ashdod",
     "latitude": 31.8289,
@@ -4930,7 +4946,9 @@
     "title": "שוק איכרים אשדוד",
     "date": "2026-02-13",
     "date_display": "כל שישי 07:00-14:00",
-    "recurringDays": [5],
+    "recurringDays": [
+      5
+    ],
     "location": "רובע ו', אשדוד",
     "city": "Ashdod",
     "latitude": 31.7922,
@@ -4944,7 +4962,9 @@
     "title": "מוזיאון אשדוד לאמנות - כניסה חופשית",
     "date": "2026-02-14",
     "date_display": "כל שבת 10:00-14:00",
-    "recurringDays": [6],
+    "recurringDays": [
+      6
+    ],
     "location": "מוזיאון אשדוד, שדרות הציונות",
     "city": "Ashdod",
     "latitude": 31.8019,
@@ -4971,7 +4991,9 @@
     "title": "פעילות ילדים בספריית אשדוד",
     "date": "2026-02-18",
     "date_display": "כל רביעי 17:00",
-    "recurringDays": [3],
+    "recurringDays": [
+      3
+    ],
     "location": "הספרייה העירונית, אשדוד",
     "city": "Ashdod",
     "latitude": 31.8042,
@@ -4985,7 +5007,9 @@
     "title": "ריצה קהילתית על הטיילת",
     "date": "2026-02-15",
     "date_display": "כל ראשון 06:30",
-    "recurringDays": [0],
+    "recurringDays": [
+      0
+    ],
     "location": "טיילת חוף אשדוד",
     "city": "Ashdod",
     "latitude": 31.8011,
