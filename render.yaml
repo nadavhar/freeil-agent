@@ -1,0 +1,12 @@
+services:
+  - type: cron
+    name: freeil-daily-scan
+    runtime: python
+    schedule: "0 6 * * *"   # 06:00 UTC = 08:00 Israel time
+    buildCommand: pip install -r requirements.txt
+    startCommand: python render_scan.py
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false          # Set manually in Render dashboard
+      - key: GITHUB_TOKEN
+        sync: false          # Set manually in Render dashboard
