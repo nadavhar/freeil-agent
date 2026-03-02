@@ -83,7 +83,7 @@ Return a JSON array where each event has these exact fields:
 - event_type: one of {types_list}
 - description: brief description in Hebrew (1-2 sentences)
 - is_free: true
-- source: website where you found the event
+- source: full URL of the specific event page (e.g. https://site.com/events/event-name), not just the homepage domain
 
 Return ONLY a valid JSON array. No markdown fences, no extra text."""
 
