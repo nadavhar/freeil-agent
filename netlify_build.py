@@ -41,7 +41,7 @@ def push_to_github(token, sha, total):
             "Content-Type": "application/json"}
     content = base64.b64encode(EVENTS_FILE.read_bytes()).decode()
     payload = {
-        "message": f"Auto-scan: update free events (total: {total}) [skip netlify]",
+        "message": f"Auto-scan: update free events (total: {total})",
         "content": content,
         "sha": sha,
         "committer": {"name": "netlify-build-bot", "email": "bot@freeil.co.il"},
