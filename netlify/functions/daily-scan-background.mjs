@@ -1,4 +1,4 @@
-const Anthropic = require("@anthropic-ai/sdk");
+import Anthropic from "@anthropic-ai/sdk";
 
 const REPO = "nadavhar/freeil-agent";
 const CITIES = [
@@ -141,7 +141,7 @@ Return ONLY a valid JSON array. No markdown fences.`;
   return [];
 }
 
-exports.handler = async () => {
+export const handler = async () => {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   const ghToken = process.env.GITHUB_TOKEN;
   if (!apiKey || !ghToken) {
