@@ -1,8 +1,3 @@
 [build]
+  command = "[ -n \"$ANTHROPIC_API_KEY\" ] && pip3 install -q requests beautifulsoup4 anthropic && python3 netlify_build.py || echo 'Skipping scan (no API key)'"
   publish = "."
-
-[functions]
-  node_bundler = "esbuild"
-
-[functions."daily-scan-background"]
-  schedule = "0 6 * * *"
