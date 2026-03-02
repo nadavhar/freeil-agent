@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">FreeIL — אירועים חינם בישראל | קונצרטים, סיורים, סדנאות בחינם</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="מצאו אירועים חינם בישראל - קונצרטים, פסטיבלים, סיורים, סדנאות, תערוכות ועוד בתל אביב, ירושלים, חיפה, באר שבע ואילת. עודכן יומית!">
+    <meta name="keywords" content="אירועים חינם, אירועים בחינם, אירועים חינם תל אביב, אירועים חינם ירושלים, אירועים חינם חיפה, קונצרטים בחינם, פסטיבלים חינם, סיורים חינם, free events israel, free events tel aviv">
+    <meta name="author" content="FreeIL">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="https://freeil.co.il/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://freeil.co.il/">
+    <meta property="og:title" content="FreeIL — אירועים חינם בישראל">
+    <meta property="og:description" content="מצאו מאות אירועים חינם בכל הארץ - קונצרטים, פסטיבלים, סיורים, סדנאות, אוכל, טבע ועוד. עודכן יומית!">
+    <meta property="og:image" content="https://freeil.co.il/og-image.png">
+    <meta property="og:locale" content="he_IL">
+    <meta property="og:site_name" content="FreeIL">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://freeil.co.il/">
+    <meta name="twitter:title" content="FreeIL — אירועים חינם בישראל">
+    <meta name="twitter:description" content="מצאו מאות אירועים חינם בכל הארץ - קונצרטים, פסטיבלים, סיורים, סדנאות ועוד!">
+    <meta name="twitter:image" content="https://freeil.co.il/og-image.png">
+
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-title" content="FreeIL">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="application-name" content="FreeIL">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Structured Data - Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "FreeIL",
+      "alternateName": "אירועים חינם בישראל",
+      "url": "https://freeil.co.il/",
+      "description": "מנוע חיפוש לאירועים חינם בישראל - קונצרטים, פסטיבלים, סיורים, סדנאות ועוד",
+      "inLanguage": ["he", "en"],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://freeil.co.il/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Structured Data - Local Business -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "FreeIL",
+      "description": "אפליקציה למציאת אירועים חינם בישראל",
+      "url": "https://freeil.co.il/",
+      "applicationCategory": "Entertainment",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "ILS"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "150"
+      }
+    }
+    </script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5T4BPXX5J5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5T4BPXX5J5');
+    </script>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+
+    <style>
+        /* Reset & prevent horizontal scroll */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+            width: 100%;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #1a1a2e;
+            padding-top: 64px; /* Space for sticky header */
+        }
+
+        /* Header - Modern Glassmorphism */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.875rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        header h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+        header h1 span {
+            color: #00d4aa;
+        }
+        .event-counter {
+            background: rgba(0, 212, 170, 0.12);
+            color: #00d4aa;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(0, 212, 170, 0.2);
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #lang-toggle {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0 14px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            touch-action: manipulation;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        #lang-toggle:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+        #lang-toggle svg {
+            flex-shrink: 0;
+        }
+        #lang-text {
+            font-size: 0.8rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 1.25rem 1rem;
+            text-align: center;
+        }
+        .hero-tagline {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Filters Section - Sticky Control Bar */
+        .filters-container {
+            position: sticky;
+            top: 64px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 100vw;
+        }
+        .filter-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .filter-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .filter-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .live-counter {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            background: #ecfdf5;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #059669;
+            transition: transform 0.2s ease;
+        }
+        .live-counter.pulse {
+            animation: counterPulse 0.3s ease;
+        }
+        @keyframes counterPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+        .reset-filters {
+            display: none;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 10px;
+            background: #fef2f2;
+            border: none;
+            border-radius: 16px;
+            color: #dc2626;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .reset-filters.visible {
+            display: inline-flex;
+        }
+        .reset-filters:hover {
+            background: #fee2e2;
+        }
+        .filter-row {
+            position: relative;
+            margin-bottom: 0.4rem;
+            padding: 0 1rem;
+        }
+        .filter-row:last-child { margin-bottom: 0; }
+        .filter-label {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            margin: 0 -1rem;
+            padding: 2px 1rem;
+        }
+        .filter-bar::-webkit-scrollbar {
+            display: none;
+        }
+        .filter-row::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 24px;
+            background: linear-gradient(to right, rgba(255,255,255,0.95), transparent);
+            pointer-events: none;
+        }
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            padding: 8px 14px;
+            border-radius: 24px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .filter-chip:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        .filter-chip.active {
+            background: #00d4aa;
+            color: white;
+            border-color: #00d4aa;
+            transform: scale(1.02);
+        }
+        .filter-chip .chip-icon {
+            font-size: 0.9rem;
+            line-height: 1;
+        }
+        .filter-chip .fav-star {
+            font-size: 0.75rem;
+            margin-right: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 0.4;
+        }
+        .filter-chip .fav-star:hover {
+            transform: scale(1.2);
+            opacity: 1;
+        }
+        .filter-chip .fav-star.active {
+            color: #f59e0b;
+            opacity: 1;
+        }
+        .filter-chip.favorited {
+            border-color: #fbbf24;
+            background: #fffbeb;
+        }
+        .filter-chip.favorited.active {
+            background: #00d4aa;
+            border-color: #00d4aa;
+        }
+        .filter-chip.date-chip.active {
+            background: #0f172a;
+            border-color: #0f172a;
+        }
+        .filter-chip.region-chip.active {
+            background: #7c3aed;
+            border-color: #7c3aed;
+        }
+        .filter-chip.city-chip.active {
+            background: #0369a1;
+            border-color: #0369a1;
+        }
+
+        /* Search Bar */
+        .search-container {
+            padding: 0 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 44px 12px 44px;
+            border: 1px solid #e2e8f0;
+            border-radius: 50px;
+            background: #f8fafc;
+            font-size: 16px; /* Prevents iOS auto-zoom on focus */
+            color: #1e293b;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        @media (min-width: 768px) {
+            .search-input {
+                font-size: 0.9rem;
+            }
+        }
+        .search-input:focus {
+            border-color: #00d4aa;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+        }
+        .search-input::placeholder {
+            color: #94a3b8;
+        }
+        .search-icon {
+            position: absolute;
+            right: 14px;
+            color: #94a3b8;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+        }
+        .search-clear {
+            position: absolute;
+            left: 10px;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.2s ease;
+        }
+        .search-clear:hover {
+            background: #cbd5e1;
+            color: #475569;
+        }
+        .search-clear.visible {
+            display: flex;
+        }
+
+        /* Event List Section */
+        .event-list-container {
+            padding: 1rem;
+            background: #fff;
+            width: 100%;
+            max-width: 100vw;
+        }
+        /* Event Card - Modern Clean Design */
+        .event-card {
+            position: relative;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .event-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+        }
+
+        /* Card Header - Tags above title */
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 0.6rem;
+        }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .tag-type {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+        .tag-city {
+            background: #f0f9ff;
+            color: #0369a1;
+        }
+
+        /* Card Title Row */
+        .card-title-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 0.75rem;
+        }
+        .event-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin: 0;
+            color: #1e293b;
+            line-height: 1.4;
+            flex: 1;
+        }
+        .badge-free {
+            background: #ecfdf5;
+            color: #059669;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* Card Meta - Icon based */
+        .card-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 0.75rem;
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            opacity: 0.7;
+        }
+
+        /* Card Description */
+        .card-desc {
+            font-size: 0.85rem;
+            color: #475569;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        /* Card Footer - Action Bar */
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 0.875rem;
+            margin-top: 0.875rem;
+            border-top: 1px solid #f1f5f9;
+        }
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+        }
+        .action-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+        .action-btn.whatsapp {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        .action-btn.whatsapp:hover {
+            background: #25D366;
+            color: white;
+        }
+        .action-btn.navigate {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+        .action-btn.navigate:hover {
+            background: #3b82f6;
+            color: white;
+        }
+        .action-btn.source {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .action-btn.source:hover {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        /* Favorite Heart Button - Bottom Left of Card */
+        .favorite-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #fef2f2;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #fca5a5;
+            transition: all 0.2s ease;
+        }
+        .favorite-btn:hover {
+            background: #fee2e2;
+            transform: scale(1.05);
+        }
+        .favorite-btn.active {
+            color: #ef4444;
+            background: #fee2e2;
+        }
+        .favorite-btn.pop {
+            animation: heartPop 0.3s ease;
+        }
+        @keyframes heartPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        #loading {
+            text-align: center;
+            padding: 2rem;
+            color: #888;
+        }
+
+        /* Desktop enhancements */
+        @media (min-width: 768px) {
+            body {
+                padding-top: 68px; /* Larger header on desktop */
+            }
+            .header-inner {
+                padding: 0.9rem 2rem;
+            }
+            header h1 { font-size: 1.8rem; }
+            .event-counter {
+                padding: 7px 16px;
+                font-size: 0.85rem;
+            }
+            #lang-toggle {
+                padding: 0 16px;
+                height: 40px;
+            }
+            .filters-container {
+                padding: 0.875rem 0;
+                top: 68px;
+            }
+            .filter-header { padding: 0 2rem; }
+            .filter-row {
+                margin-bottom: 0.5rem;
+            }
+            .filter-row::after {
+                display: none;
+            }
+            .filter-bar {
+                flex-wrap: wrap;
+                overflow-x: visible;
+                padding: 2px 2rem;
+            }
+            .filter-chip {
+                padding: 8px 16px;
+                font-size: 0.82rem;
+            }
+            .event-list-container { padding: 1rem 2rem; }
+            .event-card {
+                padding: 1.5rem;
+            }
+            .event-card h3 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="header-logo">
+                <h1>Free<span>IL</span></h1>
+                <div id="event-counter" class="event-counter">0 אירועים</div>
+            </div>
+            <div class="header-actions">
+                <button id="lang-toggle" onclick="setLanguage(currentLang === 'he' ? 'en' : 'he')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 6px;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                    <span id="lang-text">EN</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <p id="tagline" class="hero-tagline">אירועים חינם בתל אביב, ירושלים, חיפה, באר שבע ועוד</p>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filters-container">
+        <div class="filter-header">
+            <div class="filter-header-left">
+                <span id="filter-title" class="filter-title">סינון</span>
+                <span id="live-counter" class="live-counter">0 אירועים</span>
+            </div>
+            <button id="reset-filters" class="reset-filters" onclick="resetAllFilters()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                    <path d="M3 3v5h5"/>
+                </svg>
+                <span id="reset-text">איפוס</span>
+            </button>
+        </div>
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-wrapper">
+                <span class="search-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </svg>
+                </span>
+                <input type="text" id="search-input" class="search-input" placeholder="חפש אירוע, עיר או תיאור..." autocomplete="off">
+                <button id="search-clear" class="search-clear" onclick="clearSearch()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18"></path>
+                        <path d="m6 6 12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="filter-row">
+            <div id="date-filter-label" class="filter-label">מתי</div>
+            <div class="filter-bar" id="date-filters"></div>
+        </div>
+        <div class="filter-row">
+            <div id="region-filter-label" class="filter-label">אזור</div>
+            <div class="filter-bar" id="region-filters"></div>
+        </div>
+        <div class="filter-row">
+            <div id="city-filter-label" class="filter-label">עיר</div>
+            <div class="filter-bar" id="city-filters"></div>
+        </div>
+        <div class="filter-row">
+            <div id="type-filter-label" class="filter-label">קטגוריה</div>
+            <div class="filter-bar" id="type-filters"></div>
+        </div>
+    </div>
+
+    <!-- Event List Section -->
+    <div class="event-list-container">
+        <div id="event-list"><div id="loading"></div></div>
+    </div>
+
+    <script>
+        // --- Translations ---
+        const translations = {
+            he: {
+                pageTitle: 'FreeIL — אירועים חינם בישראל',
+                tagline: 'אירועים חינם בתל אביב, ירושלים, חיפה, באר שבע ועוד',
+                headerBadge: 'חינם | כניסה חופשית | Free',
+                filterDate: 'מתי',
+                filterRegion: 'אזור',
+                filterCity: 'עיר',
+                filterType: 'סוג אירוע',
+                filterAll: 'הכל',
+                regionNorth: 'צפון',
+                regionCenter: 'מרכז',
+                regionSouth: 'דרום',
+                regionJerusalem: 'ירושלים והסביבה',
+                filterToday: 'היום',
+                filterWeek: 'השבוע',
+                filterMonth: 'החודש',
+                filterTitle: 'סינון אירועים',
+                resetFilters: 'איפוס',
+                filterCategory: 'קטגוריה',
+                searchPlaceholder: 'חפש אירוע, עיר או תיאור...',
+                showMap: 'הצג מפה',
+                hideMap: 'הסתר מפה',
+                shareWhatsApp: 'שתף בוואטסאפ',
+                foundOnFreeIL: 'מצאתי ב-FreeIL:',
+                loading: 'טוען אירועים חינם...',
+                statsFormat: '{count} אירועים חינם',
+                eventCounter: '{count} אירועים',
+                noResults: 'לא נמצאו אירועים.',
+                free: 'חינם',
+                freePopup: 'חינם / Free',
+                source: 'מקור',
+                noTitle: 'ללא שם',
+                errorLoad: 'לא ניתן לטעון את events.json.',
+                errorHint: 'הריצו python main.py --demo כדי ליצור אותו.',
+                cities: {
+                    'Tel Aviv': 'תל אביב',
+                    'Jerusalem': 'ירושלים',
+                    'Haifa': 'חיפה',
+                    'Beer Sheva': 'באר שבע',
+                    'Eilat': 'אילת',
+                    'Tiberias': 'טבריה',
+                    'Nazareth': 'נצרת',
+                    'Safed': 'צפת',
+                    'Akko': 'עכו',
+                    'Petah Tikva': 'פתח תקווה',
+                    'Rishon LeZion': 'ראשון לציון',
+                    'Holon': 'חולון',
+                    'Bat Yam': 'בת ים',
+                    'Herzliya': 'הרצליה',
+                    'Hod HaSharon': 'הוד השרון',
+                    'Kfar Saba': 'כפר סבא',
+                    'Rishon LeZion': 'ראשון לציון',
+                    'Krayot': 'קריות',
+                    'Ashdod': 'אשדוד',
+                    'Other': 'אחר',
+                },
+                types: {
+                    concert: 'קונצרטים',
+                    festival: 'פסטיבלים',
+                    pride: 'גאווה',
+                    market: 'שווקים',
+                    exhibition: 'תערוכות',
+                    tour: 'סיורים',
+                    workshop: 'סדנאות',
+                    sport: 'ספורט',
+                    community: 'קהילה',
+                    culture: 'תרבות',
+                    food: 'אוכל',
+                    nature: 'טבע',
+                    nightlife: 'חיי לילה',
+                    family: 'משפחה',
+                    museum: 'מוזיאונים',
+                    lecture: 'הרצאות',
+                    yoga: 'יוגה',
+                    art: 'אמנות',
+                    theater: 'תיאטרון',
+                    dance: 'ריקודים',
+                    film: 'קולנוע',
+                    comedy: 'סטנדאפ',
+                    kids: 'ילדים',
+                    outdoor: 'פעילות חוץ',
+                    wellness: 'בריאות',
+                    tech: 'טכנולוגיה',
+                    photography: 'צילום',
+                    meditation: 'מדיטציה',
+                    beach: 'חוף',
+                    volunteering: 'התנדבות',
+                    party: 'מסיבות',
+                    other: 'אחר',
+                }
+            },
+            en: {
+                pageTitle: 'FreeIL — Free Events in Israel',
+                tagline: 'Free events in Tel Aviv, Jerusalem, Haifa, Beer Sheva & more',
+                headerBadge: 'Free | No Charge | חינם',
+                filterDate: 'When',
+                filterRegion: 'Region',
+                filterCity: 'City',
+                filterType: 'Event Type',
+                filterAll: 'All',
+                regionNorth: 'North',
+                regionCenter: 'Center',
+                regionSouth: 'South',
+                regionJerusalem: 'Jerusalem Area',
+                filterToday: 'Today',
+                filterWeek: 'This Week',
+                filterMonth: 'This Month',
+                filterTitle: 'Filter Events',
+                resetFilters: 'Reset',
+                filterCategory: 'Category',
+                searchPlaceholder: 'Search event, city or description...',
+                showMap: 'Show Map',
+                hideMap: 'Hide Map',
+                shareWhatsApp: 'Share on WhatsApp',
+                foundOnFreeIL: 'Found on FreeIL:',
+                loading: 'Loading free events...',
+                statsFormat: '{count} free events',
+                eventCounter: '{count} events',
+                noResults: 'No events found.',
+                free: 'Free',
+                freePopup: 'Free / חינם',
+                source: 'Source',
+                noTitle: 'Untitled',
+                errorLoad: 'Could not load events.json.',
+                errorHint: 'Run python main.py --demo to create it.',
+                cities: {
+                    'Tel Aviv': 'Tel Aviv',
+                    'Jerusalem': 'Jerusalem',
+                    'Haifa': 'Haifa',
+                    'Beer Sheva': 'Beer Sheva',
+                    'Eilat': 'Eilat',
+                    'Tiberias': 'Tiberias',
+                    'Nazareth': 'Nazareth',
+                    'Safed': 'Safed',
+                    'Akko': 'Akko',
+                    'Petah Tikva': 'Petah Tikva',
+                    'Rishon LeZion': 'Rishon LeZion',
+                    'Holon': 'Holon',
+                    'Bat Yam': 'Bat Yam',
+                    'Herzliya': 'Herzliya',
+                    'Hod HaSharon': 'Hod HaSharon',
+                    'Kfar Saba': 'Kfar Saba',
+                    'Rishon LeZion': 'Rishon LeZion',
+                    'Krayot': 'Krayot',
+                    'Ashdod': 'Ashdod',
+                    'Other': 'Other',
+                },
+                types: {
+                    concert: 'Concerts',
+                    festival: 'Festivals',
+                    pride: 'Pride',
+                    market: 'Markets',
+                    exhibition: 'Exhibitions',
+                    tour: 'Tours',
+                    workshop: 'Workshops',
+                    sport: 'Sports',
+                    community: 'Community',
+                    culture: 'Culture',
+                    food: 'Food',
+                    nature: 'Nature',
+                    nightlife: 'Nightlife',
+                    family: 'Family',
+                    museum: 'Museums',
+                    lecture: 'Lectures',
+                    yoga: 'Yoga',
+                    art: 'Art',
+                    theater: 'Theater',
+                    dance: 'Dance',
+                    film: 'Film',
+                    comedy: 'Comedy',
+                    kids: 'Kids',
+                    outdoor: 'Outdoor',
+                    wellness: 'Wellness',
+                    tech: 'Tech',
+                    photography: 'Photography',
+                    meditation: 'Meditation',
+                    beach: 'Beach',
+                    volunteering: 'Volunteering',
+                    party: 'Parties',
+                    other: 'Other',
+                }
+            }
+        };
+
+        // --- Language state & helpers ---
+        let currentLang = localStorage.getItem('freeil-lang') || 'he';
+
+        function t(key) {
+            return translations[currentLang][key] || key;
+        }
+
+        function getCityLabel(city) {
+            return translations[currentLang].cities[city] || city;
+        }
+
+        function getTypeLabel(type) {
+            return translations[currentLang].types[type] || type;
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('freeil-lang', lang);
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+            updateUI();
+        }
+
+        function updateEventCounter(count) {
+            document.getElementById('event-counter').textContent =
+                t('eventCounter').replace('{count}', count);
+        }
+
+        function updateUI() {
+            document.title = t('pageTitle');
+            document.getElementById('tagline').textContent = t('tagline');
+            document.getElementById('lang-text').textContent = currentLang === 'he' ? 'EN' : 'עב';
+            document.getElementById('filter-title').textContent = t('filterTitle');
+            document.getElementById('reset-text').textContent = t('resetFilters');
+            document.getElementById('date-filter-label').textContent = t('filterDate');
+            document.getElementById('region-filter-label').textContent = t('filterRegion');
+            document.getElementById('city-filter-label').textContent = t('filterCity');
+            document.getElementById('type-filter-label').textContent = t('filterCategory');
+            document.getElementById('search-input').placeholder = t('searchPlaceholder');
+            if (typeof allEvents !== 'undefined') updateEventCounter(allEvents.length);
+            buildFilters();
+            applyFilter();
+        }
+
+        let allEvents = [];
+        let activeTypeFilter = 'all';
+        let activeCityFilter = 'all';
+        let activeDateFilter = 'all';
+        let activeRegionFilter = 'all';
+        let searchQuery = '';
+        let searchDebounceTimer = null;
+
+        // Favorite categories - persisted in localStorage
+        let favoriteCategories = JSON.parse(localStorage.getItem('freeil-fav-categories') || '[]');
+
+        // User actions on events (favorites, votes) - persisted in localStorage
+        function getUserActions(eventId) {
+            const key = `freeil_actions_${eventId}`;
+            return JSON.parse(localStorage.getItem(key) || '{"favorite":false,"vote":null}');
+        }
+
+        function setUserAction(eventId, action, value) {
+            const key = `freeil_actions_${eventId}`;
+            const actions = getUserActions(eventId);
+            actions[action] = value;
+            localStorage.setItem(key, JSON.stringify(actions));
+        }
+
+        function toggleFavorite(eventId, btn) {
+            const actions = getUserActions(eventId);
+            const newValue = !actions.favorite;
+            setUserAction(eventId, 'favorite', newValue);
+
+            btn.classList.toggle('active', newValue);
+            btn.innerHTML = newValue ? '♥' : '♡';
+
+            // Pop animation
+            btn.classList.remove('pop');
+            void btn.offsetWidth;
+            btn.classList.add('pop');
+        }
+
+        // --- Search functionality with debounce ---
+        function normalizeSearchText(text) {
+            if (!text) return '';
+            return text.toLowerCase().trim();
+        }
+
+        function matchesSearch(event, query) {
+            if (!query) return true;
+            const normalizedQuery = normalizeSearchText(query);
+            const title = normalizeSearchText(event.title || '');
+            const description = normalizeSearchText(event.description || '');
+            const city = normalizeSearchText(event.city || '');
+            const cityLabel = normalizeSearchText(getCityLabel(event.city) || '');
+
+            return title.includes(normalizedQuery) ||
+                   description.includes(normalizedQuery) ||
+                   city.includes(normalizedQuery) ||
+                   cityLabel.includes(normalizedQuery);
+        }
+
+        function handleSearchInput(e) {
+            const value = e.target.value;
+            const clearBtn = document.getElementById('search-clear');
+
+            // Show/hide clear button
+            clearBtn.classList.toggle('visible', value.length > 0);
+
+            // Debounce: wait 300ms after user stops typing
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                searchQuery = value.trim();
+                applyFilter();
+            }, 300);
+        }
+
+        function clearSearch() {
+            const searchInput = document.getElementById('search-input');
+            const clearBtn = document.getElementById('search-clear');
+            searchInput.value = '';
+            clearBtn.classList.remove('visible');
+            searchQuery = '';
+            applyFilter();
+            searchInput.focus();
+        }
+
+        // Initialize search input listener
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearchInput);
+            }
+        });
+
+        function toggleFavoriteCategory(type) {
+            const index = favoriteCategories.indexOf(type);
+            if (index > -1) {
+                favoriteCategories.splice(index, 1);
+            } else {
+                favoriteCategories.push(type);
+            }
+            localStorage.setItem('freeil-fav-categories', JSON.stringify(favoriteCategories));
+            buildCategoryFilters();
+        }
+
+        function getSortedCategories(types) {
+            // Sort: favorites first (in order they were added), then non-favorites
+            const favorites = types.filter(t => favoriteCategories.includes(t));
+            const nonFavorites = types.filter(t => !favoriteCategories.includes(t));
+            // Sort favorites by their order in favoriteCategories array
+            favorites.sort((a, b) => favoriteCategories.indexOf(a) - favoriteCategories.indexOf(b));
+            return [...favorites, ...nonFavorites];
+        }
+
+        // Region to cities mapping
+        const regionCities = {
+            north: ['Haifa', 'Krayot', 'Tiberias', 'Nazareth', 'Safed', 'Akko'],
+            center: ['Tel Aviv', 'Petah Tikva', 'Rishon LeZion', 'Holon', 'Bat Yam', 'Herzliya', 'Hod HaSharon', 'Kfar Saba'],
+            south: ['Beer Sheva', 'Eilat', 'Ashdod'],
+            jerusalem: ['Jerusalem']
+        };
+
+        function getCitiesForRegion(region) {
+            if (region === 'all') return null;
+            return regionCities[region] || null;
+        }
+
+        // --- Date filter helpers (Israel Time - Asia/Jerusalem) ---
+        const ISRAEL_TZ = 'Asia/Jerusalem';
+
+        function getDateInIsrael(date = new Date()) {
+            // Format any date to YYYY-MM-DD in Israel timezone
+            return new Intl.DateTimeFormat('en-CA', {
+                timeZone: ISRAEL_TZ,
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).format(date);
+        }
+
+        function getIsraelDayOfWeek() {
+            // Get current day of week in Israel (0=Sunday, 6=Saturday)
+            const now = new Date();
+            const israelDateStr = new Intl.DateTimeFormat('en-US', {
+                timeZone: ISRAEL_TZ,
+                weekday: 'short'
+            }).format(now);
+
+            const dayMap = { 'Sun': 0, 'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thu': 4, 'Fri': 5, 'Sat': 6 };
+            return dayMap[israelDateStr] ?? -1;
+        }
+
+        function isToday(dateStr, recurringDays = null) {
+            const now = new Date();
+            const todayInIsrael = getDateInIsrael(now);
+            const israelDayOfWeek = getIsraelDayOfWeek();
+
+            // CASE A: Recurring Event (e.g., "Every Saturday")
+            if (recurringDays && Array.isArray(recurringDays) && recurringDays.length > 0) {
+                return recurringDays.includes(israelDayOfWeek);
+            }
+
+            // CASE B: Specific Date Event
+            if (!dateStr) return false;
+
+            // Get event's date in Israel Time
+            // Add T12:00:00 to avoid UTC midnight edge cases
+            const eventDate = new Date(dateStr.includes('T') ? dateStr : dateStr + 'T12:00:00');
+            const eventDateInIsrael = getDateInIsrael(eventDate);
+
+            // Strict String Comparison
+            return todayInIsrael === eventDateInIsrael;
+        }
+
+        function isThisWeek(dateStr) {
+            if (!dateStr) return false;
+
+            const now = new Date();
+            const todayInIsrael = getDateInIsrael(now);
+
+            // Event date in Israel
+            const eventDate = new Date(dateStr.includes('T') ? dateStr : dateStr + 'T12:00:00');
+            const eventDateInIsrael = getDateInIsrael(eventDate);
+
+            // Calculate end of week (7 days from today) in Israel
+            const endOfWeek = new Date(now);
+            endOfWeek.setDate(now.getDate() + 7);
+            const endOfWeekInIsrael = getDateInIsrael(endOfWeek);
+
+            // Compare: today <= event < endOfWeek
+            return eventDateInIsrael >= todayInIsrael && eventDateInIsrael < endOfWeekInIsrael;
+        }
+
+        function isThisMonth(dateStr) {
+            if (!dateStr) return false;
+
+            const now = new Date();
+            const todayInIsrael = getDateInIsrael(now);
+
+            // Event date in Israel
+            const eventDate = new Date(dateStr.includes('T') ? dateStr : dateStr + 'T12:00:00');
+            const eventDateInIsrael = getDateInIsrael(eventDate);
+
+            // Calculate end of month (30 days from today) in Israel
+            const endOfMonth = new Date(now);
+            endOfMonth.setDate(now.getDate() + 30);
+            const endOfMonthInIsrael = getDateInIsrael(endOfMonth);
+
+            // Compare: today <= event < endOfMonth
+            return eventDateInIsrael >= todayInIsrael && eventDateInIsrael < endOfMonthInIsrael;
+        }
+
+        // --- Smart Link Helper (Deep Linking Support) ---
+        function getSafeLink(event) {
+            // Priority: deep link > source URL
+            let url = event.url || event.link || event.source;
+
+            if (!url) return null;
+
+            // Ensure protocol exists
+            if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('//')) {
+                url = `https://${url}`;
+            }
+
+            // Handle protocol-relative URLs
+            if (url.startsWith('//')) {
+                url = `https:${url}`;
+            }
+
+            return url;
+        }
+
+        // --- WhatsApp Share ---
+        function shareToWhatsApp(event) {
+            const title = event.title || t('noTitle');
+            const date = event.date_display || event.date || '';
+            const location = event.location || '';
+            const sourceUrl = getSafeLink(event) || '';
+            const siteUrl = window.location.href;
+
+            let message = `🎉 *${title}*\n\n`;
+            if (date) message += `📅 ${date}\n`;
+            if (location) message += `📍 ${location}\n`;
+            message += `💰 ${t('free')}!\n\n`;
+            if (sourceUrl) message += `🔗 ${sourceUrl}\n\n`;
+            message += `${t('foundOnFreeIL')}\n${siteUrl}`;
+
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function navigateToLocation(lat, lng, locationName) {
+            // Try Waze first, falls back to Google Maps
+            const wazeUrl = `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`;
+            const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+
+            // Open Waze (most users in Israel have it)
+            window.open(wazeUrl, '_blank');
+        }
+
+        function renderEvents(events) {
+            const list = document.getElementById('event-list');
+            list.innerHTML = '';
+
+            // Update live counter with animation
+            const liveCounter = document.getElementById('live-counter');
+            liveCounter.textContent = t('statsFormat').replace('{count}', events.length);
+            liveCounter.classList.remove('pulse');
+            void liveCounter.offsetWidth; // Trigger reflow
+            liveCounter.classList.add('pulse');
+
+            if (!events.length) {
+                list.innerHTML = `<p style="padding:1rem;color:#888">${t('noResults')}</p>`;
+                return;
+            }
+
+            events.forEach((ev, i) => {
+                // Card
+                const card = document.createElement('div');
+                card.className = 'event-card';
+
+                // Generate unique event ID based on title and date
+                const eventId = btoa(encodeURIComponent((ev.title || '') + (ev.date || ''))).replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
+                const userActions = getUserActions(eventId);
+
+                const cityTag = ev.city ? `<span class="tag tag-city">${getCityLabel(ev.city)}</span>` : '';
+                const typeTag = ev.event_type ? `<span class="tag tag-type">${getTypeLabel(ev.event_type)}</span>` : '';
+                const dateStr = ev.date_display || ev.date || '';
+                const hasLocation = ev.latitude && ev.longitude;
+                const sourceLink = getSafeLink(ev);
+
+                // Icons
+                const calendarIcon = `<svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`;
+                const locationIcon = `<svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>`;
+                const whatsappIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
+                const navigateIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>`;
+                const externalLinkIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`;
+
+                // Favorite state
+                const isFavorite = userActions.favorite;
+
+                card.innerHTML = `
+                    <div class="card-tags">${typeTag}${cityTag}</div>
+                    <div class="card-title-row">
+                        <h3>${ev.title || t('noTitle')}</h3>
+                        <span class="badge-free">${t('free')}</span>
+                    </div>
+                    <div class="card-meta">
+                        <div class="meta-item">${calendarIcon}<span>${dateStr}</span></div>
+                        <div class="meta-item">${locationIcon}<span>${ev.location || ''}</span></div>
+                    </div>
+                    <div class="card-desc">${ev.description || ''}</div>
+                    <div class="card-footer">
+                        <div class="action-buttons">
+                            <button class="favorite-btn${isFavorite ? ' active' : ''}" data-event-id="${eventId}">${isFavorite ? '♥' : '♡'}</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn whatsapp" title="${t('shareWhatsApp')}">${whatsappIcon}</button>
+                            ${hasLocation ? `<button class="action-btn navigate" title="ניווט">${navigateIcon}</button>` : ''}
+                            ${sourceLink ? `<a href="${sourceLink}" target="_blank" rel="noopener noreferrer" class="action-btn source" title="${t('source')}" onclick="event.stopPropagation()">${externalLinkIcon}</a>` : ''}
+                        </div>
+                    </div>
+                `;
+
+                // Favorite button click
+                const favBtn = card.querySelector('.favorite-btn');
+                favBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleFavorite(eventId, favBtn);
+                });
+
+                // WhatsApp share click
+                card.querySelector('.action-btn.whatsapp').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    shareToWhatsApp(ev);
+                });
+
+                // Navigation click
+                if (hasLocation) {
+                    card.querySelector('.action-btn.navigate').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        navigateToLocation(ev.latitude, ev.longitude, ev.location);
+                    });
+                }
+
+                list.appendChild(card);
+            });
+
+        }
+
+        // Icons for event types
+        const typeIcons = {
+            concert: '🎵',
+            festival: '🎪',
+            pride: '🏳️‍🌈',
+            market: '🛍️',
+            exhibition: '🖼️',
+            tour: '🚶',
+            workshop: '🔧',
+            sport: '⚽',
+            community: '👥',
+            culture: '🎭',
+            food: '🍔',
+            nature: '🌿',
+            nightlife: '🌙',
+            family: '👨‍👩‍👧',
+            museum: '🏛️',
+            lecture: '📚',
+            yoga: '🧘',
+            art: '🎨',
+            theater: '🎭',
+            dance: '💃',
+            film: '🎬',
+            comedy: '😂',
+            kids: '👶',
+            outdoor: '🏕️',
+            wellness: '💆',
+            tech: '💻',
+            photography: '📷',
+            meditation: '🧘',
+            beach: '🏖️',
+            volunteering: '🤝',
+            party: '🎉',
+            other: '📌'
+        };
+
+        function buildFilters() {
+            // Date filters
+            const dateBar = document.getElementById('date-filters');
+            dateBar.innerHTML = '';
+
+            const dateOptions = [
+                { key: 'all', label: t('filterAll') },
+                { key: 'today', label: t('filterToday') },
+                { key: 'week', label: t('filterWeek') },
+                { key: 'month', label: t('filterMonth') }
+            ];
+
+            dateOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-chip date-chip' + (activeDateFilter === opt.key ? ' active' : '');
+                btn.dataset.date = opt.key;
+                btn.textContent = opt.label;
+                btn.onclick = () => { activeDateFilter = opt.key; applyFilter(); };
+                dateBar.appendChild(btn);
+            });
+
+            // Region filters
+            const regionBar = document.getElementById('region-filters');
+            regionBar.innerHTML = '';
+
+            const regionOptions = [
+                { key: 'all', label: t('filterAll') },
+                { key: 'north', label: t('regionNorth') },
+                { key: 'center', label: t('regionCenter') },
+                { key: 'jerusalem', label: t('regionJerusalem') },
+                { key: 'south', label: t('regionSouth') }
+            ];
+
+            regionOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-chip region-chip' + (activeRegionFilter === opt.key ? ' active' : '');
+                btn.dataset.region = opt.key;
+                btn.textContent = opt.label;
+                btn.onclick = () => {
+                    activeRegionFilter = opt.key;
+                    // Reset city filter when region changes
+                    activeCityFilter = 'all';
+                    buildCityFilters();
+                    applyFilter();
+                };
+                regionBar.appendChild(btn);
+            });
+
+            // City filters (depends on region)
+            buildCityFilters();
+        }
+
+        function buildCityFilters() {
+            // Get cities based on selected region
+            let cities = [...new Set(allEvents.map(e => e.city).filter(Boolean))];
+            const regionCitiesList = getCitiesForRegion(activeRegionFilter);
+            if (regionCitiesList) {
+                cities = cities.filter(c => regionCitiesList.includes(c));
+            }
+
+            const cityBar = document.getElementById('city-filters');
+            cityBar.innerHTML = '';
+
+            const allCityBtn = document.createElement('button');
+            allCityBtn.className = 'filter-chip city-chip' + (activeCityFilter === 'all' ? ' active' : '');
+            allCityBtn.dataset.city = 'all';
+            allCityBtn.innerHTML = t('filterAll');
+            allCityBtn.onclick = () => { activeCityFilter = 'all'; applyFilter(); };
+            cityBar.appendChild(allCityBtn);
+
+            cities.forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-chip city-chip' + (activeCityFilter === c ? ' active' : '');
+                btn.textContent = getCityLabel(c);
+                btn.dataset.city = c;
+                btn.onclick = () => { activeCityFilter = c; applyFilter(); };
+                cityBar.appendChild(btn);
+            });
+
+            // Type/Category filters - built separately for sorting
+            buildCategoryFilters();
+        }
+
+        function buildCategoryFilters() {
+            const types = [...new Set(allEvents.map(e => e.event_type).filter(Boolean))];
+            const sortedTypes = getSortedCategories(types);
+            const typeBar = document.getElementById('type-filters');
+            typeBar.innerHTML = '';
+
+            // "All" button (always first, no star)
+            const allTypeBtn = document.createElement('button');
+            allTypeBtn.className = 'filter-chip' + (activeTypeFilter === 'all' ? ' active' : '');
+            allTypeBtn.dataset.type = 'all';
+            allTypeBtn.innerHTML = t('filterAll');
+            allTypeBtn.onclick = () => { activeTypeFilter = 'all'; applyFilter(); };
+            typeBar.appendChild(allTypeBtn);
+
+            // Category buttons with star favorites
+            sortedTypes.forEach(type => {
+                const btn = document.createElement('button');
+                const isFavorite = favoriteCategories.includes(type);
+                const isActive = activeTypeFilter === type;
+                btn.className = 'filter-chip' + (isActive ? ' active' : '') + (isFavorite ? ' favorited' : '');
+                btn.dataset.type = type;
+
+                const icon = typeIcons[type] || '📌';
+                const starClass = isFavorite ? 'fav-star active' : 'fav-star';
+
+                btn.innerHTML = `<span class="${starClass}" data-type="${type}">★</span><span class="chip-icon">${icon}</span>${getTypeLabel(type)}`;
+
+                // Click on chip text selects filter
+                btn.onclick = (e) => {
+                    // Don't trigger filter if clicking the star
+                    if (e.target.classList.contains('fav-star')) return;
+                    activeTypeFilter = type;
+                    applyFilter();
+                };
+
+                // Star click toggles favorite
+                const star = btn.querySelector('.fav-star');
+                star.onclick = (e) => {
+                    e.stopPropagation();
+                    toggleFavoriteCategory(type);
+                };
+
+                typeBar.appendChild(btn);
+            });
+        }
+
+        function resetAllFilters() {
+            activeDateFilter = 'all';
+            activeRegionFilter = 'all';
+            activeCityFilter = 'all';
+            activeTypeFilter = 'all';
+            // Also clear search
+            searchQuery = '';
+            const searchInput = document.getElementById('search-input');
+            const clearBtn = document.getElementById('search-clear');
+            if (searchInput) searchInput.value = '';
+            if (clearBtn) clearBtn.classList.remove('visible');
+            buildCityFilters();
+            applyFilter();
+        }
+
+        function updateResetButton() {
+            const resetBtn = document.getElementById('reset-filters');
+            const isFiltered = activeDateFilter !== 'all' || activeRegionFilter !== 'all' || activeCityFilter !== 'all' || activeTypeFilter !== 'all' || searchQuery !== '';
+            resetBtn.classList.toggle('visible', isFiltered);
+        }
+
+        function applyFilter() {
+            document.querySelectorAll('#date-filters .filter-chip').forEach(b => {
+                b.classList.toggle('active', (b.dataset.date || 'all') === activeDateFilter);
+            });
+            document.querySelectorAll('#region-filters .filter-chip').forEach(b => {
+                b.classList.toggle('active', (b.dataset.region || 'all') === activeRegionFilter);
+            });
+            document.querySelectorAll('#city-filters .filter-chip').forEach(b => {
+                b.classList.toggle('active', (b.dataset.city || 'all') === activeCityFilter);
+            });
+            document.querySelectorAll('#type-filters .filter-chip').forEach(b => {
+                b.classList.toggle('active', (b.dataset.type || 'all') === activeTypeFilter);
+            });
+            updateResetButton();
+
+            let filtered = allEvents;
+            if (activeDateFilter === 'today') {
+                filtered = filtered.filter(e => isToday(e.date, e.recurringDays));
+            } else if (activeDateFilter === 'week') {
+                filtered = filtered.filter(e => isThisWeek(e.date));
+            } else if (activeDateFilter === 'month') {
+                filtered = filtered.filter(e => isThisMonth(e.date));
+            }
+            // Filter by region (if no specific city is selected)
+            if (activeRegionFilter !== 'all' && activeCityFilter === 'all') {
+                const regionCitiesList = getCitiesForRegion(activeRegionFilter);
+                if (regionCitiesList) {
+                    filtered = filtered.filter(e => regionCitiesList.includes(e.city));
+                }
+            }
+            if (activeCityFilter !== 'all') {
+                filtered = filtered.filter(e => e.city === activeCityFilter);
+            }
+            if (activeTypeFilter !== 'all') {
+                filtered = filtered.filter(e => e.event_type === activeTypeFilter);
+            }
+            // Apply search filter
+            if (searchQuery) {
+                filtered = filtered.filter(e => matchesSearch(e, searchQuery));
+            }
+            renderEvents(filtered);
+        }
+
+        // --- Initialize language ---
+        document.documentElement.lang = currentLang;
+        document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
+        document.title = t('pageTitle');
+        document.getElementById('tagline').textContent = t('tagline');
+        document.getElementById('lang-text').textContent = currentLang === 'he' ? 'EN' : 'עב';
+        document.getElementById('filter-title').textContent = t('filterTitle');
+        document.getElementById('reset-text').textContent = t('resetFilters');
+        document.getElementById('date-filter-label').textContent = t('filterDate');
+        document.getElementById('region-filter-label').textContent = t('filterRegion');
+        document.getElementById('city-filter-label').textContent = t('filterCity');
+        document.getElementById('type-filter-label').textContent = t('filterCategory');
+        document.getElementById('loading').textContent = t('loading');
+
+        // --- Load events ---
+        fetch('events.json')
+            .then(r => {
+                if (!r.ok) throw new Error('events.json not found');
+                return r.json();
+            })
+            .then(data => {
+                allEvents = data;
+                updateEventCounter(allEvents.length);
+                buildFilters();
+                renderEvents(allEvents);
+            })
+            .catch(err => {
+                document.getElementById('event-list').innerHTML = `
+                    <p style="padding:1rem;color:#c0392b">
+                        ${t('errorLoad')}<br>
+                        <code>${t('errorHint')}</code>
+                    </p>`;
+                console.error(err);
+            });
+    </script>
+
+    <!-- SEO Footer -->
+    <footer class="seo-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h2>FreeIL - אירועים חינם בישראל</h2>
+                <p>ה-AI שמוצא לכם את כל מה שחינם בישראל. 🇮🇱 קונצרטים, סיורים, תערוכות והופעות – הכל במקום אחד, בזמן אמת ובאפס שקלים. תנו לסוכן החכם שלנו למצוא לכם את הבילוי הבא.</p>
+            </div>
+            <div class="footer-section">
+                <h3>ערים פופולריות</h3>
+                <nav aria-label="ערים">
+                    <a href="#" onclick="activeCityFilter='Tel Aviv';applyFilter();return false;">אירועים חינם בתל אביב</a>
+                    <a href="#" onclick="activeCityFilter='Jerusalem';applyFilter();return false;">אירועים חינם בירושלים</a>
+                    <a href="#" onclick="activeCityFilter='Haifa';applyFilter();return false;">אירועים חינם בחיפה</a>
+                    <a href="#" onclick="activeCityFilter='Beer Sheva';applyFilter();return false;">אירועים חינם בבאר שבע</a>
+                    <a href="#" onclick="activeCityFilter='Eilat';applyFilter();return false;">אירועים חינם באילת</a>
+                </nav>
+            </div>
+            <div class="footer-section">
+                <h3>קטגוריות אירועים</h3>
+                <nav aria-label="קטגוריות">
+                    <a href="#" onclick="activeTypeFilter='concert';applyFilter();return false;">קונצרטים חינם</a>
+                    <a href="#" onclick="activeTypeFilter='festival';applyFilter();return false;">פסטיבלים חינם</a>
+                    <a href="#" onclick="activeTypeFilter='tour';applyFilter();return false;">סיורים חינם</a>
+                    <a href="#" onclick="activeTypeFilter='workshop';applyFilter();return false;">סדנאות חינם</a>
+                    <a href="#" onclick="activeTypeFilter='food';applyFilter();return false;">אירועי אוכל חינם</a>
+                    <a href="#" onclick="activeTypeFilter='nature';applyFilter();return false;">טיולים בטבע חינם</a>
+                </nav>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 FreeIL. כל הזכויות שמורות. | <span id="event-count-footer"></span></p>
+        </div>
+    </footer>
+
+    <style>
+        .seo-footer {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 2rem 1rem 1rem;
+            margin-top: 2rem;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        .footer-section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #00d4aa;
+        }
+        .footer-section h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #00d4aa;
+        }
+        .footer-section p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        .footer-section nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .footer-section nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            transition: background 0.2s;
+        }
+        .footer-section nav a:hover {
+            background: rgba(0,212,170,0.3);
+        }
+        .footer-bottom {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+        @media (min-width: 768px) {
+            .footer-content {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+            .seo-footer {
+                padding: 2rem;
+            }
+        }
+    </style>
+
+    <script>
+        // Update footer event count
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const count = document.getElementById('event-count-footer');
+                if (count && allEvents.length) {
+                    count.textContent = allEvents.length + ' אירועים חינם במאגר';
+                }
+            }, 2000);
+        });
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# robots.txt for FreeIL
+# https://freeil.co.il
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://freeil.co.il/sitemap.xml
+
+# Crawl-delay (optional, be nice to server)
+Crawl-delay: 1
