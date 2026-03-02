@@ -1,11 +1,11 @@
 # robots.txt for FreeIL
-# https://freeil.co.il
+# https://free-il.netlify.app
 
 User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://freeil.co.il/sitemap.xml
+Sitemap: https://free-il.netlify.app/sitemap.xml
 
 # Crawl-delay (optional, be nice to server)
 Crawl-delay: 1
