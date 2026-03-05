@@ -389,6 +389,61 @@
         }
         .hero-search .search-clear.visible { display: flex; }
 
+        /* Post-login welcome section */
+        .post-login-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-bottom: 1px solid rgba(0,212,170,0.15);
+            padding: 1.5rem 1.25rem;
+        }
+        .post-login-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .post-login-greeting { color: white; }
+        .post-login-greeting h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 0 0 4px;
+        }
+        .post-login-greeting h3 span { color: #00d4aa; }
+        .post-login-greeting p {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.82rem;
+            margin: 0;
+        }
+        .post-login-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .post-login-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 18px;
+            height: 40px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.15s;
+        }
+        .post-login-btn:hover { opacity: 0.85; }
+        .post-login-btn.primary { background: #00d4aa; color: #0f172a; }
+        .post-login-btn.secondary {
+            background: rgba(255,255,255,0.08);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        @media (max-width: 480px) {
+            .post-login-inner { flex-direction: column; align-items: flex-start; }
+        }
+
         /* Filters Section - Sticky Control Bar */
         .filters-container {
             position: sticky;
@@ -944,6 +999,26 @@
             <button id="search-clear" class="search-clear" onclick="clearSearch()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
+        </div>
+    </div>
+
+    <!-- Post-login welcome section (hidden until user signs in) -->
+    <div id="post-login-section" class="post-login-section" style="display:none;">
+        <div class="post-login-inner">
+            <div class="post-login-greeting">
+                <h3>שלום, <span id="post-login-name"></span></h3>
+                <p>ברוך הבא ל-FreeIL — גלה אירועים, הוסף אירועים, ושתף עם חברים</p>
+            </div>
+            <div class="post-login-actions">
+                <a href="/my-events.html#add" class="post-login-btn primary">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    הוסף אירוע
+                </a>
+                <a href="/my-events.html" class="post-login-btn secondary">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    האירועים שלי
+                </a>
+            </div>
         </div>
     </div>
 
@@ -1954,25 +2029,29 @@
             );
 
             function setAuthUI(user) {
-                const loggedOut = document.getElementById('auth-logged-out');
-                const loggedIn  = document.getElementById('auth-logged-in');
+                const loggedOut    = document.getElementById('auth-logged-out');
+                const loggedIn     = document.getElementById('auth-logged-in');
+                const postLoginSec = document.getElementById('post-login-section');
                 if (!user) {
-                    loggedOut.style.display = 'flex';
-                    loggedIn.style.display  = 'none';
+                    loggedOut.style.display    = 'flex';
+                    loggedIn.style.display     = 'none';
+                    postLoginSec.style.display = 'none';
                     return;
                 }
-                loggedOut.style.display = 'none';
-                loggedIn.style.display  = 'flex';
+                loggedOut.style.display    = 'none';
+                loggedIn.style.display     = 'flex';
+                postLoginSec.style.display = 'block';
 
-                const name    = user.user_metadata?.full_name || user.email || '';
+                const name      = user.user_metadata?.full_name || user.email || '';
                 const firstName = name.split(' ')[0] || '';
-                const initials = name.trim()
+                const initials  = name.trim()
                     ? name.trim().split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
                     : '?';
 
                 document.getElementById('user-avatar-initials').textContent = initials;
-                document.getElementById('user-name-short').textContent = firstName;
-                document.getElementById('user-dropdown-email').textContent = user.email || '';
+                document.getElementById('user-name-short').textContent      = firstName;
+                document.getElementById('user-dropdown-email').textContent  = user.email || '';
+                document.getElementById('post-login-name').textContent      = firstName;
             }
 
             // Initial session check
