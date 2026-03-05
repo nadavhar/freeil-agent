@@ -355,7 +355,7 @@
         }
         .cta-btn:hover { background: #00bfa0; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,212,170,0.4); }
 
-        /* ── Delete confirmation modal ── */
+        /* ── Shared modal overlay ── */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -376,8 +376,10 @@
             border-radius: 20px 20px 0 0;
             padding: 1.75rem 1.5rem;
             width: 100%;
-            max-width: 420px;
+            max-width: 480px;
             animation: slideUp 0.25s ease;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         @media (min-width: 480px) {
             .modal { border-radius: 20px; }
@@ -428,6 +430,68 @@
             transition: background 0.2s;
         }
         .btn-cancel:hover { background: #e2e8f0; }
+
+        /* ── Add Event modal form ── */
+        .add-modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+        .add-modal-header h3 { font-size: 1.1rem; font-weight: 800; color: #1e293b; margin: 0; }
+        .modal-close-x {
+            width: 32px; height: 32px;
+            background: #f1f5f9; border: none; border-radius: 8px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            color: #64748b; transition: all 0.15s; flex-shrink: 0;
+        }
+        .modal-close-x:hover { background: #e2e8f0; color: #1e293b; }
+
+        .add-form { display: flex; flex-direction: column; gap: 12px; }
+        .add-form .field { display: flex; flex-direction: column; gap: 5px; }
+        .add-form label { font-size: 0.78rem; font-weight: 600; color: #374151; }
+        .add-form .required { color: #ef4444; margin-right: 2px; }
+        .add-form input,
+        .add-form textarea,
+        .add-form select {
+            width: 100%;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+            font-size: 15px;
+            color: #1e293b;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            padding: 10px 12px;
+        }
+        .add-form input:focus,
+        .add-form textarea:focus,
+        .add-form select:focus {
+            border-color: #00d4aa;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0,212,170,0.12);
+        }
+        .add-form input.err,
+        .add-form textarea.err { border-color: #ef4444; }
+        .add-form textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+        .add-form .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .add-form .field-err { font-size: 0.7rem; color: #ef4444; font-weight: 500; min-height: 14px; }
+        .add-form .field-err:empty { display: none; }
+
+        .btn-submit-event {
+            width: 100%; height: 50px;
+            background: #00d4aa; color: #0f172a;
+            border: none; border-radius: 12px;
+            font-size: 0.9rem; font-weight: 800;
+            cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin-top: 4px;
+        }
+        .btn-submit-event:hover:not(:disabled) { background: #00bfa0; transform: translateY(-1px); }
+        .btn-submit-event:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; transform: none; }
+        .btn-submit-event .spinner { display: none; width: 18px; height: 18px; border: 2.5px solid rgba(15,23,42,0.3); border-top-color: #0f172a; border-radius: 50%; animation: spin 0.7s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn-submit-event.loading .btn-submit-label { display: none; }
+        .btn-submit-event.loading .spinner { display: block; }
 
         /* ── Toast notification ── */
         .toast {
@@ -626,10 +690,10 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             האירועים שלי
         </a>
-        <a href="/register.html" class="menu-nav-item">
+        <button class="menu-nav-item" onclick="closeMenu(); openAddEvent()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             הוסף אירוע חדש
-        </a>
+        </button>
     </div>
 
     <div class="side-menu-footer">
@@ -685,6 +749,77 @@
 </main>
 
 <!-- ════════════════════════════════════════════
+     ADD EVENT MODAL
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="add-event-modal" onclick="handleAddModalOverlayClick(event)">
+    <div class="modal">
+        <div class="add-modal-header">
+            <h3>➕ הוסף אירוע חדש</h3>
+            <button class="modal-close-x" onclick="closeAddEvent()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+
+        <form class="add-form" id="add-event-form" novalidate onsubmit="handleAddEventSubmit(event)">
+
+            <div class="field">
+                <label for="ae-title">שם האירוע <span class="required">*</span></label>
+                <input type="text" id="ae-title" placeholder="למשל: קונצרט חינם בפארק" maxlength="120">
+                <span class="field-err" id="ae-title-err"></span>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label for="ae-date">תאריך</label>
+                    <input type="date" id="ae-date">
+                </div>
+                <div class="field">
+                    <label for="ae-time">שעה</label>
+                    <input type="time" id="ae-time">
+                </div>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label for="ae-city">עיר</label>
+                    <input type="text" id="ae-city" placeholder="תל אביב">
+                </div>
+                <div class="field">
+                    <label for="ae-type">סוג אירוע</label>
+                    <select id="ae-type">
+                        <option value="">בחר...</option>
+                        <option value="מוזיקה">מוזיקה</option>
+                        <option value="תרבות">תרבות</option>
+                        <option value="ספורט">ספורט</option>
+                        <option value="אוכל">אוכל</option>
+                        <option value="חינוך">חינוך</option>
+                        <option value="טבע">טבע</option>
+                        <option value="קומדי">קומדי</option>
+                        <option value="אחר">אחר</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="ae-location">מיקום</label>
+                <input type="text" id="ae-location" placeholder="כתובת או שם המקום">
+            </div>
+
+            <div class="field">
+                <label for="ae-desc">תיאור</label>
+                <textarea id="ae-desc" placeholder="ספר על האירוע..." rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit-event" id="btn-submit-event">
+                <div class="spinner"></div>
+                <span class="btn-submit-label">שלח לאישור</span>
+            </button>
+
+        </form>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════
      DELETE CONFIRMATION MODAL
 ════════════════════════════════════════════ -->
 <div class="modal-overlay" id="delete-modal" onclick="handleModalOverlayClick(event)">
@@ -724,7 +859,19 @@ function closeMenu() {
     document.body.style.overflow = '';
 }
 function openAddEvent() {
-    window.location.href = '/register.html';
+    document.getElementById('add-event-form').reset();
+    document.getElementById('ae-title-err').textContent = '';
+    document.getElementById('ae-title').classList.remove('err');
+    document.getElementById('add-event-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('ae-title').focus(), 100);
+}
+function closeAddEvent() {
+    document.getElementById('add-event-modal').classList.remove('open');
+    document.body.style.overflow = '';
+}
+function handleAddModalOverlayClick(e) {
+    if (e.target === e.currentTarget) closeAddEvent();
 }
 </script>
 
@@ -931,6 +1078,55 @@ async function duplicateEvent(event) {
     events.unshift(normalizeRow(data));
     render();
     showToast('האירוע שוכפל כטיוטה ✓', 'success');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ADD EVENT FORM SUBMIT
+══════════════════════════════════════════════════════════════ */
+async function handleAddEventSubmit(e) {
+    e.preventDefault();
+
+    const title = document.getElementById('ae-title').value.trim();
+    if (!title) {
+        document.getElementById('ae-title').classList.add('err');
+        document.getElementById('ae-title-err').textContent = 'נא להזין שם לאירוע';
+        return;
+    }
+    document.getElementById('ae-title').classList.remove('err');
+    document.getElementById('ae-title-err').textContent = '';
+
+    const dateVal = document.getElementById('ae-date').value;
+    const timeVal = document.getElementById('ae-time').value;
+    const city    = document.getElementById('ae-city').value.trim();
+    const type    = document.getElementById('ae-type').value;
+    const loc     = document.getElementById('ae-location').value.trim();
+    const desc    = document.getElementById('ae-desc').value.trim();
+
+    const btn = document.getElementById('btn-submit-event');
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    const { data, error } = await supabase.from('user_events').insert({
+        user_id:     currentUser.id,
+        title,
+        date:        dateVal || null,
+        time:        timeVal || null,
+        city:        city    || null,
+        event_type:  type    || null,
+        location:    loc     || null,
+        description: desc    || null,
+        status:      'pending',
+    }).select().single();
+
+    btn.classList.remove('loading');
+    btn.disabled = false;
+
+    if (error) { showToast('שגיאה בשמירת האירוע', 'error'); return; }
+
+    events.unshift(normalizeRow(data));
+    render();
+    closeAddEvent();
+    showToast('האירוע נשלח לאישור ✓', 'success');
 }
 
 /* ══════════════════════════════════════════════════════════════
