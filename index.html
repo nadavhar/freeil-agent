@@ -314,6 +314,52 @@
         .user-dropdown .dropdown-signout:hover { background: #fef2f2; }
         .user-dropdown svg { flex-shrink: 0; opacity: 0.65; }
 
+        /* Guest sticky bottom bar */
+        .guest-bottom-bar {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 500;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 0.875rem 1rem;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+        }
+        .guest-bottom-bar.visible { display: block; }
+        .guest-bottom-bar-inner {
+            max-width: 480px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .guest-bottom-bar p {
+            flex: 1;
+            font-size: 0.82rem;
+            color: #475569;
+            line-height: 1.3;
+        }
+        .guest-bottom-bar p strong { color: #1e293b; }
+        .guest-bar-login {
+            height: 44px; padding: 0 18px;
+            background: #f1f5f9; color: #1e293b;
+            border: 1.5px solid #e2e8f0; border-radius: 12px;
+            font-size: 0.85rem; font-weight: 700;
+            text-decoration: none; white-space: nowrap;
+            display: flex; align-items: center;
+            flex-shrink: 0;
+        }
+        .guest-bar-register {
+            height: 44px; padding: 0 18px;
+            background: #00d4aa; color: #0f172a;
+            border: none; border-radius: 12px;
+            font-size: 0.85rem; font-weight: 800;
+            text-decoration: none; white-space: nowrap;
+            display: flex; align-items: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,212,170,0.3);
+        }
+
         /* Hero Section */
         .hero-section {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
@@ -1941,17 +1987,20 @@
                 const loggedIn     = document.getElementById('auth-logged-in');
                 const banner       = document.getElementById('user-welcome-banner');
                 const guestBanner  = document.getElementById('guest-banner');
+                const bottomBar    = document.getElementById('guest-bottom-bar');
                 if (!user) {
                     loggedOut.style.display   = 'flex';
                     loggedIn.style.display    = 'none';
-                    banner.style.display      = 'none';
+                    if (banner)     banner.style.display     = 'none';
                     if (guestBanner) guestBanner.style.display = 'block';
+                    if (bottomBar)  bottomBar.classList.add('visible');
                     return;
                 }
                 loggedOut.style.display   = 'none';
                 loggedIn.style.display    = 'flex';
-                banner.style.display      = 'block';
+                if (banner)     banner.style.display     = 'block';
                 if (guestBanner) guestBanner.style.display = 'none';
+                if (bottomBar)  bottomBar.classList.remove('visible');
 
                 const name    = user.user_metadata?.full_name || user.email || '';
                 const firstName = name.split(' ')[0] || '';
@@ -1992,5 +2041,14 @@
             });
         })();
     </script>
+
+    <!-- Sticky bottom bar for logged-out users -->
+    <div class="guest-bottom-bar" id="guest-bottom-bar">
+        <div class="guest-bottom-bar-inner">
+            <p><strong>הצטרפו ל-FreeIL</strong> — שתפו אירועים חינמיים</p>
+            <a href="/login.html" class="guest-bar-login">כניסה</a>
+            <a href="/register.html" class="guest-bar-register">הרשמה</a>
+        </div>
+    </div>
 </body>
 </html>
