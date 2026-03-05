@@ -1900,8 +1900,10 @@
         }
 
         function buildCityFilters() {
-            // Get cities based on selected region
-            let cities = [...new Set(allEvents.map(e => e.city).filter(Boolean))];
+            // Always show all known cities; in public tab also include any extra cities from events
+            const knownCities = Object.keys(translations.he.cities).filter(c => c !== 'Other');
+            const eventCities = allEvents.map(e => e.city).filter(Boolean);
+            let cities = [...new Set([...knownCities, ...eventCities])];
             const regionCitiesList = getCitiesForRegion(activeRegionFilter);
             if (regionCitiesList) {
                 cities = cities.filter(c => regionCitiesList.includes(c));
@@ -1931,7 +1933,10 @@
         }
 
         function buildCategoryFilters() {
-            const types = [...new Set(allEvents.map(e => e.event_type).filter(Boolean))];
+            // Always show all known categories; also include any extra types from events
+            const knownTypes = Object.keys(translations.he.types);
+            const eventTypes = allEvents.map(e => e.event_type).filter(Boolean);
+            const types = [...new Set([...knownTypes, ...eventTypes])];
             const sortedTypes = getSortedCategories(types);
             const typeBar = document.getElementById('type-filters');
             typeBar.innerHTML = '';
