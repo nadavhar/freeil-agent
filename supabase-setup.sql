@@ -16,9 +16,7 @@ create table if not exists user_events (
   city             text,
   thumbnail_url    text,
   emoji            text        default '📅',
-  status           text        default 'pending'
-                               check (status in ('approved', 'pending', 'rejected', 'draft')),
-  rejection_reason text,
+  status           text        default 'published',
   created_at       timestamptz default now(),
   updated_at       timestamptz default now()
 );
