@@ -958,7 +958,7 @@ function signOut() {
    SUPABASE CLIENT
 ══════════════════════════════════════════════════════════════ */
 const { createClient } = window.supabase;
-const supabase = createClient(
+const sb = createClient(
     'https://iymmfwjsmaziymmwijjn.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5bW1md2pzbWF6aXltbXdpampuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDA4NjEsImV4cCI6MjA4ODI3Njg2MX0.caAHy7Ie28m17akWRL98Zisoi91FJLtKkpwStmLjSh0'
 );
@@ -1108,7 +1108,7 @@ function handleAction(action, id) {
 }
 
 async function duplicateEvent(event) {
-    const { data, error } = await supabase.from('user_events').insert({
+    const { data, error } = await sb.from('user_events').insert({
         user_id:          currentUser.id,
         title:            event.title + ' (עותק)',
         date:             event.date,
@@ -1154,11 +1154,11 @@ function handleImagePick(e) {
 async function uploadImage(file, userId) {
     const ext  = file.name.split('.').pop().toLowerCase();
     const path = `${userId}/${Date.now()}.${ext}`;
-    const { data, error } = await supabase.storage
+    const { data, error } = await sb.storage
         .from('event-images')
         .upload(path, file, { upsert: false, contentType: file.type });
     if (error) return null;
-    const { data: urlData } = supabase.storage.from('event-images').getPublicUrl(path);
+    const { data: urlData } = sb.storage.from('event-images').getPublicUrl(path);
     return urlData?.publicUrl || null;
 }
 
@@ -1195,7 +1195,7 @@ async function handleAddEventSubmit(e) {
         if (!thumbnailUrl) showToast('התמונה לא הועלתה, האירוע נשמר בלעדיה', '');
     }
 
-    const { data: newRow, error } = await supabase.from('user_events').insert({
+    const { data: newRow, error } = await sb.from('user_events').insert({
         user_id:       currentUser.id,
         title,
         date:          dateVal       || null,
@@ -1276,7 +1276,7 @@ function handleModalOverlayClick(e) {
 ══════════════════════════════════════════════════════════════ */
 // Override the fallback signOut (defined in first script block) with proper SDK version
 signOut = async function () {
-    try { await supabase.auth.signOut(); } catch (e) { /* ignore */ }
+    try { await sb.auth.signOut(); } catch (e) { /* ignore */ }
     window.location.href = '/';
 };
 
@@ -1327,7 +1327,7 @@ function showToast(msg, type = '') {
    INIT — check session then load events
 ══════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await sb.auth.getSession();
     if (!session) { window.location.href = '/'; return; }
     currentUser = session.user;
 
