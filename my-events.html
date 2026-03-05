@@ -571,61 +571,24 @@
 <div class="toast" id="toast"></div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 /* ══════════════════════════════════════════════════════════════
-   DATA
-   Replace this mock array with your real API call / Supabase fetch
+   SUPABASE CLIENT
 ══════════════════════════════════════════════════════════════ */
-const MOCK_EVENTS = [
-    {
-        id: '1',
-        title: 'קונצרט קאמרי בגן הירקון',
-        date: '2026-03-15',
-        time: '19:00',
-        thumbnail: null,
-        emoji: '🎻',
-        status: 'approved',    // 'approved' | 'pending' | 'rejected' | 'draft'
-        rejectionReason: null,
-    },
-    {
-        id: '2',
-        title: 'סיור חינם בנחלת בנימין',
-        date: '2026-03-22',
-        time: '10:00',
-        thumbnail: null,
-        emoji: '🏛️',
-        status: 'pending',
-        rejectionReason: null,
-    },
-    {
-        id: '3',
-        title: 'סדנת צילום ברחוב הדרקון',
-        date: '2026-03-10',
-        time: '17:30',
-        thumbnail: null,
-        emoji: '📷',
-        status: 'rejected',
-        rejectionReason: 'האירוע אינו חינמי — נמצאה עלות כניסה של 30 ₪ באתר הרשמי.',
-    },
-    {
-        id: '4',
-        title: 'פיקניק קהילתי בפארק הירקון',
-        date: null,
-        time: null,
-        thumbnail: null,
-        emoji: '🧺',
-        status: 'draft',
-        rejectionReason: null,
-    },
-];
+const { createClient } = window.supabase;
+const supabase = createClient(
+    'https://iymmfwjsmaziymmwijjn.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5bW1md2pzbWF6aXltbXdpampuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDA4NjEsImV4cCI6MjA4ODI3Njg2MX0.caAHy7Ie28m17akWRL98Zisoi91FJLtKkpwStmLjSh0'
+);
 
 /* ══════════════════════════════════════════════════════════════
    STATE
 ══════════════════════════════════════════════════════════════ */
-let events = [...MOCK_EVENTS];         // will be replaced by real data
-let activeMenuId = null;               // which row's dropdown is open
-let pendingDeleteId = null;            // which event is queued for deletion
-let openDropdownEl = null;             // reference to open dropdown element
+let events = [];
+let currentUser = null;
+let pendingDeleteId = null;
+let openDropdownEl = null;
 
 /* ══════════════════════════════════════════════════════════════
    RENDER
@@ -770,7 +733,6 @@ document.addEventListener('click', closeAllDropdowns);
 
 /* ══════════════════════════════════════════════════════════════
    ACTION HANDLERS
-   Replace the TODO stubs with your real API calls
 ══════════════════════════════════════════════════════════════ */
 function handleAction(action, id) {
     closeAllDropdowns();
@@ -778,20 +740,12 @@ function handleAction(action, id) {
     if (!event) return;
 
     if (action === 'edit') {
-        // TODO: navigate to edit form / open edit modal with event data
+        // TODO: open edit form/modal pre-filled with event data
         showToast(`עורך את "${event.title}"…`, 'success');
     }
 
     if (action === 'duplicate') {
-        const clone = {
-            ...event,
-            id: String(Date.now()),
-            title: event.title + ' (עותק)',
-            status: 'draft',
-        };
-        events.unshift(clone);
-        render();
-        showToast('האירוע שוכפל כטיוטה ✓', 'success');
+        duplicateEvent(event);
     }
 
     if (action === 'delete') {
@@ -801,14 +755,39 @@ function handleAction(action, id) {
     }
 }
 
+async function duplicateEvent(event) {
+    const { data, error } = await supabase.from('user_events').insert({
+        user_id:          currentUser.id,
+        title:            event.title + ' (עותק)',
+        date:             event.date,
+        time:             event.time,
+        location:         event.location,
+        description:      event.description,
+        event_type:       event.event_type,
+        city:             event.city,
+        thumbnail_url:    event.thumbnail_url,
+        emoji:            event.emoji,
+        status:           'draft',
+    }).select().single();
+
+    if (error) { showToast('שגיאה בשכפול האירוע', 'error'); return; }
+    events.unshift(normalizeRow(data));
+    render();
+    showToast('האירוע שוכפל כטיוטה ✓', 'success');
+}
+
 /* ══════════════════════════════════════════════════════════════
    DELETE MODAL
 ══════════════════════════════════════════════════════════════ */
-function confirmDelete() {
+async function confirmDelete() {
     if (!pendingDeleteId) return;
 
-    // TODO: call your real delete API here, e.g.:
-    // await supabase.from('events').delete().eq('id', pendingDeleteId);
+    const { error } = await supabase
+        .from('user_events')
+        .delete()
+        .eq('id', pendingDeleteId);
+
+    if (error) { showToast('שגיאה במחיקת האירוע', 'error'); closeDeleteModal(); return; }
 
     events = events.filter(e => e.id !== pendingDeleteId);
     pendingDeleteId = null;
@@ -827,23 +806,38 @@ function handleModalOverlayClick(e) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   NAVIGATION STUBS
-   Wire these to your real routing / modal system
+   NAVIGATION
 ══════════════════════════════════════════════════════════════ */
 function goBack() {
-    // TODO: navigate back — window.history.back() or your SPA router
     if (window.history.length > 1) window.history.back();
     else window.location.href = '/';
 }
 
 function openAddEvent() {
-    // TODO: open the "Add Event" form / route
+    // TODO: link to your event submission form
     showToast('פותח טופס הוספת אירוע…', 'success');
 }
 
 /* ══════════════════════════════════════════════════════════════
    HELPERS
 ══════════════════════════════════════════════════════════════ */
+function normalizeRow(row) {
+    return {
+        id:              row.id,
+        title:           row.title,
+        date:            row.date,
+        time:            row.time,
+        location:        row.location,
+        description:     row.description,
+        event_type:      row.event_type,
+        city:            row.city,
+        thumbnail:       row.thumbnail_url || null,
+        emoji:           row.emoji || '📅',
+        status:          row.status,
+        rejectionReason: row.rejection_reason || null,
+    };
+}
+
 function formatDate(dateStr) {
     if (!dateStr) return '';
     try {
@@ -868,14 +862,23 @@ function showToast(msg, type = '') {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   INIT
-   Replace MOCK_EVENTS with a real fetch, e.g.:
-     const { data } = await supabase.from('events')
-       .select('*').eq('user_id', currentUser.id)
-       .order('created_at', { ascending: false });
-     events = data;
+   INIT — check session then load events
 ══════════════════════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', render);
+document.addEventListener('DOMContentLoaded', async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { window.location.href = '/register.html'; return; }
+    currentUser = session.user;
+
+    const { data, error } = await supabase
+        .from('user_events')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .order('created_at', { ascending: false });
+
+    if (error) { showToast('שגיאה בטעינת האירועים', 'error'); return; }
+    events = (data || []).map(normalizeRow);
+    render();
+});
 </script>
 </body>
 </html>

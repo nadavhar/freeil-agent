@@ -605,15 +605,33 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+/* ══════════════════════════════════════════════════════════════
+   SUPABASE CLIENT
+══════════════════════════════════════════════════════════════ */
+const { createClient } = window.supabase;
+const supabase = createClient(
+    'https://iymmfwjsmaziymmwijjn.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5bW1md2pzbWF6aXltbXdpampuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDA4NjEsImV4cCI6MjA4ODI3Njg2MX0.caAHy7Ie28m17akWRL98Zisoi91FJLtKkpwStmLjSh0'
+);
+
+/* ══════════════════════════════════════════════════════════════
+   INIT — redirect if already logged in
+══════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) window.location.href = '/my-events.html';
+});
+
 /* ══════════════════════════════════════════════════════════════
    STATE
 ══════════════════════════════════════════════════════════════ */
 const state = {
-    name:     '',
-    email:    '',
-    password: '',
-    terms:    false,
+    name:      '',
+    email:     '',
+    password:  '',
+    terms:     false,
     pwVisible: false,
 };
 
@@ -742,35 +760,21 @@ async function handleSubmit(e) {
 
     setLoading(true);
 
-    try {
-        // ── TODO: replace with your real API call ──────────────────
-        // Option A — Supabase Auth:
-        //   const { error } = await supabase.auth.signUp({
-        //     email: state.email,
-        //     password: state.password,
-        //     options: { data: { full_name: state.name } }
-        //   });
-        //   if (error) throw error;
-        //
-        // Option B — custom endpoint:
-        //   const res = await fetch('/api/auth/register', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ name: state.name, email: state.email, password: state.password }),
-        //   });
-        //   if (!res.ok) throw new Error((await res.json()).message);
-        // ──────────────────────────────────────────────────────────
+    const { error } = await supabase.auth.signUp({
+        email:    state.email,
+        password: state.password,
+        options:  { data: { full_name: state.name } },
+    });
 
-        await simulateApiCall(1400);   // remove when wiring real API
-        showSuccess(state.name);
-
-    } catch (err) {
+    if (error) {
         setLoading(false);
-        const msg = err.message || 'אירעה שגיאה. אנא נסה/י שוב.';
-        // Map common Supabase / API error messages to Hebrew
-        const heMsg = mapErrorToHebrew(msg);
-        showToast(heMsg, 'error');
+        showToast(mapErrorToHebrew(error.message), 'error');
+        return;
     }
+
+    // Supabase sends a confirmation email by default.
+    // Disable email confirmation in Auth → Settings if you want instant login.
+    showSuccess(state.name);
 }
 
 function mapErrorToHebrew(msg) {
@@ -786,13 +790,15 @@ function mapErrorToHebrew(msg) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SOCIAL LOGIN
-   Wire each provider to your auth SDK (Supabase OAuth, Firebase, etc.)
+   SOCIAL LOGIN — Google OAuth via Supabase
+   Apple requires a paid Apple Developer account to configure.
 ══════════════════════════════════════════════════════════════ */
 async function handleSocialLogin(provider) {
-    // TODO:
-    // await supabase.auth.signInWithOAuth({ provider, options: { redirectTo: window.location.origin } });
-    showToast(`מתחבר עם ${provider === 'google' ? 'Google' : 'Apple'}…`);
+    const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: { redirectTo: window.location.origin + '/my-events.html' },
+    });
+    if (error) showToast(mapErrorToHebrew(error.message), 'error');
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -807,15 +813,10 @@ function setLoading(on) {
 function showSuccess(name) {
     const firstName = (name || '').split(' ')[0];
     document.getElementById('success-name-msg').textContent =
-        `היי ${firstName}! החשבון שלך נוצר בהצלחה. עכשיו תוכל/י לשתף אירועים חינמיים עם הקהילה.`;
+        `היי ${firstName}! נשלח אליך אימייל לאישור החשבון. לאחר האישור תוכל/י להתחבר ולשתף אירועים חינמיים.`;
     document.getElementById('card-body').classList.add('hidden');
     document.getElementById('card-footer').classList.add('hidden');
     document.getElementById('success-overlay').classList.add('visible');
-}
-
-// Stub — remove when wiring real API
-function simulateApiCall(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 let toastTimer;
