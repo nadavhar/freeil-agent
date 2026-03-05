@@ -721,6 +721,25 @@
 <div class="toast" id="toast"></div>
 
 
+<script>
+/* ══════════════════════════════════════════════════════════════
+   UI FUNCTIONS — defined first, no dependencies
+══════════════════════════════════════════════════════════════ */
+function openMenu() {
+    document.getElementById('side-menu').classList.add('open');
+    document.getElementById('menu-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeMenu() {
+    document.getElementById('side-menu').classList.remove('open');
+    document.getElementById('menu-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+function openAddEvent() {
+    window.location.href = '/register.html';
+}
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 /* ══════════════════════════════════════════════════════════════
@@ -958,22 +977,9 @@ function handleModalOverlayClick(e) {
 /* ══════════════════════════════════════════════════════════════
    NAVIGATION & MENU
 ══════════════════════════════════════════════════════════════ */
-function openMenu() {
-    document.getElementById('side-menu').classList.add('open');
-    document.getElementById('menu-overlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-}
-function closeMenu() {
-    document.getElementById('side-menu').classList.remove('open');
-    document.getElementById('menu-overlay').classList.remove('open');
-    document.body.style.overflow = '';
-}
 async function signOut() {
     await supabase.auth.signOut();
     window.location.href = '/';
-}
-function openAddEvent() {
-    window.location.href = '/register.html';
 }
 
 /* ══════════════════════════════════════════════════════════════
