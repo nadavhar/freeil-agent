@@ -40,6 +40,15 @@
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
 
+    <!-- Supabase — must load before any script that uses `sb` -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        const sb = window.supabase.createClient(
+            'https://iymmfwjsmaziymmwijjn.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5bW1md2pzbWF6aXltbXdpampuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDA4NjEsImV4cCI6MjA4ODI3Njg2MX0.caAHy7Ie28m17akWRL98Zisoi91FJLtKkpwStmLjSh0'
+        );
+    </script>
+
     <!-- Structured Data - Organization -->
     <script type="application/ld+json">
     {
@@ -2203,14 +2212,9 @@
     </script>
 
     <!-- Supabase auth state in header -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script>
         (function () {
-            const { createClient } = window.supabase;
-            const sb = createClient(
-                'https://iymmfwjsmaziymmwijjn.supabase.co',
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5bW1md2pzbWF6aXltbXdpampuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDA4NjEsImV4cCI6MjA4ODI3Njg2MX0.caAHy7Ie28m17akWRL98Zisoi91FJLtKkpwStmLjSh0'
-            );
+            // sb is already created in <head>
 
             function setAuthUI(user) {
                 const loggedOut    = document.getElementById('auth-logged-out');
