@@ -769,7 +769,7 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </div>
                 <div>
-                    <h3>הוסף אירוע חדש</h3>
+                    <h3 id="add-modal-title">הוסף אירוע חדש</h3>
                     <p>האירוע יעבור בדיקה לפני פרסום</p>
                 </div>
             </div>
@@ -862,7 +862,7 @@
                 <div class="spinner"></div>
                 <span class="btn-submit-label">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                    שלח לאישור
+                    <span id="btn-submit-label-text">שלח לאישור</span>
                 </span>
             </button>
 
@@ -910,14 +910,37 @@ function closeMenu() {
     document.body.style.overflow = '';
 }
 function openAddEvent() {
+    editingEventId = null;
     document.getElementById('add-event-form').reset();
     document.getElementById('ae-title-err').textContent = '';
     document.getElementById('ae-title').classList.remove('err');
+    document.getElementById('add-modal-title').textContent = 'הוסף אירוע חדש';
+    document.getElementById('btn-submit-label-text').textContent = 'שלח לאישור';
+    document.getElementById('add-event-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('ae-title').focus(), 100);
+}
+function openEditEvent(ev) {
+    editingEventId = ev.id;
+    document.getElementById('add-event-form').reset();
+    document.getElementById('ae-title-err').textContent = '';
+    document.getElementById('ae-title').classList.remove('err');
+    document.getElementById('add-modal-title').textContent = 'ערוך אירוע';
+    document.getElementById('btn-submit-label-text').textContent = 'שמור שינויים';
+    // Pre-fill fields
+    document.getElementById('ae-title').value    = ev.title    || '';
+    document.getElementById('ae-date').value     = ev.date     || '';
+    document.getElementById('ae-time').value     = ev.time     || '';
+    document.getElementById('ae-city').value     = ev.city     || '';
+    document.getElementById('ae-type').value     = ev.event_type || '';
+    document.getElementById('ae-location').value = ev.location || '';
+    document.getElementById('ae-desc').value     = ev.description || '';
     document.getElementById('add-event-modal').classList.add('open');
     document.body.style.overflow = 'hidden';
     setTimeout(() => document.getElementById('ae-title').focus(), 100);
 }
 function closeAddEvent() {
+    editingEventId = null;
     document.getElementById('add-event-modal').classList.remove('open');
     document.body.style.overflow = '';
     removeImage();
@@ -967,6 +990,7 @@ let events = [];
 let currentUser = null;
 let pendingDeleteId = null;
 let openDropdownEl = null;
+let editingEventId = null;
 
 /* ══════════════════════════════════════════════════════════════
    RENDER
@@ -1107,8 +1131,7 @@ function handleAction(action, id) {
     if (!event) return;
 
     if (action === 'edit') {
-        // TODO: open edit form/modal pre-filled with event data
-        showToast(`עורך את "${event.title}"…`, 'success');
+        openEditEvent(event);
     }
 
     if (action === 'duplicate') {
@@ -1210,6 +1233,45 @@ async function handleAddEventSubmit(e) {
         if (!thumbnailUrl) showToast('התמונה לא הועלתה, האירוע נשמר בלעדיה', '');
     }
 
+    if (editingEventId) {
+        // ── UPDATE existing event ──
+        const updates = {
+            title,
+            date:          dateVal  || null,
+            time:          timeVal  || null,
+            city:          city     || null,
+            event_type:    type     || null,
+            location:      loc      || null,
+            description:   desc     || null,
+        };
+        if (thumbnailUrl) updates.thumbnail_url = thumbnailUrl;
+
+        const { data: updated, error } = await sb
+            .from('user_events')
+            .update(updates)
+            .eq('id', editingEventId)
+            .select().single();
+
+        btn.classList.remove('loading');
+        btn.disabled = false;
+
+        if (error) {
+            console.error('Update error:', error);
+            showToast('שגיאה: ' + (error.message || 'לא ניתן לעדכן'), 'error');
+            return;
+        }
+
+        if (updated) {
+            const idx = events.findIndex(e => e.id === editingEventId);
+            if (idx !== -1) events[idx] = normalizeRow(updated);
+        }
+        render();
+        closeAddEvent();
+        showToast('האירוע עודכן בהצלחה ✓', 'success');
+        return;
+    }
+
+    // ── INSERT new event ──
     const { data: newRow, error } = await sb.from('user_events').insert({
         user_id:       currentUser.id,
         title,
@@ -1233,10 +1295,8 @@ async function handleAddEventSubmit(e) {
     }
 
     if (newRow) {
-        // Best case: insert returned the row directly
         events.unshift(normalizeRow(newRow));
     } else {
-        // Fallback: reload from DB (RLS may prevent chained select in some configs)
         const { data: rows, error: selErr } = await sb
             .from('user_events')
             .select('*')
@@ -1249,7 +1309,6 @@ async function handleAddEventSubmit(e) {
     render();
     closeAddEvent();
     showToast('האירוע פורסם בהצלחה ✓', 'success');
-    // Highlight the newly added card
     const newId = events[0]?.id;
     if (newId) setTimeout(() => {
         const row = document.getElementById('row-' + newId);
