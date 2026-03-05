@@ -930,6 +930,28 @@ function closeAddEvent() {
 function handleAddModalOverlayClick(e) {
     if (e.target === e.currentTarget) closeAddEvent();
 }
+/* removeImage has no Supabase deps — keep it here so closeAddEvent can call it safely */
+function removeImage() {
+    const preview  = document.getElementById('ae-img-preview-wrap');
+    const zone     = document.getElementById('ae-upload-zone');
+    const imgInput = document.getElementById('ae-image');
+    const imgEl    = document.getElementById('ae-img-preview');
+    if (imgInput)  imgInput.value = '';
+    if (imgEl)     imgEl.src = '';
+    if (preview)   preview.classList.remove('visible');
+    if (zone)      zone.style.display = '';
+    // selectedImageFile reset handled by second script if it loaded; safe to ignore here
+    if (typeof selectedImageFile !== 'undefined') window.selectedImageFile = null;
+}
+/* Fallback signOut — clears Supabase localStorage keys and redirects.
+   Works even if the Supabase CDN fails. The second script overrides this
+   with the proper SDK call when loaded. */
+function signOut() {
+    Object.keys(localStorage).forEach(k => {
+        if (k.startsWith('sb-')) localStorage.removeItem(k);
+    });
+    window.location.href = '/';
+}
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -1140,7 +1162,7 @@ async function duplicateEvent(event) {
 /* ══════════════════════════════════════════════════════════════
    IMAGE PICK / REMOVE
 ══════════════════════════════════════════════════════════════ */
-let selectedImageFile = null;
+window.selectedImageFile = null;
 
 function handleImagePick(e) {
     const file = e.target.files[0];
@@ -1150,7 +1172,7 @@ function handleImagePick(e) {
         e.target.value = '';
         return;
     }
-    selectedImageFile = file;
+    window.selectedImageFile = file;
     const reader = new FileReader();
     reader.onload = ev => {
         document.getElementById('ae-img-preview').src = ev.target.result;
@@ -1158,14 +1180,6 @@ function handleImagePick(e) {
         document.getElementById('ae-upload-zone').style.display = 'none';
     };
     reader.readAsDataURL(file);
-}
-
-function removeImage() {
-    selectedImageFile = null;
-    document.getElementById('ae-image').value = '';
-    document.getElementById('ae-img-preview').src = '';
-    document.getElementById('ae-img-preview-wrap').classList.remove('visible');
-    document.getElementById('ae-upload-zone').style.display = '';
 }
 
 async function uploadImage(file, userId) {
@@ -1207,8 +1221,8 @@ async function handleAddEventSubmit(e) {
 
     // Upload image if selected
     let thumbnailUrl = null;
-    if (selectedImageFile) {
-        thumbnailUrl = await uploadImage(selectedImageFile, currentUser.id);
+    if (window.selectedImageFile) {
+        thumbnailUrl = await uploadImage(window.selectedImageFile, currentUser.id);
         if (!thumbnailUrl) showToast('התמונה לא הועלתה, האירוע נשמר בלעדיה', '');
     }
 
@@ -1268,10 +1282,11 @@ function handleModalOverlayClick(e) {
 /* ══════════════════════════════════════════════════════════════
    NAVIGATION & MENU
 ══════════════════════════════════════════════════════════════ */
-async function signOut() {
-    await supabase.auth.signOut();
+// Override the fallback signOut (defined in first script block) with proper SDK version
+signOut = async function () {
+    try { await supabase.auth.signOut(); } catch (e) { /* ignore */ }
     window.location.href = '/';
-}
+};
 
 /* ══════════════════════════════════════════════════════════════
    HELPERS

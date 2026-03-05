@@ -1963,8 +1963,8 @@
             };
 
             window.signOut = async function () {
-                await sb.auth.signOut();
-                document.getElementById('user-dropdown').classList.remove('open');
+                try { await sb.auth.signOut(); } catch (e) { /* ignore */ }
+                window.location.href = '/';
             };
 
             // Close dropdown on outside click
