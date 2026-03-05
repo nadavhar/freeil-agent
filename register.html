@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הרשמה — FreeIL</title>
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="robots" content="noindex">
+
+    <style>
+        /* ── Reset ── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow-x: hidden; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #1a1a2e;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Background gradient (top band) ── */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 260px;
+            background: linear-gradient(160deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── Page wrapper ── */
+        .page {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2.5rem 1rem 3rem;
+        }
+
+        /* ── Logo area ── */
+        .logo-area {
+            text-align: center;
+            margin-bottom: 1.75rem;
+        }
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .logo-mark {
+            width: 46px; height: 46px;
+            background: rgba(0, 212, 170, 0.15);
+            border: 1.5px solid rgba(0, 212, 170, 0.35);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .logo-mark svg { color: #00d4aa; }
+        .logo-text {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }
+        .logo-text span { color: #00d4aa; }
+        .logo-tagline {
+            margin-top: 0.75rem;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 0.78rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* ── Card ── */
+        .card {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+        .card-body {
+            padding: 2rem 1.75rem 1.75rem;
+        }
+
+        /* ── Card header ── */
+        .card-header {
+            text-align: center;
+            margin-bottom: 1.75rem;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 0.35rem;
+            line-height: 1.25;
+        }
+        .card-subtitle {
+            font-size: 0.82rem;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        /* ── Social login buttons ── */
+        .social-btns { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem; }
+
+        .social-btn {
+            width: 100%;
+            height: 48px;
+            border-radius: 12px;
+            border: 1.5px solid #e2e8f0;
+            background: white;
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1e293b;
+            position: relative;
+        }
+        .social-btn:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            transform: translateY(-1px);
+        }
+        .social-btn:active { transform: translateY(0); box-shadow: none; }
+
+        .social-btn.apple {
+            background: #0f172a;
+            border-color: #0f172a;
+            color: white;
+        }
+        .social-btn.apple:hover { background: #1e293b; border-color: #1e293b; }
+
+        .social-btn svg { flex-shrink: 0; }
+
+        /* ── Divider ── */
+        .divider {
+            display: flex; align-items: center; gap: 12px;
+            margin: 1.25rem 0;
+            color: #94a3b8;
+            font-size: 0.78rem;
+            font-weight: 500;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        /* ── Form ── */
+        .form { display: flex; flex-direction: column; gap: 14px; }
+
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        .field label .required { color: #ef4444; margin-right: 2px; }
+
+        .input-wrapper { position: relative; }
+        .input-wrapper .input-icon {
+            position: absolute;
+            right: 13px; top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            pointer-events: none;
+            display: flex; align-items: center;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            height: 48px;
+            padding: 0 42px 0 12px;  /* rtl: icon on right */
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f8fafc;
+            font-size: 15px;  /* prevent iOS zoom */
+            color: #1e293b;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+        }
+        @media (min-width: 480px) {
+            input[type="text"], input[type="email"], input[type="password"] { font-size: 0.9rem; }
+        }
+        input:focus {
+            border-color: #00d4aa;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.12);
+        }
+        input.error {
+            border-color: #ef4444;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+        input::placeholder { color: #94a3b8; }
+
+        /* Password field: toggle btn on left side */
+        .password-wrapper input { padding-left: 42px; }
+        .toggle-pw {
+            position: absolute;
+            left: 12px; top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #94a3b8;
+            padding: 4px;
+            display: flex; align-items: center;
+            transition: color 0.2s;
+            border-radius: 6px;
+        }
+        .toggle-pw:hover { color: #475569; }
+        .toggle-pw:focus-visible { outline: 2px solid #00d4aa; outline-offset: 2px; }
+
+        /* Strength bar */
+        .strength-bar {
+            height: 3px;
+            border-radius: 4px;
+            background: #e2e8f0;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.3s ease, background 0.3s ease;
+        }
+        .strength-label {
+            font-size: 0.68rem;
+            font-weight: 500;
+            margin-top: 4px;
+            color: #94a3b8;
+            min-height: 14px;
+        }
+
+        /* Field error message */
+        .field-error {
+            font-size: 0.72rem;
+            color: #ef4444;
+            font-weight: 500;
+            min-height: 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .field-error svg { flex-shrink: 0; }
+        .field-error:empty { display: none; }
+
+        /* ── Terms checkbox ── */
+        .terms-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 2px;
+        }
+        .terms-row input[type="checkbox"] {
+            width: 18px; height: 18px;
+            min-width: 18px;
+            border-radius: 5px;
+            border: 1.5px solid #cbd5e1;
+            accent-color: #00d4aa;
+            cursor: pointer;
+            margin-top: 1px;
+        }
+        .terms-text {
+            font-size: 0.78rem;
+            color: #475569;
+            line-height: 1.5;
+        }
+        .terms-text a {
+            color: #00d4aa;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .terms-text a:hover { text-decoration: underline; }
+        .terms-error {
+            font-size: 0.72rem;
+            color: #ef4444;
+            font-weight: 500;
+            margin-top: 2px;
+            display: none;
+        }
+        .terms-error.visible { display: block; }
+
+        /* ── Submit button ── */
+        .submit-btn {
+            width: 100%;
+            height: 52px;
+            background: #00d4aa;
+            color: #0f172a;
+            border: none;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
+            gap: 8px;
+            margin-top: 4px;
+            box-shadow: 0 4px 16px rgba(0, 212, 170, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .submit-btn:hover:not(:disabled) {
+            background: #00bfa0;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 212, 170, 0.4);
+        }
+        .submit-btn:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
+        .submit-btn:disabled {
+            background: #e2e8f0;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* Spinner inside button */
+        .spinner {
+            display: none;
+            width: 20px; height: 20px;
+            border: 2.5px solid rgba(15, 23, 42, 0.3);
+            border-top-color: #0f172a;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        .submit-btn.loading .btn-label { display: none; }
+        .submit-btn.loading .spinner  { display: block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Card footer ── */
+        .card-footer {
+            padding: 1.1rem 1.75rem;
+            background: #f8fafc;
+            border-top: 1px solid #f1f5f9;
+            text-align: center;
+        }
+        .card-footer p {
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+        .card-footer a {
+            color: #00d4aa;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .card-footer a:hover { text-decoration: underline; }
+
+        /* ── Success overlay ── */
+        .success-overlay {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2.5rem 2rem;
+        }
+        .success-overlay.visible { display: flex; }
+        .card-body.hidden { display: none; }
+        .card-footer.hidden { display: none; }
+
+        .success-circle {
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, #00d4aa, #00b894);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 8px 24px rgba(0, 212, 170, 0.35);
+            animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes popIn {
+            from { transform: scale(0); opacity: 0; }
+            to   { transform: scale(1); opacity: 1; }
+        }
+        .success-overlay h2 { font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; }
+        .success-overlay p  { font-size: 0.85rem; color: #64748b; line-height: 1.6; margin-bottom: 1.5rem; }
+        .go-home-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #00d4aa;
+            color: #0f172a;
+            border: none;
+            padding: 13px 28px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .go-home-btn:hover { background: #00bfa0; transform: translateY(-1px); }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 1.5rem; left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #1e293b;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            z-index: 999;
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            white-space: nowrap;
+            display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+            pointer-events: none;
+        }
+        .toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.error   { background: #dc2626; }
+    </style>
+</head>
+<body>
+
+<div class="page">
+
+    <!-- Logo -->
+    <div class="logo-area">
+        <a href="/" class="logo">
+            <div class="logo-mark">
+                <!-- ticket icon -->
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+                    <line x1="9" y1="9"  x2="9"  y2="15" stroke-dasharray="2 2"/>
+                </svg>
+            </div>
+            <span class="logo-text">Free<span>IL</span></span>
+        </a>
+        <div class="logo-tagline">אירועים חינם בישראל</div>
+    </div>
+
+    <!-- Card -->
+    <div class="card">
+
+        <!-- Success state -->
+        <div class="success-overlay" id="success-overlay">
+            <div class="success-circle">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            </div>
+            <h2>ברוכים הבאים! 🎉</h2>
+            <p id="success-name-msg">החשבון שלך נוצר בהצלחה. עכשיו תוכל לשתף אירועים חינמיים עם הקהילה.</p>
+            <button class="go-home-btn" onclick="window.location.href='/'">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                לדף הראשי
+            </button>
+        </div>
+
+        <!-- Registration form -->
+        <div class="card-body" id="card-body">
+
+            <div class="card-header">
+                <h1 class="card-title">הצטרפו לקהילת FreeIL</h1>
+                <p class="card-subtitle">גלו ושתפו את האירועים החינמיים השווים ביותר</p>
+            </div>
+
+            <!-- Social login -->
+            <div class="social-btns">
+                <button class="social-btn google" onclick="handleSocialLogin('google')" type="button">
+                    <!-- Google "G" SVG -->
+                    <svg width="20" height="20" viewBox="0 0 48 48">
+                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                        <path fill="none" d="M0 0h48v48H0z"/>
+                    </svg>
+                    המשך עם Google
+                </button>
+
+                <button class="social-btn apple" onclick="handleSocialLogin('apple')" type="button">
+                    <!-- Apple SVG -->
+                    <svg width="19" height="19" viewBox="0 0 814 1000" fill="white">
+                        <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105.4-57-155.3-127.4C46 399.4 0 280.5 0 166.7C0 64 46 14 71.2 14c23.4 0 41.4 5.3 56.8 5.3 13.4 0 35.3-5.3 56.8-5.3 96.4 0 152.3 96.4 152.3 96.4s49.7 12.1 49.7-44.3c0-49.3-30.1-96.4-30.1-96.4S406 0 406 97.6c0 36.1-8.5 71.9-22.2 105.1 35.1-2.3 72.3-5.8 91.8-5.8 118.7 0 191.3 68.8 191.3 191.3 0 121.6-68.8 189.1-140.1 189.1-26.2 0-51.6-15.7-77.2-15.7-25.5 0-50.8 18.9-77.3 18.9-26.4 0-50.8-20.5-77.3-20.5-26.4 0-54.1 22.1-80.6 22.1C117.1 582 68.3 490.6 68.3 400c0-87.5 43.5-184 111.3-184 56.3 0 103.7 24.8 134 45.7l12.9-28.1c-29.7-62.9-91.5-105.1-160.4-105.1-56.3 0-101 22.7-128.8 22.7-27.9 0-61.3-22.7-61.3-22.7C-16.5 177 0 280.5 0 280.5z"/>
+                    </svg>
+                    המשך עם Apple
+                </button>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider">או</div>
+
+            <!-- Email form -->
+            <form class="form" id="reg-form" novalidate onsubmit="handleSubmit(event)">
+
+                <!-- Full name -->
+                <div class="field">
+                    <label for="name">שם מלא <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </span>
+                        <input type="text" id="name" name="name" placeholder="ישראל ישראלי"
+                               autocomplete="name" inputmode="text"
+                               oninput="clearError('name')" onblur="validateName()">
+                    </div>
+                    <span class="field-error" id="name-error"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="field">
+                    <label for="email">דואר אלקטרוני <span class="required">*</span></label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </span>
+                        <input type="email" id="email" name="email" placeholder="you@example.com"
+                               autocomplete="email" inputmode="email" dir="ltr"
+                               oninput="clearError('email')" onblur="validateEmail()">
+                    </div>
+                    <span class="field-error" id="email-error"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="field">
+                    <label for="password">סיסמה <span class="required">*</span></label>
+                    <div class="input-wrapper password-wrapper">
+                        <span class="input-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                        </span>
+                        <input type="password" id="password" name="password"
+                               placeholder="מינימום 8 תווים"
+                               autocomplete="new-password" dir="ltr"
+                               oninput="handlePasswordInput()" onblur="validatePassword()">
+                        <button type="button" class="toggle-pw" id="toggle-pw"
+                                onclick="togglePassword()" aria-label="הצג/הסתר סיסמה">
+                            <!-- Eye icon (show) -->
+                            <svg id="eye-show" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <!-- Eye-off icon (hide) -->
+                            <svg id="eye-hide" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Strength bar -->
+                    <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+                    <div class="strength-label" id="strength-label"></div>
+                    <span class="field-error" id="password-error"></span>
+                </div>
+
+                <!-- Terms -->
+                <div class="field" style="gap:4px">
+                    <div class="terms-row">
+                        <input type="checkbox" id="terms" name="terms"
+                               onchange="clearTermsError()">
+                        <label for="terms" class="terms-text">
+                            אני מסכים/ה ל<a href="/terms.html" target="_blank">תנאי השימוש</a>
+                            ו<a href="/privacy.html" target="_blank">מדיניות הפרטיות</a>
+                        </label>
+                    </div>
+                    <div class="terms-error" id="terms-error">יש לאשר את תנאי השימוש כדי להמשיך</div>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="submit-btn" id="submit-btn">
+                    <div class="spinner"></div>
+                    <span class="btn-label">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-3px;margin-left:6px">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                            <line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+                        </svg>
+                        צור משתמש חדש
+                    </span>
+                </button>
+
+            </form>
+        </div><!-- /card-body -->
+
+        <!-- Footer -->
+        <div class="card-footer" id="card-footer">
+            <p>כבר יש לך חשבון? <a href="/login.html">התחבר כאן</a></p>
+        </div>
+
+    </div><!-- /card -->
+
+</div><!-- /page -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════════════ */
+const state = {
+    name:     '',
+    email:    '',
+    password: '',
+    terms:    false,
+    pwVisible: false,
+};
+
+/* ══════════════════════════════════════════════════════════════
+   VALIDATION
+══════════════════════════════════════════════════════════════ */
+function validateName() {
+    const val = document.getElementById('name').value.trim();
+    state.name = val;
+    if (!val) return setError('name', 'נא להזין שם מלא');
+    if (val.length < 2) return setError('name', 'השם חייב להכיל לפחות 2 תווים');
+    clearError('name');
+    return true;
+}
+
+function validateEmail() {
+    const val = document.getElementById('email').value.trim();
+    state.email = val;
+    if (!val) return setError('email', 'נא להזין כתובת דואר אלקטרוני');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return setError('email', 'כתובת הדואר האלקטרוני אינה תקינה');
+    clearError('email');
+    return true;
+}
+
+function validatePassword() {
+    const val = document.getElementById('password').value;
+    state.password = val;
+    if (!val) return setError('password', 'נא להזין סיסמה');
+    if (val.length < 8) return setError('password', 'הסיסמה חייבת להכיל לפחות 8 תווים');
+    clearError('password');
+    return true;
+}
+
+function validateTerms() {
+    state.terms = document.getElementById('terms').checked;
+    if (!state.terms) {
+        document.getElementById('terms-error').classList.add('visible');
+        return false;
+    }
+    clearTermsError();
+    return true;
+}
+
+function setError(field, msg) {
+    const input = document.getElementById(field);
+    const errEl = document.getElementById(`${field}-error`);
+    if (input)  input.classList.add('error');
+    if (errEl)  errEl.innerHTML = `
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        ${msg}`;
+    return false;
+}
+
+function clearError(field) {
+    const input = document.getElementById(field);
+    const errEl = document.getElementById(`${field}-error`);
+    if (input) input.classList.remove('error');
+    if (errEl) errEl.innerHTML = '';
+}
+
+function clearTermsError() {
+    document.getElementById('terms-error').classList.remove('visible');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PASSWORD STRENGTH
+══════════════════════════════════════════════════════════════ */
+function handlePasswordInput() {
+    clearError('password');
+    const val = document.getElementById('password').value;
+    state.password = val;
+    updateStrength(val);
+}
+
+function updateStrength(pw) {
+    const fill  = document.getElementById('strength-fill');
+    const label = document.getElementById('strength-label');
+    if (!pw) { fill.style.width = '0%'; label.textContent = ''; return; }
+
+    let score = 0;
+    if (pw.length >= 8)  score++;
+    if (pw.length >= 12) score++;
+    if (/[A-Z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+    const levels = [
+        { pct: '20%', color: '#ef4444', text: 'חלשה מאוד' },
+        { pct: '40%', color: '#f97316', text: 'חלשה'      },
+        { pct: '60%', color: '#f59e0b', text: 'בינונית'   },
+        { pct: '80%', color: '#84cc16', text: 'חזקה'       },
+        { pct: '100%',color: '#10b981', text: 'חזקה מאוד' },
+    ];
+    const lvl = levels[Math.min(score - 1, 4)] || levels[0];
+    fill.style.width    = lvl.pct;
+    fill.style.background = lvl.color;
+    label.textContent   = lvl.text;
+    label.style.color   = lvl.color;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PASSWORD VISIBILITY TOGGLE
+══════════════════════════════════════════════════════════════ */
+function togglePassword() {
+    state.pwVisible = !state.pwVisible;
+    const input = document.getElementById('password');
+    input.type = state.pwVisible ? 'text' : 'password';
+    document.getElementById('eye-show').style.display = state.pwVisible ? 'none'  : 'block';
+    document.getElementById('eye-hide').style.display = state.pwVisible ? 'block' : 'none';
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FORM SUBMIT
+══════════════════════════════════════════════════════════════ */
+async function handleSubmit(e) {
+    e.preventDefault();
+
+    // Run all validations; collect results
+    const ok = [validateName(), validateEmail(), validatePassword(), validateTerms()];
+    if (ok.includes(false)) {
+        // Scroll to first error
+        const firstErr = document.querySelector('.error, .terms-error.visible');
+        if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+
+    setLoading(true);
+
+    try {
+        // ── TODO: replace with your real API call ──────────────────
+        // Option A — Supabase Auth:
+        //   const { error } = await supabase.auth.signUp({
+        //     email: state.email,
+        //     password: state.password,
+        //     options: { data: { full_name: state.name } }
+        //   });
+        //   if (error) throw error;
+        //
+        // Option B — custom endpoint:
+        //   const res = await fetch('/api/auth/register', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({ name: state.name, email: state.email, password: state.password }),
+        //   });
+        //   if (!res.ok) throw new Error((await res.json()).message);
+        // ──────────────────────────────────────────────────────────
+
+        await simulateApiCall(1400);   // remove when wiring real API
+        showSuccess(state.name);
+
+    } catch (err) {
+        setLoading(false);
+        const msg = err.message || 'אירעה שגיאה. אנא נסה/י שוב.';
+        // Map common Supabase / API error messages to Hebrew
+        const heMsg = mapErrorToHebrew(msg);
+        showToast(heMsg, 'error');
+    }
+}
+
+function mapErrorToHebrew(msg) {
+    if (/already registered|already exists|duplicate/i.test(msg))
+        return 'כתובת הדואר האלקטרוני כבר רשומה במערכת';
+    if (/invalid email/i.test(msg))
+        return 'כתובת הדואר האלקטרוני אינה תקינה';
+    if (/password/i.test(msg))
+        return 'הסיסמה אינה עומדת בדרישות';
+    if (/network|fetch/i.test(msg))
+        return 'שגיאת רשת — בדוק/י את החיבור לאינטרנט';
+    return msg;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SOCIAL LOGIN
+   Wire each provider to your auth SDK (Supabase OAuth, Firebase, etc.)
+══════════════════════════════════════════════════════════════ */
+async function handleSocialLogin(provider) {
+    // TODO:
+    // await supabase.auth.signInWithOAuth({ provider, options: { redirectTo: window.location.origin } });
+    showToast(`מתחבר עם ${provider === 'google' ? 'Google' : 'Apple'}…`);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   UI HELPERS
+══════════════════════════════════════════════════════════════ */
+function setLoading(on) {
+    const btn = document.getElementById('submit-btn');
+    btn.classList.toggle('loading', on);
+    btn.disabled = on;
+}
+
+function showSuccess(name) {
+    const firstName = (name || '').split(' ')[0];
+    document.getElementById('success-name-msg').textContent =
+        `היי ${firstName}! החשבון שלך נוצר בהצלחה. עכשיו תוכל/י לשתף אירועים חינמיים עם הקהילה.`;
+    document.getElementById('card-body').classList.add('hidden');
+    document.getElementById('card-footer').classList.add('hidden');
+    document.getElementById('success-overlay').classList.add('visible');
+}
+
+// Stub — remove when wiring real API
+function simulateApiCall(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+let toastTimer;
+function showToast(msg, type = '') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `toast ${type} visible`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('visible'), 3000);
+}
+</script>
+</body>
+</html>
