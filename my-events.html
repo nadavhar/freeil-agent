@@ -1226,7 +1226,7 @@ async function handleAddEventSubmit(e) {
         if (!thumbnailUrl) showToast('התמונה לא הועלתה, האירוע נשמר בלעדיה', '');
     }
 
-    const { data, error } = await supabase.from('user_events').insert({
+    const { error } = await supabase.from('user_events').insert({
         user_id:       currentUser.id,
         title,
         date:          dateVal       || null,
@@ -1237,14 +1237,20 @@ async function handleAddEventSubmit(e) {
         description:   desc          || null,
         thumbnail_url: thumbnailUrl  || null,
         status:        'pending',
-    }).select().single();
+    });
 
     btn.classList.remove('loading');
     btn.disabled = false;
 
     if (error) { showToast('שגיאה בשמירת האירוע', 'error'); return; }
 
-    events.unshift(normalizeRow(data));
+    // Reload full list so the new pending card is guaranteed to appear
+    const { data: rows } = await supabase
+        .from('user_events')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .order('created_at', { ascending: false });
+    events = (rows || []).map(normalizeRow);
     render();
     closeAddEvent();
     showToast('האירוע נשלח לאישור ✓', 'success');
