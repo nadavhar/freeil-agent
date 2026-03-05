@@ -42,18 +42,6 @@
             align-items: center;
             gap: 0.75rem;
         }
-        .back-btn {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.15);
-            color: rgba(255,255,255,0.85);
-            width: 38px; height: 38px;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-        .back-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); }
         .header-title {
             font-size: 1.05rem;
             font-weight: 700;
@@ -375,7 +363,7 @@
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            z-index: 900;
+            z-index: 950;
             align-items: flex-end;
             justify-content: center;
         }
@@ -934,7 +922,7 @@ async function duplicateEvent(event) {
         description:      event.description,
         event_type:       event.event_type,
         city:             event.city,
-        thumbnail_url:    event.thumbnail_url,
+        thumbnail_url:    event.thumbnail,
         emoji:            event.emoji,
         status:           'draft',
     }).select().single();
@@ -962,7 +950,7 @@ async function confirmDelete() {
     pendingDeleteId = null;
     closeDeleteModal();
     render();
-    showToast('האירוע נמחק', 'error');
+    showToast('האירוע נמחק בהצלחה', 'success');
 }
 
 function closeDeleteModal() {
