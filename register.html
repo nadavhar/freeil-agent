@@ -794,11 +794,27 @@ function mapErrorToHebrew(msg) {
    Apple requires a paid Apple Developer account to configure.
 ══════════════════════════════════════════════════════════════ */
 async function handleSocialLogin(provider) {
+    const btn = document.querySelector(`.social-btn.${provider}`);
+    const originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    btn.innerHTML = `<svg style="animation:spin 0.7s linear infinite" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> מתחבר…`;
+
     const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: { redirectTo: window.location.origin + '/my-events.html' },
     });
-    if (error) showToast(mapErrorToHebrew(error.message), 'error');
+
+    if (error) {
+        btn.disabled = false;
+        btn.style.opacity = '';
+        btn.innerHTML = originalHtml;
+        if (/provider is not enabled/i.test(error.message)) {
+            showToast('Google login לא מוגדר עדיין — יש להפעיל בדשבורד Supabase', 'error');
+        } else {
+            showToast(mapErrorToHebrew(error.message), 'error');
+        }
+    }
 }
 
 /* ══════════════════════════════════════════════════════════════
