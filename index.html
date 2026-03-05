@@ -929,6 +929,90 @@
                 font-size: 1.1rem;
             }
         }
+
+        /* ── Tab Switcher ── */
+        .tab-switcher {
+            display: flex;
+            gap: 8px;
+            padding: 12px 1rem;
+            background: #fff;
+            border-bottom: 2px solid #f0f4f8;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-family: inherit;
+        }
+        .tab-btn.active {
+            background: #1a1a2e;
+            color: #fff;
+            border-color: #1a1a2e;
+            box-shadow: 0 4px 12px rgba(26,26,46,0.25);
+        }
+        .tab-btn:not(.active):hover {
+            border-color: #1a1a2e;
+            color: #1a1a2e;
+        }
+
+        /* ── FAB ── */
+        .fab-add-event {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            background: linear-gradient(135deg, #00d4aa, #00b894);
+            color: #0f172a;
+            border: none;
+            border-radius: 56px;
+            padding: 14px 22px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,212,170,0.45);
+            display: none;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            animation: fabIn 0.3s ease;
+        }
+        .fab-add-event:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 24px rgba(0,212,170,0.55);
+        }
+        @keyframes fabIn {
+            from { opacity: 0; transform: translateY(16px) scale(0.9); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ── Register button ── */
+        .btn-register {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-register:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+        .btn-register.registered {
+            background: #e2e8f0;
+            color: #64748b;
+            cursor: default;
+        }
+        .btn-register.registered:hover { transform: none; box-shadow: none; }
     </style>
 </head>
 <body>
@@ -1055,10 +1139,22 @@
         </div>
     </div>
 
+    <!-- Tab Switcher -->
+    <div class="tab-switcher">
+        <button id="tab-public"  class="tab-btn active" onclick="switchTab('public')">🌐 ציבורי</button>
+        <button id="tab-private" class="tab-btn"        onclick="switchTab('private')">✨ פרטי</button>
+    </div>
+
     <!-- Event List Section -->
     <div class="event-list-container">
         <div id="event-list"><div id="loading"></div></div>
     </div>
+
+    <!-- FAB: Add Event (Private tab only) -->
+    <button id="fab-add" class="fab-add-event" onclick="window.location.href='/my-events.html'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        הוסף אירוע
+    </button>
 
     <script>
         // --- Translations ---
@@ -1292,6 +1388,9 @@
         }
 
         let allEvents = [];
+        let publicEvents = [];
+        let privateEvents = [];
+        let activeTab = 'public';
         let activeTypeFilter = 'all';
         let activeCityFilter = 'all';
         let activeDateFilter = 'all';
@@ -1548,6 +1647,29 @@
             window.open(wazeUrl, '_blank');
         }
 
+        function showToast(msg) {
+            let t = document.getElementById('main-toast');
+            if (!t) {
+                t = document.createElement('div');
+                t.id = 'main-toast';
+                t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:12px 24px;border-radius:12px;font-size:0.95rem;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:opacity 0.3s;pointer-events:none;';
+                document.body.appendChild(t);
+            }
+            t.textContent = msg;
+            t.style.opacity = '1';
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => { t.style.opacity = '0'; }, 3000);
+        }
+
+        async function handleRegister(ev, btn) {
+            const { data: { user } } = await sb.auth.getUser();
+            if (!user) { window.location.href = '/login.html'; return; }
+            btn.textContent = '✓ נרשמת';
+            btn.classList.add('registered');
+            localStorage.setItem('reg-' + ev.id, '1');
+            showToast('נרשמת לאירוע בהצלחה!');
+        }
+
         function renderEvents(events) {
             const list = document.getElementById('event-list');
             list.innerHTML = '';
@@ -1589,6 +1711,14 @@
                 // Favorite state
                 const isFavorite = userActions.favorite;
 
+                // Register button (private tab only)
+                const isPrivate = ev.source === 'user';
+                const regKey = 'reg-' + ev.id;
+                const isRegistered = isPrivate && localStorage.getItem(regKey) === '1';
+                const registerBtn = isPrivate
+                    ? `<button class="btn-register${isRegistered ? ' registered' : ''}" data-ev-id="${ev.id}">${isRegistered ? '✓ נרשמת' : 'הרשמה'}</button>`
+                    : '';
+
                 card.innerHTML = `
                     <div class="card-tags">${typeTag}${cityTag}</div>
                     <div class="card-title-row">
@@ -1603,6 +1733,7 @@
                     <div class="card-footer">
                         <div class="action-buttons">
                             <button class="favorite-btn${isFavorite ? ' active' : ''}" data-event-id="${eventId}">${isFavorite ? '♥' : '♡'}</button>
+                            ${registerBtn}
                         </div>
                         <div class="action-buttons">
                             <button class="action-btn whatsapp" title="${t('shareWhatsApp')}">${whatsappIcon}</button>
@@ -1631,6 +1762,17 @@
                         e.stopPropagation();
                         navigateToLocation(ev.latitude, ev.longitude, ev.location);
                     });
+                }
+
+                // Register button click (private events)
+                if (isPrivate && !isRegistered) {
+                    const regBtn = card.querySelector('.btn-register');
+                    if (regBtn) {
+                        regBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            handleRegister(ev, regBtn);
+                        });
+                    }
                 }
 
                 list.appendChild(card);
@@ -1803,6 +1945,24 @@
             });
         }
 
+        function switchTab(tab) {
+            activeTab = tab;
+            document.getElementById('tab-public').classList.toggle('active', tab === 'public');
+            document.getElementById('tab-private').classList.toggle('active', tab === 'private');
+            const fab = document.getElementById('fab-add');
+            if (fab) fab.style.display = tab === 'private' ? 'flex' : 'none';
+            allEvents = tab === 'private' ? privateEvents : publicEvents;
+            activeDateFilter = 'all';
+            activeRegionFilter = 'all';
+            activeCityFilter = 'all';
+            activeTypeFilter = 'all';
+            searchQuery = '';
+            const si = document.getElementById('search-input');
+            if (si) si.value = '';
+            buildFilters();
+            applyFilter();
+        }
+
         function resetAllFilters() {
             activeDateFilter = 'all';
             activeRegionFilter = 'all';
@@ -1908,7 +2068,9 @@
                 } catch (e) { return []; }
             })(),
         ]).then(([scraped, userEvents]) => {
-            allEvents = [...userEvents, ...scraped];
+            publicEvents = scraped;
+            privateEvents = userEvents;
+            allEvents = publicEvents; // default tab = public
             updateEventCounter(allEvents.length);
             buildFilters();
             renderEvents(allEvents);
