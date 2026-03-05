@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>האירועים שלי — FreeIL</title>
+    <meta name="theme-color" content="#1a1a2e">
+
+    <style>
+        /* ── Reset ── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { overflow-x: hidden; max-width: 100vw; width: 100%; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #1a1a2e;
+            padding-top: 64px;
+        }
+
+        /* ── Header — mirrors index.html ── */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .header-inner {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 0.875rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .back-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.85);
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); }
+        .header-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: white;
+            white-space: nowrap;
+        }
+        .header-title span { color: #00d4aa; }
+        .add-event-btn {
+            display: flex; align-items: center; gap: 6px;
+            background: #00d4aa;
+            color: #0f172a;
+            border: none;
+            padding: 0 16px;
+            height: 38px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .add-event-btn:hover { background: #00bfa0; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,212,170,0.3); }
+        .add-event-btn svg { flex-shrink: 0; }
+
+        /* ── Page container ── */
+        .page-container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 1.25rem 1rem 5rem;
+        }
+
+        /* ── Stats row ── */
+        .stats-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.25rem;
+        }
+        .stat-pill {
+            flex: 1;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        .stat-pill .stat-num {
+            font-size: 1.4rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+        .stat-pill .stat-label {
+            font-size: 0.65rem;
+            color: #64748b;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .stat-pill.approved .stat-num  { color: #059669; }
+        .stat-pill.pending  .stat-num  { color: #d97706; }
+        .stat-pill.rejected .stat-num  { color: #dc2626; }
+        .stat-pill.draft    .stat-num  { color: #94a3b8; }
+
+        /* ── Event list ── */
+        .events-list { display: flex; flex-direction: column; gap: 10px; }
+
+        /* ── Event row ── */
+        .event-row {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 12px 12px 8px;
+            transition: box-shadow 0.2s, border-color 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .event-row:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: #cbd5e1; }
+
+        /* Status accent line on right edge (RTL = right) */
+        .event-row::before {
+            content: '';
+            position: absolute;
+            right: 0; top: 0; bottom: 0;
+            width: 4px;
+            border-radius: 0 14px 14px 0;
+        }
+        .event-row.status-approved::before { background: #10b981; }
+        .event-row.status-pending::before  { background: #f59e0b; }
+        .event-row.status-rejected::before { background: #ef4444; }
+        .event-row.status-draft::before    { background: #cbd5e1; }
+
+        /* Thumbnail */
+        .event-thumb {
+            width: 64px; height: 64px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #f1f5f9;
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+        .event-thumb img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .event-thumb .thumb-placeholder {
+            font-size: 1.6rem;
+        }
+
+        /* Info block */
+        .event-info { flex: 1; min-width: 0; }
+        .event-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.3;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .event-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .event-date {
+            font-size: 0.75rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .event-date svg { opacity: 0.6; }
+
+        /* Status badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 9px;
+            border-radius: 20px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .badge-approved { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+        .badge-pending  { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+        .badge-rejected { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .badge-draft    { background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; }
+
+        .status-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .badge-approved .status-dot { background: #10b981; }
+        .badge-pending  .status-dot { background: #f59e0b; animation: blink 1.4s ease-in-out infinite; }
+        .badge-rejected .status-dot { background: #ef4444; }
+        .badge-draft    .status-dot { background: #94a3b8; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Rejection reason tooltip */
+        .rejection-reason {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: help;
+            margin-right: 4px;
+        }
+        .rejection-reason .tooltip-icon {
+            width: 16px; height: 16px;
+            background: #fecaca;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: #dc2626;
+        }
+        .rejection-reason .tooltip-text {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 6px);
+            right: -8px;
+            background: #1e293b;
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 400;
+            padding: 6px 10px;
+            border-radius: 8px;
+            white-space: nowrap;
+            max-width: 220px;
+            white-space: normal;
+            z-index: 50;
+            line-height: 1.4;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+        .rejection-reason .tooltip-text::after {
+            content: '';
+            position: absolute;
+            top: 100%; right: 12px;
+            border: 5px solid transparent;
+            border-top-color: #1e293b;
+        }
+        .rejection-reason:hover .tooltip-text,
+        .rejection-reason:focus .tooltip-text { display: block; }
+
+        /* ── Action menu (three dots) ── */
+        .action-menu-wrapper { position: relative; flex-shrink: 0; }
+        .three-dot-btn {
+            width: 34px; height: 34px;
+            background: transparent;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+        .three-dot-btn:hover { background: #f1f5f9; color: #1e293b; border-color: #cbd5e1; }
+        .three-dot-btn.active { background: #f1f5f9; border-color: #cbd5e1; color: #1e293b; }
+
+        .action-dropdown {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: calc(100% + 6px);
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            overflow: hidden;
+            min-width: 150px;
+            z-index: 200;
+        }
+        .action-dropdown.open { display: block; }
+
+        .action-dropdown button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 16px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1e293b;
+            transition: background 0.15s;
+            text-align: right;
+        }
+        .action-dropdown button:hover { background: #f8fafc; }
+        .action-dropdown button svg { flex-shrink: 0; color: #64748b; }
+        .action-dropdown .action-delete { color: #dc2626; }
+        .action-dropdown .action-delete svg { color: #dc2626; }
+        .action-dropdown .action-delete:hover { background: #fef2f2; }
+        .action-dropdown hr { border: none; border-top: 1px solid #f1f5f9; margin: 2px 0; }
+
+        /* ── Empty state ── */
+        .empty-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        .empty-state.visible { display: flex; }
+        .empty-illustration {
+            font-size: 4.5rem;
+            margin-bottom: 1.25rem;
+            line-height: 1;
+            filter: grayscale(0.2);
+        }
+        .empty-state h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+        .empty-state p {
+            font-size: 0.875rem;
+            color: #64748b;
+            max-width: 280px;
+            line-height: 1.6;
+            margin-bottom: 1.75rem;
+        }
+        .cta-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #00d4aa;
+            color: #0f172a;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 16px rgba(0,212,170,0.3);
+        }
+        .cta-btn:hover { background: #00bfa0; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,212,170,0.4); }
+
+        /* ── Delete confirmation modal ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 900;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        @media (min-width: 480px) {
+            .modal-overlay { align-items: center; }
+        }
+        .modal {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 1.75rem 1.5rem;
+            width: 100%;
+            max-width: 420px;
+            animation: slideUp 0.25s ease;
+        }
+        @media (min-width: 480px) {
+            .modal { border-radius: 20px; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to   { transform: translateY(0);   opacity: 1; }
+        }
+        .modal-icon {
+            width: 52px; height: 52px;
+            background: #fef2f2;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .modal h3 { font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.4rem; }
+        .modal p  { font-size: 0.875rem; color: #64748b; line-height: 1.6; margin-bottom: 1.5rem; }
+        .modal-title-preview {
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn-delete-confirm {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-delete-confirm:hover { background: #b91c1c; }
+        .btn-cancel {
+            background: #f1f5f9;
+            color: #475569;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-cancel:hover { background: #e2e8f0; }
+
+        /* ── Toast notification ── */
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #1e293b;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            z-index: 1100;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        }
+        .toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.success { background: #059669; }
+        .toast.error   { background: #dc2626; }
+
+        /* ── Section heading ── */
+        .section-heading {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #94a3b8;
+            margin-bottom: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════ -->
+<header>
+    <div class="header-inner">
+        <div class="header-left">
+            <button class="back-btn" onclick="goBack()" aria-label="חזרה">
+                <!-- arrow right (RTL = back) -->
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18l6-6-6-6"/>
+                </svg>
+            </button>
+            <div class="header-title">ניהול <span>האירועים שלי</span></div>
+        </div>
+        <button class="add-event-btn" onclick="openAddEvent()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            הוסף אירוע
+        </button>
+    </div>
+</header>
+
+<!-- ════════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════ -->
+<main class="page-container">
+
+    <!-- Stats row -->
+    <div class="stats-row" id="stats-row">
+        <div class="stat-pill approved">
+            <div class="stat-num" id="count-approved">0</div>
+            <div class="stat-label">מאושרים</div>
+        </div>
+        <div class="stat-pill pending">
+            <div class="stat-num" id="count-pending">0</div>
+            <div class="stat-label">ממתינים</div>
+        </div>
+        <div class="stat-pill rejected">
+            <div class="stat-num" id="count-rejected">0</div>
+            <div class="stat-label">נדחו</div>
+        </div>
+        <div class="stat-pill draft">
+            <div class="stat-num" id="count-draft">0</div>
+            <div class="stat-label">טיוטות</div>
+        </div>
+    </div>
+
+    <!-- Event list -->
+    <div class="section-heading">האירועים שלי</div>
+    <div class="events-list" id="events-list"></div>
+
+    <!-- Empty state (shown when no events) -->
+    <div class="empty-state" id="empty-state">
+        <div class="empty-illustration">🎪</div>
+        <h2>עוד לא הוספת אירועים</h2>
+        <p>שתף אירוע חינמי עם הקהילה ועזור לאחרים למצוא חוויות נהדרות בחינם!</p>
+        <button class="cta-btn" onclick="openAddEvent()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            צור את האירוע הראשון שלך
+        </button>
+    </div>
+
+</main>
+
+<!-- ════════════════════════════════════════════
+     DELETE CONFIRMATION MODAL
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="delete-modal" onclick="handleModalOverlayClick(event)">
+    <div class="modal">
+        <div class="modal-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6"/><path d="M14 11v6"/>
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+            </svg>
+        </div>
+        <h3>מחיקת אירוע</h3>
+        <p>האם אתה בטוח שברצונך למחוק את <span class="modal-title-preview" id="modal-event-title"></span>? פעולה זו אינה ניתנת לביטול.</p>
+        <div class="modal-actions">
+            <button class="btn-delete-confirm" onclick="confirmDelete()">כן, מחק</button>
+            <button class="btn-cancel" onclick="closeDeleteModal()">ביטול</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   DATA
+   Replace this mock array with your real API call / Supabase fetch
+══════════════════════════════════════════════════════════════ */
+const MOCK_EVENTS = [
+    {
+        id: '1',
+        title: 'קונצרט קאמרי בגן הירקון',
+        date: '2026-03-15',
+        time: '19:00',
+        thumbnail: null,
+        emoji: '🎻',
+        status: 'approved',    // 'approved' | 'pending' | 'rejected' | 'draft'
+        rejectionReason: null,
+    },
+    {
+        id: '2',
+        title: 'סיור חינם בנחלת בנימין',
+        date: '2026-03-22',
+        time: '10:00',
+        thumbnail: null,
+        emoji: '🏛️',
+        status: 'pending',
+        rejectionReason: null,
+    },
+    {
+        id: '3',
+        title: 'סדנת צילום ברחוב הדרקון',
+        date: '2026-03-10',
+        time: '17:30',
+        thumbnail: null,
+        emoji: '📷',
+        status: 'rejected',
+        rejectionReason: 'האירוע אינו חינמי — נמצאה עלות כניסה של 30 ₪ באתר הרשמי.',
+    },
+    {
+        id: '4',
+        title: 'פיקניק קהילתי בפארק הירקון',
+        date: null,
+        time: null,
+        thumbnail: null,
+        emoji: '🧺',
+        status: 'draft',
+        rejectionReason: null,
+    },
+];
+
+/* ══════════════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════════════ */
+let events = [...MOCK_EVENTS];         // will be replaced by real data
+let activeMenuId = null;               // which row's dropdown is open
+let pendingDeleteId = null;            // which event is queued for deletion
+let openDropdownEl = null;             // reference to open dropdown element
+
+/* ══════════════════════════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════════════════════════ */
+function render() {
+    updateStats();
+    renderList();
+}
+
+function updateStats() {
+    const counts = { approved: 0, pending: 0, rejected: 0, draft: 0 };
+    events.forEach(e => { if (counts[e.status] !== undefined) counts[e.status]++; });
+    document.getElementById('count-approved').textContent = counts.approved;
+    document.getElementById('count-pending').textContent  = counts.pending;
+    document.getElementById('count-rejected').textContent = counts.rejected;
+    document.getElementById('count-draft').textContent    = counts.draft;
+
+    // Hide stats row when empty
+    document.getElementById('stats-row').style.display = events.length === 0 ? 'none' : 'flex';
+}
+
+function renderList() {
+    const list   = document.getElementById('events-list');
+    const empty  = document.getElementById('empty-state');
+
+    if (events.length === 0) {
+        list.innerHTML = '';
+        empty.classList.add('visible');
+        return;
+    }
+    empty.classList.remove('visible');
+    list.innerHTML = events.map(buildRow).join('');
+
+    // Attach three-dot button listeners after render
+    list.querySelectorAll('.three-dot-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = btn.dataset.id;
+            toggleDropdown(id, btn);
+        });
+    });
+
+    // Attach action button listeners
+    list.querySelectorAll('[data-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const action = btn.dataset.action;
+            const id     = btn.dataset.id;
+            handleAction(action, id);
+        });
+    });
+}
+
+function buildRow(ev) {
+    const statusConfig = {
+        approved: { label: 'מאושר',           cls: 'badge-approved', rowCls: 'status-approved' },
+        pending:  { label: 'בהמתנה לאישור',   cls: 'badge-pending',  rowCls: 'status-pending'  },
+        rejected: { label: 'נדחה',             cls: 'badge-rejected', rowCls: 'status-rejected' },
+        draft:    { label: 'טיוטה',            cls: 'badge-draft',    rowCls: 'status-draft'    },
+    };
+    const sc = statusConfig[ev.status] || statusConfig.draft;
+
+    const thumbHtml = ev.thumbnail
+        ? `<img src="${ev.thumbnail}" alt="${escHtml(ev.title)}" loading="lazy">`
+        : `<span class="thumb-placeholder">${ev.emoji || '📅'}</span>`;
+
+    const dateHtml = ev.date
+        ? `<span class="event-date">
+             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+             ${formatDate(ev.date)}${ev.time ? ' · ' + ev.time : ''}
+           </span>`
+        : `<span class="event-date" style="color:#94a3b8">ללא תאריך</span>`;
+
+    const rejectionTooltip = (ev.status === 'rejected' && ev.rejectionReason)
+        ? `<span class="rejection-reason" tabindex="0" aria-label="סיבת דחייה">
+             <span class="tooltip-icon">?</span>
+             <span class="tooltip-text">סיבת דחייה: ${escHtml(ev.rejectionReason)}</span>
+           </span>`
+        : '';
+
+    return `
+      <div class="event-row ${sc.rowCls}" id="row-${ev.id}">
+        <div class="event-thumb">${thumbHtml}</div>
+        <div class="event-info">
+          <div class="event-title" title="${escHtml(ev.title)}">${escHtml(ev.title)}</div>
+          <div class="event-meta">
+            ${dateHtml}
+            <span class="status-badge ${sc.cls}">
+              <span class="status-dot"></span>${sc.label}
+            </span>
+            ${rejectionTooltip}
+          </div>
+        </div>
+        <div class="action-menu-wrapper">
+          <button class="three-dot-btn" data-id="${ev.id}" aria-label="פעולות" aria-haspopup="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="5"  r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
+            </svg>
+          </button>
+          <div class="action-dropdown" id="dropdown-${ev.id}">
+            <button data-action="edit" data-id="${ev.id}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              ערוך
+            </button>
+            <button data-action="duplicate" data-id="${ev.id}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              שכפל
+            </button>
+            <hr>
+            <button class="action-delete" data-action="delete" data-id="${ev.id}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+              מחק
+            </button>
+          </div>
+        </div>
+      </div>`;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DROPDOWN LOGIC
+══════════════════════════════════════════════════════════════ */
+function toggleDropdown(id, btn) {
+    const dropdown = document.getElementById(`dropdown-${id}`);
+
+    if (openDropdownEl && openDropdownEl !== dropdown) {
+        closeAllDropdowns();
+    }
+
+    const isOpen = dropdown.classList.contains('open');
+    dropdown.classList.toggle('open', !isOpen);
+    btn.classList.toggle('active', !isOpen);
+    openDropdownEl = isOpen ? null : dropdown;
+}
+
+function closeAllDropdowns() {
+    document.querySelectorAll('.action-dropdown.open').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.three-dot-btn.active').forEach(b => b.classList.remove('active'));
+    openDropdownEl = null;
+}
+
+document.addEventListener('click', closeAllDropdowns);
+
+/* ══════════════════════════════════════════════════════════════
+   ACTION HANDLERS
+   Replace the TODO stubs with your real API calls
+══════════════════════════════════════════════════════════════ */
+function handleAction(action, id) {
+    closeAllDropdowns();
+    const event = events.find(e => e.id === id);
+    if (!event) return;
+
+    if (action === 'edit') {
+        // TODO: navigate to edit form / open edit modal with event data
+        showToast(`עורך את "${event.title}"…`, 'success');
+    }
+
+    if (action === 'duplicate') {
+        const clone = {
+            ...event,
+            id: String(Date.now()),
+            title: event.title + ' (עותק)',
+            status: 'draft',
+        };
+        events.unshift(clone);
+        render();
+        showToast('האירוע שוכפל כטיוטה ✓', 'success');
+    }
+
+    if (action === 'delete') {
+        pendingDeleteId = id;
+        document.getElementById('modal-event-title').textContent = `"${event.title}"`;
+        document.getElementById('delete-modal').classList.add('open');
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DELETE MODAL
+══════════════════════════════════════════════════════════════ */
+function confirmDelete() {
+    if (!pendingDeleteId) return;
+
+    // TODO: call your real delete API here, e.g.:
+    // await supabase.from('events').delete().eq('id', pendingDeleteId);
+
+    events = events.filter(e => e.id !== pendingDeleteId);
+    pendingDeleteId = null;
+    closeDeleteModal();
+    render();
+    showToast('האירוע נמחק', 'error');
+}
+
+function closeDeleteModal() {
+    document.getElementById('delete-modal').classList.remove('open');
+    pendingDeleteId = null;
+}
+
+function handleModalOverlayClick(e) {
+    if (e.target === e.currentTarget) closeDeleteModal();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   NAVIGATION STUBS
+   Wire these to your real routing / modal system
+══════════════════════════════════════════════════════════════ */
+function goBack() {
+    // TODO: navigate back — window.history.back() or your SPA router
+    if (window.history.length > 1) window.history.back();
+    else window.location.href = '/';
+}
+
+function openAddEvent() {
+    // TODO: open the "Add Event" form / route
+    showToast('פותח טופס הוספת אירוע…', 'success');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════════════════════════ */
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    try {
+        const d = new Date(dateStr + 'T00:00:00');
+        return d.toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch { return dateStr; }
+}
+
+function escHtml(str) {
+    const d = document.createElement('div');
+    d.appendChild(document.createTextNode(str || ''));
+    return d.innerHTML;
+}
+
+let toastTimer;
+function showToast(msg, type = '') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `toast ${type} visible`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('visible'), 2800);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INIT
+   Replace MOCK_EVENTS with a real fetch, e.g.:
+     const { data } = await supabase.from('events')
+       .select('*').eq('user_id', currentUser.id)
+       .order('created_at', { ascending: false });
+     events = data;
+══════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', render);
+</script>
+</body>
+</html>
