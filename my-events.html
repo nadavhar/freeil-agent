@@ -215,16 +215,14 @@
 
         .action-dropdown {
             display: none;
-            position: absolute;
-            left: 0;
-            top: calc(100% + 6px);
+            position: fixed;
             background: white;
             border: 1px solid #e2e8f0;
             border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             overflow: hidden;
             min-width: 160px;
-            z-index: 500;
+            z-index: 9999;
         }
         .action-dropdown.open { display: block; }
 
@@ -1069,9 +1067,27 @@ function toggleDropdown(id, btn) {
     }
 
     const isOpen = dropdown.classList.contains('open');
-    dropdown.classList.toggle('open', !isOpen);
-    btn.classList.toggle('active', !isOpen);
-    openDropdownEl = isOpen ? null : dropdown;
+    if (isOpen) {
+        dropdown.classList.remove('open');
+        btn.classList.remove('active');
+        openDropdownEl = null;
+        return;
+    }
+
+    // Position using fixed coordinates so it's never clipped
+    const rect = btn.getBoundingClientRect();
+    dropdown.style.top  = (rect.bottom + 6) + 'px';
+    dropdown.style.left = rect.left + 'px';
+
+    // If dropdown would go off right edge, align to right of button
+    dropdown.classList.add('open');
+    const dw = dropdown.offsetWidth;
+    if (rect.left + dw > window.innerWidth - 8) {
+        dropdown.style.left = (rect.right - dw) + 'px';
+    }
+
+    btn.classList.add('active');
+    openDropdownEl = dropdown;
 }
 
 function closeAllDropdowns() {
