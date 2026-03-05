@@ -160,6 +160,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-shrink: 0; /* never compress the action group */
         }
         #lang-toggle {
             background: transparent;
@@ -167,6 +168,7 @@
             color: rgba(255,255,255,0.7);
             padding: 0 10px;
             height: 34px;
+            flex-shrink: 0;
             border-radius: 7px;
             cursor: pointer;
             font-size: 0.75rem;
@@ -189,6 +191,7 @@
             touch-action: manipulation;
             text-decoration: none; white-space: nowrap;
             border: none;
+            flex-shrink: 0;
         }
         .auth-btn.login {
             background: rgba(255,255,255,0.08);
@@ -211,8 +214,28 @@
             font-size: 0.8rem; font-weight: 700;
             cursor: pointer; transition: all 0.2s;
             text-decoration: none; white-space: nowrap;
+            flex-shrink: 0;
         }
         .auth-btn-add:hover { background: rgba(0,212,170,0.2); }
+
+        /* ── Mobile header responsive fixes ── */
+        @media (max-width: 479px) {
+            /* Hide counter on mobile — absolute position causes overlap with actions */
+            .event-counter { display: none; }
+            /* Tighter gaps and padding */
+            .header-actions { gap: 6px; }
+            .auth-btn  { padding: 0 10px; font-size: 0.75rem; height: 34px; }
+            .auth-btn-add { padding: 0 10px; font-size: 0.75rem; height: 34px; }
+            #lang-toggle { padding: 0 8px; height: 34px; }
+        }
+        @media (max-width: 359px) {
+            /* Very narrow screens: hide lang text, icon only */
+            #lang-text { display: none; }
+            #lang-toggle { padding: 0 7px; min-width: 32px; }
+            .auth-btn  { padding: 0 8px; }
+            .auth-btn-add { padding: 0 8px; }
+            .header-actions { gap: 5px; }
+        }
 
         /* User avatar + dropdown */
         .user-menu-wrapper {
