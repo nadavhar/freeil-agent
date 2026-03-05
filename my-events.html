@@ -950,7 +950,7 @@ function signOut() {
     Object.keys(localStorage).forEach(k => {
         if (k.startsWith('sb-')) localStorage.removeItem(k);
     });
-    window.location.href = '/login.html';
+    window.location.href = '/';
 }
 </script>
 
@@ -1285,7 +1285,7 @@ function handleModalOverlayClick(e) {
 // Override the fallback signOut (defined in first script block) with proper SDK version
 signOut = async function () {
     try { await supabase.auth.signOut(); } catch (e) { /* ignore */ }
-    window.location.href = '/login.html';
+    window.location.href = '/';
 };
 
 /* ══════════════════════════════════════════════════════════════
@@ -1336,7 +1336,7 @@ function showToast(msg, type = '') {
 ══════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { window.location.href = '/login.html'; return; }
+    if (!session) { window.location.href = '/'; return; }
     currentUser = session.user;
 
     // Populate side menu user info
