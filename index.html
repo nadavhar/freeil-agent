@@ -833,6 +833,10 @@
 
                 <!-- Auth: logged-in state -->
                 <div id="auth-logged-in" style="display:none; align-items:center; gap:8px;">
+                    <a href="/my-events.html" class="auth-btn register" style="text-decoration:none;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        הוסף אירוע
+                    </a>
                     <div class="user-menu-wrapper">
                         <button class="user-avatar-btn" id="user-avatar-btn" onclick="toggleUserDropdown(event)">
                             <div class="user-avatar" id="user-avatar-initials">?</div>
@@ -871,6 +875,26 @@
     <!-- Hero Section -->
     <div class="hero-section">
         <p id="tagline" class="hero-tagline">אירועים חינם בתל אביב, ירושלים, חיפה, באר שבע ועוד</p>
+
+        <!-- Logged-in welcome banner (hidden for guests) -->
+        <div id="user-welcome-banner" style="display:none; margin-top:0.9rem; padding:0.9rem 1rem; background:rgba(0,212,170,0.1); border:1px solid rgba(0,212,170,0.25); border-radius:14px; max-width:600px; margin-left:auto; margin-right:auto; text-align:right;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                <div>
+                    <div style="font-size:0.95rem; font-weight:700; color:#fff; margin-bottom:2px;">שלום, <span id="welcome-name">!</span> 👋</div>
+                    <div style="font-size:0.75rem; color:rgba(255,255,255,0.6);">רוצה לשתף אירוע חינמי עם הקהילה?</div>
+                </div>
+                <div style="display:flex; gap:8px; flex-shrink:0;">
+                    <a href="/my-events.html" style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.85); padding:7px 13px; border-radius:8px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        האירועים שלי
+                    </a>
+                    <a href="/my-events.html" style="display:inline-flex; align-items:center; gap:6px; background:#00d4aa; color:#0f172a; padding:7px 13px; border-radius:8px; font-size:0.78rem; font-weight:700; text-decoration:none; transition:all 0.2s;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        הוסף אירוע
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Filters Section -->
@@ -1900,22 +1924,27 @@
             function setAuthUI(user) {
                 const loggedOut = document.getElementById('auth-logged-out');
                 const loggedIn  = document.getElementById('auth-logged-in');
+                const banner    = document.getElementById('user-welcome-banner');
                 if (!user) {
                     loggedOut.style.display = 'flex';
                     loggedIn.style.display  = 'none';
+                    banner.style.display    = 'none';
                     return;
                 }
                 loggedOut.style.display = 'none';
                 loggedIn.style.display  = 'flex';
+                banner.style.display    = 'block';
 
                 const name    = user.user_metadata?.full_name || user.email || '';
+                const firstName = name.split(' ')[0] || '';
                 const initials = name.trim()
                     ? name.trim().split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
                     : '?';
 
                 document.getElementById('user-avatar-initials').textContent = initials;
-                document.getElementById('user-name-short').textContent = name.split(' ')[0] || '';
+                document.getElementById('user-name-short').textContent = firstName;
                 document.getElementById('user-dropdown-email').textContent = user.email || '';
+                document.getElementById('welcome-name').textContent = (firstName || user.email) + '!';
             }
 
             // Initial session check
