@@ -372,21 +372,22 @@
             .modal-overlay { align-items: center; }
         }
         .modal {
-            background: white;
-            border-radius: 20px 20px 0 0;
-            padding: 1.75rem 1.5rem;
+            background: #fff;
+            border-radius: 24px 24px 0 0;
+            padding: 2rem 1.75rem;
             width: 100%;
-            max-width: 480px;
-            animation: slideUp 0.25s ease;
-            max-height: 90vh;
+            max-width: 500px;
+            animation: slideUp 0.3s cubic-bezier(0.34,1.2,0.64,1);
+            max-height: 92vh;
             overflow-y: auto;
+            box-shadow: 0 -4px 30px rgba(0,0,0,0.08), 0 25px 60px rgba(0,0,0,0.18);
         }
         @media (min-width: 480px) {
-            .modal { border-radius: 20px; }
+            .modal { border-radius: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.1); }
         }
         @keyframes slideUp {
-            from { transform: translateY(40px); opacity: 0; }
-            to   { transform: translateY(0);   opacity: 1; }
+            from { transform: translateY(48px); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
         }
         .modal-icon {
             width: 52px; height: 52px;
@@ -434,54 +435,76 @@
         /* ── Add Event modal form ── */
         .add-modal-header {
             display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid #f1f5f9;
         }
-        .add-modal-header h3 { font-size: 1.1rem; font-weight: 800; color: #1e293b; margin: 0; }
+        .add-modal-header-left { display: flex; align-items: center; gap: 12px; }
+        .add-modal-icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.06));
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: #00d4aa; flex-shrink: 0;
+        }
+        .add-modal-header h3 { font-size: 1.05rem; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.02em; }
+        .add-modal-header p  { font-size: 0.75rem; color: #94a3b8; margin: 2px 0 0; }
         .modal-close-x {
-            width: 32px; height: 32px;
-            background: #f1f5f9; border: none; border-radius: 8px;
+            width: 34px; height: 34px;
+            background: #f8fafc; border: 1px solid #e8edf4; border-radius: 10px;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
-            color: #64748b; transition: all 0.15s; flex-shrink: 0;
+            color: #94a3b8; transition: all 0.15s; flex-shrink: 0;
         }
-        .modal-close-x:hover { background: #e2e8f0; color: #1e293b; }
+        .modal-close-x:hover { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
 
-        .add-form { display: flex; flex-direction: column; gap: 12px; }
-        .add-form .field { display: flex; flex-direction: column; gap: 5px; }
-        .add-form label { font-size: 0.78rem; font-weight: 600; color: #374151; }
+        .add-form { display: flex; flex-direction: column; gap: 14px; }
+        .add-form .field { display: flex; flex-direction: column; gap: 6px; }
+        .add-form label {
+            font-size: 0.7rem; font-weight: 700; color: #64748b;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
         .add-form .required { color: #ef4444; margin-right: 2px; }
         .add-form input,
         .add-form textarea,
         .add-form select {
             width: 100%;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 10px;
+            border: 1.5px solid #e8edf4;
+            border-radius: 12px;
             background: #f8fafc;
-            font-size: 15px;
-            color: #1e293b;
+            font-size: 0.9rem;
+            color: #0f172a;
             font-family: inherit;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            padding: 10px 12px;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            padding: 11px 14px;
         }
         .add-form input:focus,
         .add-form textarea:focus,
         .add-form select:focus {
             border-color: #00d4aa;
             background: #fff;
-            box-shadow: 0 0 0 3px rgba(0,212,170,0.12);
+            box-shadow: 0 0 0 4px rgba(0,212,170,0.1);
         }
         .add-form input.err,
-        .add-form textarea.err { border-color: #ef4444; }
-        .add-form textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+        .add-form textarea.err { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.08); }
+        .add-form textarea { resize: vertical; min-height: 88px; line-height: 1.6; }
         .add-form .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .add-form .field-err { font-size: 0.7rem; color: #ef4444; font-weight: 500; min-height: 14px; }
+        .add-form .field-err { font-size: 0.7rem; color: #ef4444; font-weight: 600; min-height: 14px; }
         .add-form .field-err:empty { display: none; }
+
+        /* Icon-prefixed inputs */
+        .input-icon-wrap { position: relative; }
+        .input-icon-wrap .field-icon {
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            color: #b0bcc8; pointer-events: none; display: flex; align-items: center;
+        }
+        .input-icon-wrap input { padding-right: 38px; }
 
         /* Image upload */
         .img-upload-zone {
-            border: 2px dashed #e2e8f0;
-            border-radius: 12px;
-            padding: 1.25rem;
+            border: 2px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 1.75rem 1.25rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
@@ -489,46 +512,63 @@
             position: relative;
         }
         .img-upload-zone:hover,
-        .img-upload-zone.drag-over { border-color: #00d4aa; background: rgba(0,212,170,0.04); }
+        .img-upload-zone.drag-over {
+            border-color: #00d4aa;
+            background: rgba(0,212,170,0.03);
+            box-shadow: 0 0 0 4px rgba(0,212,170,0.07);
+        }
         .img-upload-zone input[type="file"] {
             position: absolute; inset: 0; opacity: 0; cursor: pointer;
             width: 100%; height: 100%; padding: 0; border: none; background: none;
         }
-        .img-upload-hint { font-size: 0.78rem; color: #94a3b8; margin-top: 4px; }
-        .img-upload-icon { font-size: 1.6rem; line-height: 1; margin-bottom: 4px; }
-        .img-upload-label { font-size: 0.82rem; font-weight: 600; color: #475569; }
+        .img-upload-icon-wrap {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, rgba(0,212,170,0.12), rgba(0,212,170,0.04));
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 10px; color: #00d4aa;
+        }
+        .img-upload-label { font-size: 0.85rem; font-weight: 700; color: #334155; margin-bottom: 3px; }
+        .img-upload-label span { color: #00d4aa; }
+        .img-upload-hint { font-size: 0.75rem; color: #94a3b8; }
 
         .img-preview-wrap {
-            display: none;
-            position: relative;
-            border-radius: 10px;
-            overflow: hidden;
-            height: 140px;
+            display: none; position: relative;
+            border-radius: 14px; overflow: hidden; height: 150px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
         }
         .img-preview-wrap.visible { display: block; }
         .img-preview-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .img-preview-remove {
-            position: absolute; top: 6px; left: 6px;
-            width: 28px; height: 28px;
-            background: rgba(15,23,42,0.65); border: none; border-radius: 50%;
-            color: white; cursor: pointer; font-size: 14px; font-weight: 700;
+            position: absolute; top: 8px; left: 8px;
+            width: 30px; height: 30px;
+            background: rgba(15,23,42,0.7); border: none; border-radius: 50%;
+            color: white; cursor: pointer; font-size: 13px; font-weight: 700;
             display: flex; align-items: center; justify-content: center;
-            transition: background 0.15s;
+            transition: background 0.15s; backdrop-filter: blur(4px);
         }
-        .img-preview-remove:hover { background: rgba(220,38,38,0.85); }
+        .img-preview-remove:hover { background: rgba(220,38,38,0.9); }
 
         .btn-submit-event {
-            width: 100%; height: 50px;
-            background: #00d4aa; color: #0f172a;
-            border: none; border-radius: 12px;
-            font-size: 0.9rem; font-weight: 800;
+            width: 100%; height: 52px;
+            background: linear-gradient(135deg, #00d4aa, #00b894);
+            color: #0f172a;
+            border: none; border-radius: 14px;
+            font-size: 0.95rem; font-weight: 800;
             cursor: pointer; transition: all 0.2s;
             display: flex; align-items: center; justify-content: center; gap: 8px;
-            margin-top: 4px;
+            margin-top: 6px;
+            box-shadow: 0 4px 16px rgba(0,212,170,0.3);
+            letter-spacing: -0.01em;
         }
-        .btn-submit-event:hover:not(:disabled) { background: #00bfa0; transform: translateY(-1px); }
-        .btn-submit-event:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; transform: none; }
-        .btn-submit-event .spinner { display: none; width: 18px; height: 18px; border: 2.5px solid rgba(15,23,42,0.3); border-top-color: #0f172a; border-radius: 50%; animation: spin 0.7s linear infinite; }
+        .btn-submit-event:hover:not(:disabled) {
+            background: linear-gradient(135deg, #00e0b8, #00c9a0);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 8px 24px rgba(0,212,170,0.4);
+        }
+        .btn-submit-event:active:not(:disabled) { transform: translateY(0) scale(0.99); }
+        .btn-submit-event:disabled { background: #e8edf4; color: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-submit-event .spinner { display: none; width: 20px; height: 20px; border: 2.5px solid rgba(15,23,42,0.25); border-top-color: #0f172a; border-radius: 50%; animation: spin 0.7s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .btn-submit-event.loading .btn-submit-label { display: none; }
         .btn-submit-event.loading .spinner { display: block; }
@@ -794,9 +834,17 @@
 <div class="modal-overlay" id="add-event-modal" onclick="handleAddModalOverlayClick(event)">
     <div class="modal">
         <div class="add-modal-header">
-            <h3>➕ הוסף אירוע חדש</h3>
+            <div class="add-modal-header-left">
+                <div class="add-modal-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+                <div>
+                    <h3>הוסף אירוע חדש</h3>
+                    <p>האירוע יעבור בדיקה לפני פרסום</p>
+                </div>
+            </div>
             <button class="modal-close-x" onclick="closeAddEvent()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
 
@@ -811,43 +859,55 @@
             <div class="field-row">
                 <div class="field">
                     <label for="ae-date">תאריך</label>
-                    <input type="date" id="ae-date">
+                    <div class="input-icon-wrap">
+                        <span class="field-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+                        <input type="date" id="ae-date">
+                    </div>
                 </div>
                 <div class="field">
                     <label for="ae-time">שעה</label>
-                    <input type="time" id="ae-time">
+                    <div class="input-icon-wrap">
+                        <span class="field-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                        <input type="time" id="ae-time">
+                    </div>
                 </div>
             </div>
 
             <div class="field-row">
                 <div class="field">
                     <label for="ae-city">עיר</label>
-                    <input type="text" id="ae-city" placeholder="תל אביב">
+                    <div class="input-icon-wrap">
+                        <span class="field-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                        <input type="text" id="ae-city" placeholder="תל אביב">
+                    </div>
                 </div>
                 <div class="field">
                     <label for="ae-type">סוג אירוע</label>
                     <select id="ae-type">
-                        <option value="">בחר...</option>
-                        <option value="מוזיקה">מוזיקה</option>
-                        <option value="תרבות">תרבות</option>
-                        <option value="ספורט">ספורט</option>
-                        <option value="אוכל">אוכל</option>
-                        <option value="חינוך">חינוך</option>
-                        <option value="טבע">טבע</option>
-                        <option value="קומדי">קומדי</option>
-                        <option value="אחר">אחר</option>
+                        <option value="">בחר קטגוריה...</option>
+                        <option value="מוזיקה">🎵 מוזיקה</option>
+                        <option value="תרבות">🎭 תרבות</option>
+                        <option value="ספורט">⚽ ספורט</option>
+                        <option value="אוכל">🍕 אוכל</option>
+                        <option value="חינוך">📚 חינוך</option>
+                        <option value="טבע">🌿 טבע</option>
+                        <option value="קומדי">😂 קומדי</option>
+                        <option value="אחר">✨ אחר</option>
                     </select>
                 </div>
             </div>
 
             <div class="field">
                 <label for="ae-location">מיקום</label>
-                <input type="text" id="ae-location" placeholder="כתובת או שם המקום">
+                <div class="input-icon-wrap">
+                    <span class="field-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+                    <input type="text" id="ae-location" placeholder="כתובת או שם המקום">
+                </div>
             </div>
 
             <div class="field">
-                <label for="ae-desc">תיאור</label>
-                <textarea id="ae-desc" placeholder="ספר על האירוע..." rows="3"></textarea>
+                <label for="ae-desc">תיאור האירוע</label>
+                <textarea id="ae-desc" placeholder="ספר על האירוע — מה יקרה, למי זה מתאים, מה להביא..." rows="3"></textarea>
             </div>
 
             <div class="field">
@@ -860,15 +920,20 @@
                 <!-- Upload zone (hidden after file chosen) -->
                 <div class="img-upload-zone" id="ae-upload-zone">
                     <input type="file" id="ae-image" accept="image/*" onchange="handleImagePick(event)">
-                    <div class="img-upload-icon">🖼️</div>
-                    <div class="img-upload-label">לחץ להעלאת תמונה</div>
-                    <div class="img-upload-hint">JPG, PNG, WEBP עד 5MB</div>
+                    <div class="img-upload-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <div class="img-upload-label">גרור תמונה לכאן או <span>לחץ לבחירה</span></div>
+                    <div class="img-upload-hint">JPG · PNG · WEBP · עד 5MB</div>
                 </div>
             </div>
 
             <button type="submit" class="btn-submit-event" id="btn-submit-event">
                 <div class="spinner"></div>
-                <span class="btn-submit-label">שלח לאישור</span>
+                <span class="btn-submit-label">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    שלח לאישור
+                </span>
             </button>
 
         </form>
