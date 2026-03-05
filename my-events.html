@@ -75,36 +75,54 @@
         }
 
         /* ── Stats row ── */
-        .stats-row {
+        /* ── Status filter tabs ── */
+        .status-tabs {
             display: flex;
-            gap: 10px;
+            gap: 6px;
             margin-bottom: 1.25rem;
+            overflow-x: auto;
+            padding-bottom: 2px;
+            scrollbar-width: none;
         }
-        .stat-pill {
-            flex: 1;
+        .status-tabs::-webkit-scrollbar { display: none; }
+        .status-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: 10px;
+            border: 1.5px solid #e2e8f0;
             background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 10px 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+        .status-tab:hover { border-color: #cbd5e1; color: #334155; }
+        .status-tab .tab-count {
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 20px;
+            min-width: 18px;
             text-align: center;
         }
-        .stat-pill .stat-num {
-            font-size: 1.4rem;
-            font-weight: 800;
-            line-height: 1;
-            margin-bottom: 2px;
-        }
-        .stat-pill .stat-label {
-            font-size: 0.65rem;
-            color: #64748b;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-        .stat-pill.approved .stat-num  { color: #059669; }
-        .stat-pill.pending  .stat-num  { color: #d97706; }
-        .stat-pill.rejected .stat-num  { color: #dc2626; }
-        .stat-pill.draft    .stat-num  { color: #94a3b8; }
+        /* Active states per tab */
+        .status-tab.active-all      { background: #0f172a; border-color: #0f172a; color: white; }
+        .status-tab.active-all      .tab-count { background: rgba(255,255,255,0.2); color: white; }
+        .status-tab.active-approved { background: #ecfdf5; border-color: #a7f3d0; color: #059669; }
+        .status-tab.active-approved .tab-count { background: #d1fae5; color: #059669; }
+        .status-tab.active-pending  { background: #fffbeb; border-color: #fde68a; color: #d97706; }
+        .status-tab.active-pending  .tab-count { background: #fef3c7; color: #d97706; }
+        .status-tab.active-rejected { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
+        .status-tab.active-rejected .tab-count { background: #fee2e2; color: #dc2626; }
+        .status-tab.active-draft    { background: #f8fafc; border-color: #cbd5e1; color: #475569; }
+        .status-tab.active-draft    .tab-count { background: #e2e8f0; color: #475569; }
 
         /* ── Event list ── */
         .events-list { display: flex; flex-direction: column; gap: 10px; }
@@ -789,28 +807,26 @@
 ════════════════════════════════════════════ -->
 <main class="page-container">
 
-    <!-- Stats row -->
-    <div class="stats-row" id="stats-row">
-        <div class="stat-pill approved">
-            <div class="stat-num" id="count-approved">0</div>
-            <div class="stat-label">מאושרים</div>
-        </div>
-        <div class="stat-pill pending">
-            <div class="stat-num" id="count-pending">0</div>
-            <div class="stat-label">ממתינים</div>
-        </div>
-        <div class="stat-pill rejected">
-            <div class="stat-num" id="count-rejected">0</div>
-            <div class="stat-label">נדחו</div>
-        </div>
-        <div class="stat-pill draft">
-            <div class="stat-num" id="count-draft">0</div>
-            <div class="stat-label">טיוטות</div>
-        </div>
+    <!-- Status filter tabs -->
+    <div class="status-tabs" id="status-tabs">
+        <button class="status-tab active-all" data-filter="all" onclick="setFilter('all')">
+            הכל <span class="tab-count" id="count-all">0</span>
+        </button>
+        <button class="status-tab" data-filter="pending" onclick="setFilter('pending')">
+            ממתין לאישור <span class="tab-count" id="count-pending">0</span>
+        </button>
+        <button class="status-tab" data-filter="approved" onclick="setFilter('approved')">
+            מאושר <span class="tab-count" id="count-approved">0</span>
+        </button>
+        <button class="status-tab" data-filter="rejected" onclick="setFilter('rejected')">
+            נדחה <span class="tab-count" id="count-rejected">0</span>
+        </button>
+        <button class="status-tab" data-filter="draft" onclick="setFilter('draft')">
+            טיוטה <span class="tab-count" id="count-draft">0</span>
+        </button>
     </div>
 
     <!-- Event list -->
-    <div class="section-heading">האירועים שלי</div>
     <div class="events-list" id="events-list"></div>
 
     <!-- Empty state (shown when no events) -->
@@ -1037,38 +1053,57 @@ let events = [];
 let currentUser = null;
 let pendingDeleteId = null;
 let openDropdownEl = null;
+let activeFilter = 'all';
+
+/* ══════════════════════════════════════════════════════════════
+   FILTER TABS
+══════════════════════════════════════════════════════════════ */
+function setFilter(filter) {
+    activeFilter = filter;
+
+    // Update tab active classes
+    document.querySelectorAll('.status-tab').forEach(btn => {
+        const f = btn.dataset.filter;
+        btn.className = 'status-tab';
+        if (f === filter) btn.classList.add('active-' + filter);
+    });
+
+    renderList();
+}
 
 /* ══════════════════════════════════════════════════════════════
    RENDER
 ══════════════════════════════════════════════════════════════ */
 function render() {
-    updateStats();
+    updateTabs();
     renderList();
 }
 
-function updateStats() {
-    const counts = { approved: 0, pending: 0, rejected: 0, draft: 0 };
+function updateTabs() {
+    const counts = { all: events.length, approved: 0, pending: 0, rejected: 0, draft: 0 };
     events.forEach(e => { if (counts[e.status] !== undefined) counts[e.status]++; });
+    document.getElementById('count-all').textContent      = counts.all;
     document.getElementById('count-approved').textContent = counts.approved;
     document.getElementById('count-pending').textContent  = counts.pending;
     document.getElementById('count-rejected').textContent = counts.rejected;
     document.getElementById('count-draft').textContent    = counts.draft;
-
-    // Hide stats row when empty
-    document.getElementById('stats-row').style.display = events.length === 0 ? 'none' : 'flex';
 }
 
 function renderList() {
-    const list   = document.getElementById('events-list');
-    const empty  = document.getElementById('empty-state');
+    const list  = document.getElementById('events-list');
+    const empty = document.getElementById('empty-state');
 
-    if (events.length === 0) {
+    const filtered = activeFilter === 'all'
+        ? events
+        : events.filter(e => e.status === activeFilter);
+
+    if (filtered.length === 0) {
         list.innerHTML = '';
         empty.classList.add('visible');
         return;
     }
     empty.classList.remove('visible');
-    list.innerHTML = events.map(buildRow).join('');
+    list.innerHTML = filtered.map(buildRow).join('');
 
     // Attach three-dot button listeners after render
     list.querySelectorAll('.three-dot-btn').forEach(btn => {
@@ -1316,6 +1351,7 @@ async function handleAddEventSubmit(e) {
         .eq('user_id', currentUser.id)
         .order('created_at', { ascending: false });
     events = (rows || []).map(normalizeRow);
+    setFilter('pending'); // switch to pending tab so new event is visible
     render();
     closeAddEvent();
     showToast('האירוע נשלח לאישור ✓', 'success');
