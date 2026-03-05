@@ -1222,7 +1222,7 @@ async function handleAddEventSubmit(e) {
         events.unshift(normalizeRow(newRow));
     } else {
         // Fallback: reload from DB (RLS may prevent chained select in some configs)
-        const { data: rows, error: selErr } = await supabase
+        const { data: rows, error: selErr } = await sb
             .from('user_events')
             .select('*')
             .eq('user_id', currentUser.id)
@@ -1248,7 +1248,7 @@ async function handleAddEventSubmit(e) {
 async function confirmDelete() {
     if (!pendingDeleteId) return;
 
-    const { error } = await supabase
+    const { error } = await sb
         .from('user_events')
         .delete()
         .eq('id', pendingDeleteId);
@@ -1340,7 +1340,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('menu-user-name').textContent  = name.split(' ')[0] || currentUser.email;
     document.getElementById('menu-user-email').textContent = currentUser.email || '';
 
-    const { data, error } = await supabase
+    const { data, error } = await sb
         .from('user_events')
         .select('*')
         .eq('user_id', currentUser.id)
