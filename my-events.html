@@ -477,6 +477,46 @@
         .add-form .field-err { font-size: 0.7rem; color: #ef4444; font-weight: 500; min-height: 14px; }
         .add-form .field-err:empty { display: none; }
 
+        /* Image upload */
+        .img-upload-zone {
+            border: 2px dashed #e2e8f0;
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #f8fafc;
+            position: relative;
+        }
+        .img-upload-zone:hover,
+        .img-upload-zone.drag-over { border-color: #00d4aa; background: rgba(0,212,170,0.04); }
+        .img-upload-zone input[type="file"] {
+            position: absolute; inset: 0; opacity: 0; cursor: pointer;
+            width: 100%; height: 100%; padding: 0; border: none; background: none;
+        }
+        .img-upload-hint { font-size: 0.78rem; color: #94a3b8; margin-top: 4px; }
+        .img-upload-icon { font-size: 1.6rem; line-height: 1; margin-bottom: 4px; }
+        .img-upload-label { font-size: 0.82rem; font-weight: 600; color: #475569; }
+
+        .img-preview-wrap {
+            display: none;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 140px;
+        }
+        .img-preview-wrap.visible { display: block; }
+        .img-preview-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .img-preview-remove {
+            position: absolute; top: 6px; left: 6px;
+            width: 28px; height: 28px;
+            background: rgba(15,23,42,0.65); border: none; border-radius: 50%;
+            color: white; cursor: pointer; font-size: 14px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.15s;
+        }
+        .img-preview-remove:hover { background: rgba(220,38,38,0.85); }
+
         .btn-submit-event {
             width: 100%; height: 50px;
             background: #00d4aa; color: #0f172a;
@@ -810,6 +850,22 @@
                 <textarea id="ae-desc" placeholder="ספר על האירוע..." rows="3"></textarea>
             </div>
 
+            <div class="field">
+                <label>תמונה לאירוע</label>
+                <!-- Preview (shown after file chosen) -->
+                <div class="img-preview-wrap" id="ae-img-preview-wrap">
+                    <img id="ae-img-preview" src="" alt="תצוגה מקדימה">
+                    <button type="button" class="img-preview-remove" onclick="removeImage()" title="הסר תמונה">✕</button>
+                </div>
+                <!-- Upload zone (hidden after file chosen) -->
+                <div class="img-upload-zone" id="ae-upload-zone">
+                    <input type="file" id="ae-image" accept="image/*" onchange="handleImagePick(event)">
+                    <div class="img-upload-icon">🖼️</div>
+                    <div class="img-upload-label">לחץ להעלאת תמונה</div>
+                    <div class="img-upload-hint">JPG, PNG, WEBP עד 5MB</div>
+                </div>
+            </div>
+
             <button type="submit" class="btn-submit-event" id="btn-submit-event">
                 <div class="spinner"></div>
                 <span class="btn-submit-label">שלח לאישור</span>
@@ -869,6 +925,7 @@ function openAddEvent() {
 function closeAddEvent() {
     document.getElementById('add-event-modal').classList.remove('open');
     document.body.style.overflow = '';
+    removeImage();
 }
 function handleAddModalOverlayClick(e) {
     if (e.target === e.currentTarget) closeAddEvent();
@@ -1081,6 +1138,48 @@ async function duplicateEvent(event) {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   IMAGE PICK / REMOVE
+══════════════════════════════════════════════════════════════ */
+let selectedImageFile = null;
+
+function handleImagePick(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+        showToast('התמונה גדולה מדי — מקסימום 5MB', 'error');
+        e.target.value = '';
+        return;
+    }
+    selectedImageFile = file;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        document.getElementById('ae-img-preview').src = ev.target.result;
+        document.getElementById('ae-img-preview-wrap').classList.add('visible');
+        document.getElementById('ae-upload-zone').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeImage() {
+    selectedImageFile = null;
+    document.getElementById('ae-image').value = '';
+    document.getElementById('ae-img-preview').src = '';
+    document.getElementById('ae-img-preview-wrap').classList.remove('visible');
+    document.getElementById('ae-upload-zone').style.display = '';
+}
+
+async function uploadImage(file, userId) {
+    const ext  = file.name.split('.').pop().toLowerCase();
+    const path = `${userId}/${Date.now()}.${ext}`;
+    const { data, error } = await supabase.storage
+        .from('event-images')
+        .upload(path, file, { upsert: false, contentType: file.type });
+    if (error) return null;
+    const { data: urlData } = supabase.storage.from('event-images').getPublicUrl(path);
+    return urlData?.publicUrl || null;
+}
+
+/* ══════════════════════════════════════════════════════════════
    ADD EVENT FORM SUBMIT
 ══════════════════════════════════════════════════════════════ */
 async function handleAddEventSubmit(e) {
@@ -1106,16 +1205,24 @@ async function handleAddEventSubmit(e) {
     btn.classList.add('loading');
     btn.disabled = true;
 
+    // Upload image if selected
+    let thumbnailUrl = null;
+    if (selectedImageFile) {
+        thumbnailUrl = await uploadImage(selectedImageFile, currentUser.id);
+        if (!thumbnailUrl) showToast('התמונה לא הועלתה, האירוע נשמר בלעדיה', '');
+    }
+
     const { data, error } = await supabase.from('user_events').insert({
-        user_id:     currentUser.id,
+        user_id:       currentUser.id,
         title,
-        date:        dateVal || null,
-        time:        timeVal || null,
-        city:        city    || null,
-        event_type:  type    || null,
-        location:    loc     || null,
-        description: desc    || null,
-        status:      'pending',
+        date:          dateVal       || null,
+        time:          timeVal       || null,
+        city:          city          || null,
+        event_type:    type          || null,
+        location:      loc           || null,
+        description:   desc          || null,
+        thumbnail_url: thumbnailUrl  || null,
+        status:        'pending',
     }).select().single();
 
     btn.classList.remove('loading');
