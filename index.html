@@ -1882,25 +1882,44 @@
         document.getElementById('loading').textContent = t('loading');
 
         // --- Load events ---
-        fetch('events.json')
-            .then(r => {
-                if (!r.ok) throw new Error('events.json not found');
-                return r.json();
-            })
-            .then(data => {
-                allEvents = data;
-                updateEventCounter(allEvents.length);
-                buildFilters();
-                renderEvents(allEvents);
-            })
-            .catch(err => {
-                document.getElementById('event-list').innerHTML = `
-                    <p style="padding:1rem;color:#c0392b">
-                        ${t('errorLoad')}<br>
-                        <code>${t('errorHint')}</code>
-                    </p>`;
-                console.error(err);
-            });
+        // Load events.json + user-submitted events in parallel
+        Promise.all([
+            fetch('events.json').then(r => r.ok ? r.json() : []).catch(() => []),
+            (async () => {
+                try {
+                    const { data } = await sb
+                        .from('user_events')
+                        .select('*')
+                        .eq('status', 'published')
+                        .order('created_at', { ascending: false });
+                    return (data || []).map(row => ({
+                        id:          'user-' + row.id,
+                        title:       row.title,
+                        date:        row.date        || '',
+                        time:        row.time        || '',
+                        location:    row.location    || '',
+                        city:        row.city        || '',
+                        description: row.description || '',
+                        event_type:  row.event_type  || 'other',
+                        thumbnail:   row.thumbnail_url || '',
+                        emoji:       row.emoji       || '📅',
+                        source:      'user',
+                    }));
+                } catch (e) { return []; }
+            })(),
+        ]).then(([scraped, userEvents]) => {
+            allEvents = [...userEvents, ...scraped];
+            updateEventCounter(allEvents.length);
+            buildFilters();
+            renderEvents(allEvents);
+        }).catch(err => {
+            document.getElementById('event-list').innerHTML = `
+                <p style="padding:1rem;color:#c0392b">
+                    ${t('errorLoad')}<br>
+                    <code>${t('errorHint')}</code>
+                </p>`;
+            console.error(err);
+        });
     </script>
 
     <!-- SEO Footer -->
