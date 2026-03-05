@@ -475,6 +475,112 @@
             color: #94a3b8;
             margin-bottom: 0.75rem;
         }
+
+        /* ── Hamburger menu ── */
+        .hamburger-btn {
+            width: 38px; height: 38px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.85);
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .hamburger-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); }
+
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.55);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 800;
+        }
+        .menu-overlay.open { display: block; }
+
+        .side-menu {
+            position: fixed;
+            top: 0; right: -280px;
+            width: 280px; height: 100%;
+            background: #0f172a;
+            z-index: 900;
+            transition: right 0.28s cubic-bezier(0.4,0,0.2,1);
+            display: flex; flex-direction: column;
+            box-shadow: -8px 0 32px rgba(0,0,0,0.3);
+        }
+        .side-menu.open { right: 0; }
+
+        .side-menu-header {
+            padding: 1.25rem 1.25rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .side-menu-logo { font-size: 1.4rem; font-weight: 800; color: white; letter-spacing: -0.02em; }
+        .side-menu-logo span { color: #00d4aa; }
+        .menu-close-btn {
+            width: 34px; height: 34px;
+            background: rgba(255,255,255,0.06);
+            border: none; border-radius: 8px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .menu-close-btn:hover { background: rgba(255,255,255,0.12); color: white; }
+
+        .side-menu-user {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            display: flex; align-items: center; gap: 12px;
+        }
+        .menu-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: #00d4aa;
+            color: #0f172a;
+            font-size: 0.85rem; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .menu-user-info { min-width: 0; }
+        .menu-user-name { font-size: 0.9rem; font-weight: 700; color: white; }
+        .menu-user-email { font-size: 0.72rem; color: rgba(255,255,255,0.45); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .side-menu-nav { flex: 1; padding: 0.75rem 0; }
+        .menu-nav-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 13px 1.25rem;
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-size: 0.9rem; font-weight: 500;
+            transition: all 0.15s;
+            cursor: pointer;
+            border: none; background: transparent; width: 100%; text-align: right;
+            font-family: inherit;
+        }
+        .menu-nav-item:hover { background: rgba(255,255,255,0.06); color: white; }
+        .menu-nav-item.active { color: #00d4aa; background: rgba(0,212,170,0.08); }
+        .menu-nav-item svg { flex-shrink: 0; opacity: 0.7; }
+        .menu-nav-item.active svg { opacity: 1; color: #00d4aa; }
+
+        .side-menu-footer {
+            padding: 0.75rem 0 1.25rem;
+            border-top: 1px solid rgba(255,255,255,0.07);
+        }
+        .menu-signout {
+            display: flex; align-items: center; gap: 14px;
+            padding: 13px 1.25rem;
+            color: #f87171;
+            font-size: 0.9rem; font-weight: 500;
+            cursor: pointer;
+            border: none; background: transparent; width: 100%; text-align: right;
+            font-family: inherit;
+            transition: background 0.15s;
+        }
+        .menu-signout:hover { background: rgba(239,68,68,0.08); }
     </style>
 </head>
 <body>
@@ -485,10 +591,11 @@
 <header>
     <div class="header-inner">
         <div class="header-left">
-            <button class="back-btn" onclick="goBack()" aria-label="חזרה">
-                <!-- arrow right (RTL = back) -->
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 18l6-6-6-6"/>
+            <button class="hamburger-btn" onclick="openMenu()" aria-label="תפריט">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="3" y1="6"  x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
                 </svg>
             </button>
             <div class="header-title">ניהול <span>האירועים שלי</span></div>
@@ -501,6 +608,49 @@
         </button>
     </div>
 </header>
+
+<!-- ════════════════════════════════════════════
+     SIDE MENU
+════════════════════════════════════════════ -->
+<div class="menu-overlay" id="menu-overlay" onclick="closeMenu()"></div>
+<nav class="side-menu" id="side-menu">
+    <div class="side-menu-header">
+        <div class="side-menu-logo">Free<span>IL</span></div>
+        <button class="menu-close-btn" onclick="closeMenu()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+    </div>
+
+    <div class="side-menu-user">
+        <div class="menu-avatar" id="menu-avatar">?</div>
+        <div class="menu-user-info">
+            <div class="menu-user-name" id="menu-user-name">טוען...</div>
+            <div class="menu-user-email" id="menu-user-email"></div>
+        </div>
+    </div>
+
+    <div class="side-menu-nav">
+        <a href="/" class="menu-nav-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            דף הבית
+        </a>
+        <a href="/my-events.html" class="menu-nav-item active">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            האירועים שלי
+        </a>
+        <a href="/register.html" class="menu-nav-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            הוסף אירוע חדש
+        </a>
+    </div>
+
+    <div class="side-menu-footer">
+        <button class="menu-signout" onclick="signOut()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            התנתק
+        </button>
+    </div>
+</nav>
 
 <!-- ════════════════════════════════════════════
      MAIN CONTENT
@@ -806,16 +956,24 @@ function handleModalOverlayClick(e) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   NAVIGATION
+   NAVIGATION & MENU
 ══════════════════════════════════════════════════════════════ */
-function goBack() {
-    if (window.history.length > 1) window.history.back();
-    else window.location.href = '/';
+function openMenu() {
+    document.getElementById('side-menu').classList.add('open');
+    document.getElementById('menu-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
 }
-
+function closeMenu() {
+    document.getElementById('side-menu').classList.remove('open');
+    document.getElementById('menu-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+async function signOut() {
+    await supabase.auth.signOut();
+    window.location.href = '/';
+}
 function openAddEvent() {
-    // TODO: link to your event submission form
-    showToast('פותח טופס הוספת אירוע…', 'success');
+    window.location.href = '/register.html';
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -866,8 +1024,17 @@ function showToast(msg, type = '') {
 ══════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', async () => {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { window.location.href = '/register.html'; return; }
+    if (!session) { window.location.href = '/login.html'; return; }
     currentUser = session.user;
+
+    // Populate side menu user info
+    const name = currentUser.user_metadata?.full_name || currentUser.email || '';
+    const initials = name.trim()
+        ? name.trim().split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
+        : '?';
+    document.getElementById('menu-avatar').textContent     = initials;
+    document.getElementById('menu-user-name').textContent  = name.split(' ')[0] || currentUser.email;
+    document.getElementById('menu-user-email').textContent = currentUser.email || '';
 
     const { data, error } = await supabase
         .from('user_events')
