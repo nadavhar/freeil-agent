@@ -1326,7 +1326,7 @@ async function handleAddEventSubmit(e) {
         if (!thumbnailUrl) showToast('התמונה לא הועלתה, האירוע נשמר בלעדיה', '');
     }
 
-    const { error } = await supabase.from('user_events').insert({
+    const { data: newRow, error } = await supabase.from('user_events').insert({
         user_id:       currentUser.id,
         title,
         date:          dateVal       || null,
@@ -1337,21 +1337,32 @@ async function handleAddEventSubmit(e) {
         description:   desc          || null,
         thumbnail_url: thumbnailUrl  || null,
         status:        'pending',
-    });
+    }).select().single();
 
     btn.classList.remove('loading');
     btn.disabled = false;
 
-    if (error) { showToast('שגיאה בשמירת האירוע', 'error'); return; }
+    if (error) {
+        console.error('Insert error:', error);
+        showToast('שגיאה: ' + (error.message || 'לא ניתן לשמור את האירוע'), 'error');
+        return;
+    }
 
-    // Reload full list so the new pending card is guaranteed to appear
-    const { data: rows } = await supabase
-        .from('user_events')
-        .select('*')
-        .eq('user_id', currentUser.id)
-        .order('created_at', { ascending: false });
-    events = (rows || []).map(normalizeRow);
-    setFilter('pending'); // switch to pending tab so new event is visible
+    if (newRow) {
+        // Best case: insert returned the row directly
+        events.unshift(normalizeRow(newRow));
+    } else {
+        // Fallback: reload from DB (RLS may prevent chained select in some configs)
+        const { data: rows, error: selErr } = await supabase
+            .from('user_events')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .order('created_at', { ascending: false });
+        if (selErr) console.error('Select error:', selErr);
+        events = (rows || []).map(normalizeRow);
+    }
+
+    setFilter('pending');
     render();
     closeAddEvent();
     showToast('האירוע נשלח לאישור ✓', 'success');
@@ -1461,7 +1472,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         .eq('user_id', currentUser.id)
         .order('created_at', { ascending: false });
 
-    if (error) { showToast('שגיאה בטעינת האירועים', 'error'); return; }
+    if (error) {
+        console.error('Load error:', error);
+        showToast('שגיאה בטעינת האירועים: ' + (error.message || error.code || 'בדוק את הגדרות Supabase'), 'error');
+        return;
+    }
     events = (data || []).map(normalizeRow);
     render();
 });
