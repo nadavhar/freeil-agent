@@ -106,124 +106,114 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f5f7fa;
             color: #1a1a2e;
-            padding-top: 64px; /* Space for sticky header */
+            padding-top: 60px;
         }
 
-        /* Header - Modern Glassmorphism */
+        /* ── Header ── */
         header {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             z-index: 1000;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: #0f172a;
             color: white;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
         .header-inner {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0.875rem 1rem;
+            padding: 0 1rem;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
         }
-        .header-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
+        /* Logo */
+        .header-logo { display: flex; align-items: center; }
         header h1 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 800;
             margin: 0;
             line-height: 1;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
+            color: white;
         }
-        header h1 span {
-            color: #00d4aa;
-        }
+        header h1 span { color: #00d4aa; }
+
+        /* Event counter — centered absolutely */
         .event-counter {
-            background: rgba(0, 212, 170, 0.12);
-            color: #00d4aa;
-            padding: 6px 14px;
+            position: absolute;
+            left: 50%; transform: translateX(-50%);
+            background: rgba(0,212,170,0.08);
+            color: rgba(0,212,170,0.85);
+            padding: 5px 13px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            border: 1px solid rgba(0, 212, 170, 0.2);
+            border: 1px solid rgba(0,212,170,0.15);
+            white-space: nowrap;
+            pointer-events: none;
         }
+
+        /* Right-side actions */
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         #lang-toggle {
             background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: rgba(255, 255, 255, 0.8);
-            padding: 0 14px;
-            height: 38px;
-            min-width: 38px;
-            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.7);
+            padding: 0 10px;
+            height: 34px;
+            border-radius: 7px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 500;
             touch-action: manipulation;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+            transition: all 0.2s;
         }
-        #lang-toggle:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.25);
-            color: white;
-        }
-        #lang-toggle svg {
-            flex-shrink: 0;
-        }
-        #lang-text {
-            font-size: 0.8rem;
-        }
+        #lang-toggle:hover { background: rgba(255,255,255,0.07); color: white; }
+        #lang-toggle svg { flex-shrink: 0; }
+        #lang-text { font-size: 0.75rem; }
 
         /* Auth header buttons */
         .auth-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            height: 38px;
-            padding: 0 14px;
+            display: inline-flex; align-items: center; gap: 6px;
+            height: 36px; padding: 0 14px;
             border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
             touch-action: manipulation;
-            text-decoration: none;
-            white-space: nowrap;
+            text-decoration: none; white-space: nowrap;
+            border: none;
         }
         .auth-btn.login {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: rgba(255, 255, 255, 0.85);
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.9);
         }
-        .auth-btn.login:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.3);
-            color: white;
-        }
+        .auth-btn.login:hover { background: rgba(255,255,255,0.13); color: white; }
         .auth-btn.register {
             background: #00d4aa;
-            border: 1px solid #00d4aa;
             color: #0f172a;
         }
-        .auth-btn.register:hover {
-            background: #00bfa0;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+        .auth-btn.register:hover { background: #00bfa0; transform: translateY(-1px); }
+        .auth-btn-add {
+            display: inline-flex; align-items: center; gap: 6px;
+            height: 36px; padding: 0 14px;
+            background: rgba(0,212,170,0.12);
+            border: 1px solid rgba(0,212,170,0.25);
+            color: #00d4aa;
+            border-radius: 8px;
+            font-size: 0.8rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s;
+            text-decoration: none; white-space: nowrap;
         }
+        .auth-btn-add:hover { background: rgba(0,212,170,0.2); }
+
         /* User avatar + dropdown */
         .user-menu-wrapper {
             position: relative;
@@ -314,69 +304,72 @@
         .user-dropdown .dropdown-signout:hover { background: #fef2f2; }
         .user-dropdown svg { flex-shrink: 0; opacity: 0.65; }
 
-        /* Guest sticky bottom bar */
-        .guest-bottom-bar {
-            display: none;
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            z-index: 500;
-            background: white;
-            border-top: 1px solid #e2e8f0;
-            padding: 0.875rem 1rem;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
-        }
-        .guest-bottom-bar.visible { display: block; }
-        .guest-bottom-bar-inner {
-            max-width: 480px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .guest-bottom-bar p {
-            flex: 1;
-            font-size: 0.82rem;
-            color: #475569;
-            line-height: 1.3;
-        }
-        .guest-bottom-bar p strong { color: #1e293b; }
-        .guest-bar-login {
-            height: 44px; padding: 0 18px;
-            background: #f1f5f9; color: #1e293b;
-            border: 1.5px solid #e2e8f0; border-radius: 12px;
-            font-size: 0.85rem; font-weight: 700;
-            text-decoration: none; white-space: nowrap;
-            display: flex; align-items: center;
-            flex-shrink: 0;
-        }
-        .guest-bar-register {
-            height: 44px; padding: 0 18px;
-            background: #00d4aa; color: #0f172a;
-            border: none; border-radius: 12px;
-            font-size: 0.85rem; font-weight: 800;
-            text-decoration: none; white-space: nowrap;
-            display: flex; align-items: center;
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(0,212,170,0.3);
-        }
-
-        /* Hero Section */
+        /* ── Hero Section ── */
         .hero-section {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            padding: 1.25rem 1rem;
+            background: #0f172a;
+            padding: 2.5rem 1rem 2rem;
             text-align: center;
         }
-        .hero-tagline {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.95rem;
-            margin: 0;
-            font-weight: 500;
+        .hero-title {
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
         }
+        .hero-title span { color: #00d4aa; }
+        .hero-tagline {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+            margin: 0 0 1.75rem;
+            font-weight: 400;
+        }
+        /* Search bar inside hero */
+        .hero-search {
+            max-width: 560px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .hero-search .search-icon {
+            position: absolute;
+            right: 14px; top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.35);
+            pointer-events: none;
+            display: flex; align-items: center;
+        }
+        .hero-search .search-input {
+            width: 100%;
+            height: 52px;
+            background: rgba(255,255,255,0.07);
+            border: 1.5px solid rgba(255,255,255,0.12);
+            border-radius: 14px;
+            padding: 0 48px 0 48px;
+            font-size: 1rem;
+            color: white;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .hero-search .search-input::placeholder { color: rgba(255,255,255,0.35); }
+        .hero-search .search-input:focus {
+            border-color: rgba(0,212,170,0.5);
+            background: rgba(255,255,255,0.1);
+        }
+        .hero-search .search-clear {
+            position: absolute;
+            left: 14px; top: 50%; transform: translateY(-50%);
+            background: transparent; border: none; cursor: pointer;
+            color: rgba(255,255,255,0.4); display: none;
+            align-items: center; padding: 4px;
+        }
+        .hero-search .search-clear.visible { display: flex; }
 
         /* Filters Section - Sticky Control Bar */
         .filters-container {
             position: sticky;
-            top: 64px;
+            top: 60px;
             z-index: 100;
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(12px);
@@ -868,29 +861,34 @@
                 <div id="event-counter" class="event-counter">0 אירועים</div>
             </div>
             <div class="header-actions">
-                <!-- Auth: logged-out state -->
+                <button id="lang-toggle" onclick="setLanguage(currentLang === 'he' ? 'en' : 'he')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                    <span id="lang-text">EN</span>
+                </button>
+
+                <!-- Logged-out -->
                 <div id="auth-logged-out" style="display:flex; align-items:center; gap:8px;">
                     <a href="/login.html" class="auth-btn login">כניסה</a>
-                    <a href="/register.html" class="auth-btn register">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        הוסף אירוע
-                    </a>
+                    <a href="/register.html" class="auth-btn register">הרשמה</a>
                 </div>
 
-                <!-- Auth: logged-in state -->
+                <!-- Logged-in -->
                 <div id="auth-logged-in" style="display:none; align-items:center; gap:8px;">
-                    <a href="/my-events.html" class="auth-btn register" style="text-decoration:none;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <a href="/my-events.html" class="auth-btn-add">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         הוסף אירוע
                     </a>
                     <div class="user-menu-wrapper">
                         <button class="user-avatar-btn" id="user-avatar-btn" onclick="toggleUserDropdown(event)">
                             <div class="user-avatar" id="user-avatar-initials">?</div>
-                            <span class="user-name-short" id="user-name-short"></span>
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
                         </button>
                         <div class="user-dropdown" id="user-dropdown">
                             <div class="user-dropdown-header">
+                                <div style="font-size:0.78rem; font-weight:600; color:#1e293b; margin-bottom:2px;" id="user-name-short"></div>
                                 <div class="user-dropdown-email" id="user-dropdown-email"></div>
                             </div>
                             <a href="/my-events.html">
@@ -905,56 +903,25 @@
                         </div>
                     </div>
                 </div>
-
-                <button id="lang-toggle" onclick="setLanguage(currentLang === 'he' ? 'en' : 'he')">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 6px;">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                    </svg>
-                    <span id="lang-text">EN</span>
-                </button>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
     <div class="hero-section">
+        <h2 class="hero-title">גלו אירועים <span>חינמיים</span> בכל הארץ</h2>
         <p id="tagline" class="hero-tagline">אירועים חינם בתל אביב, ירושלים, חיפה, באר שבע ועוד</p>
-
-        <!-- Guest CTA banner (hidden for logged-in users) -->
-        <div id="guest-banner" style="display:block; margin-top:0.9rem; padding:0.9rem 1rem; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:14px; max-width:600px; margin-left:auto; margin-right:auto; text-align:right;">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-                <div style="font-size:0.82rem; color:rgba(255,255,255,0.7); line-height:1.4;">רוצה להוסיף אירוע חינמי לקהילה?</div>
-                <div style="display:flex; gap:8px; flex-shrink:0;">
-                    <a href="/login.html" style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.9); padding:7px 14px; border-radius:8px; font-size:0.82rem; font-weight:600; text-decoration:none;">
-                        כניסה
-                    </a>
-                    <a href="/register.html" style="display:inline-flex; align-items:center; gap:6px; background:#00d4aa; color:#0f172a; padding:7px 14px; border-radius:8px; font-size:0.82rem; font-weight:700; text-decoration:none;">
-                        הרשמה חינם
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Logged-in welcome banner (hidden for guests) -->
-        <div id="user-welcome-banner" style="display:none; margin-top:0.9rem; padding:0.9rem 1rem; background:rgba(0,212,170,0.1); border:1px solid rgba(0,212,170,0.25); border-radius:14px; max-width:600px; margin-left:auto; margin-right:auto; text-align:right;">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-                <div>
-                    <div style="font-size:0.95rem; font-weight:700; color:#fff; margin-bottom:2px;">שלום, <span id="welcome-name">!</span> 👋</div>
-                    <div style="font-size:0.75rem; color:rgba(255,255,255,0.6);">רוצה לשתף אירוע חינמי עם הקהילה?</div>
-                </div>
-                <div style="display:flex; gap:8px; flex-shrink:0;">
-                    <a href="/my-events.html" style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.85); padding:7px 13px; border-radius:8px; font-size:0.78rem; font-weight:600; text-decoration:none; transition:all 0.2s;">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                        האירועים שלי
-                    </a>
-                    <a href="/my-events.html" style="display:inline-flex; align-items:center; gap:6px; background:#00d4aa; color:#0f172a; padding:7px 13px; border-radius:8px; font-size:0.78rem; font-weight:700; text-decoration:none; transition:all 0.2s;">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                        הוסף אירוע
-                    </a>
-                </div>
-            </div>
+        <!-- Search bar lives here -->
+        <div class="hero-search">
+            <span class="search-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                </svg>
+            </span>
+            <input type="text" id="search-input" class="search-input" placeholder="חפש אירוע, עיר או תיאור..." autocomplete="off">
+            <button id="search-clear" class="search-clear" onclick="clearSearch()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
         </div>
     </div>
 
@@ -972,24 +939,6 @@
                 </svg>
                 <span id="reset-text">איפוס</span>
             </button>
-        </div>
-        <!-- Search Bar -->
-        <div class="search-container">
-            <div class="search-wrapper">
-                <span class="search-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.3-4.3"></path>
-                    </svg>
-                </span>
-                <input type="text" id="search-input" class="search-input" placeholder="חפש אירוע, עיר או תיאור..." autocomplete="off">
-                <button id="search-clear" class="search-clear" onclick="clearSearch()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 6 6 18"></path>
-                        <path d="m6 6 12 12"></path>
-                    </svg>
-                </button>
-            </div>
         </div>
         <div class="filter-row">
             <div id="date-filter-label" class="filter-label">מתי</div>
@@ -1983,24 +1932,15 @@
             );
 
             function setAuthUI(user) {
-                const loggedOut    = document.getElementById('auth-logged-out');
-                const loggedIn     = document.getElementById('auth-logged-in');
-                const banner       = document.getElementById('user-welcome-banner');
-                const guestBanner  = document.getElementById('guest-banner');
-                const bottomBar    = document.getElementById('guest-bottom-bar');
+                const loggedOut = document.getElementById('auth-logged-out');
+                const loggedIn  = document.getElementById('auth-logged-in');
                 if (!user) {
-                    loggedOut.style.display   = 'flex';
-                    loggedIn.style.display    = 'none';
-                    if (banner)     banner.style.display     = 'none';
-                    if (guestBanner) guestBanner.style.display = 'block';
-                    if (bottomBar)  bottomBar.classList.add('visible');
+                    loggedOut.style.display = 'flex';
+                    loggedIn.style.display  = 'none';
                     return;
                 }
-                loggedOut.style.display   = 'none';
-                loggedIn.style.display    = 'flex';
-                if (banner)     banner.style.display     = 'block';
-                if (guestBanner) guestBanner.style.display = 'none';
-                if (bottomBar)  bottomBar.classList.remove('visible');
+                loggedOut.style.display = 'none';
+                loggedIn.style.display  = 'flex';
 
                 const name    = user.user_metadata?.full_name || user.email || '';
                 const firstName = name.split(' ')[0] || '';
@@ -2011,7 +1951,6 @@
                 document.getElementById('user-avatar-initials').textContent = initials;
                 document.getElementById('user-name-short').textContent = firstName;
                 document.getElementById('user-dropdown-email').textContent = user.email || '';
-                document.getElementById('welcome-name').textContent = (firstName || user.email) + '!';
             }
 
             // Initial session check
@@ -2042,13 +1981,6 @@
         })();
     </script>
 
-    <!-- Sticky bottom bar for logged-out users -->
-    <div class="guest-bottom-bar" id="guest-bottom-bar">
-        <div class="guest-bottom-bar-inner">
-            <p><strong>הצטרפו ל-FreeIL</strong> — שתפו אירועים חינמיים</p>
-            <a href="/login.html" class="guest-bar-login">כניסה</a>
-            <a href="/register.html" class="guest-bar-register">הרשמה</a>
-        </div>
-    </div>
+
 </body>
 </html>
