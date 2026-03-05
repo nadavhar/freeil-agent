@@ -876,6 +876,21 @@
     <div class="hero-section">
         <p id="tagline" class="hero-tagline">אירועים חינם בתל אביב, ירושלים, חיפה, באר שבע ועוד</p>
 
+        <!-- Guest CTA banner (hidden for logged-in users) -->
+        <div id="guest-banner" style="display:block; margin-top:0.9rem; padding:0.9rem 1rem; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:14px; max-width:600px; margin-left:auto; margin-right:auto; text-align:right;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                <div style="font-size:0.82rem; color:rgba(255,255,255,0.7); line-height:1.4;">רוצה להוסיף אירוע חינמי לקהילה?</div>
+                <div style="display:flex; gap:8px; flex-shrink:0;">
+                    <a href="/login.html" style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.9); padding:7px 14px; border-radius:8px; font-size:0.82rem; font-weight:600; text-decoration:none;">
+                        כניסה
+                    </a>
+                    <a href="/register.html" style="display:inline-flex; align-items:center; gap:6px; background:#00d4aa; color:#0f172a; padding:7px 14px; border-radius:8px; font-size:0.82rem; font-weight:700; text-decoration:none;">
+                        הרשמה חינם
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- Logged-in welcome banner (hidden for guests) -->
         <div id="user-welcome-banner" style="display:none; margin-top:0.9rem; padding:0.9rem 1rem; background:rgba(0,212,170,0.1); border:1px solid rgba(0,212,170,0.25); border-radius:14px; max-width:600px; margin-left:auto; margin-right:auto; text-align:right;">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
@@ -1922,18 +1937,21 @@
             );
 
             function setAuthUI(user) {
-                const loggedOut = document.getElementById('auth-logged-out');
-                const loggedIn  = document.getElementById('auth-logged-in');
-                const banner    = document.getElementById('user-welcome-banner');
+                const loggedOut    = document.getElementById('auth-logged-out');
+                const loggedIn     = document.getElementById('auth-logged-in');
+                const banner       = document.getElementById('user-welcome-banner');
+                const guestBanner  = document.getElementById('guest-banner');
                 if (!user) {
-                    loggedOut.style.display = 'flex';
-                    loggedIn.style.display  = 'none';
-                    banner.style.display    = 'none';
+                    loggedOut.style.display   = 'flex';
+                    loggedIn.style.display    = 'none';
+                    banner.style.display      = 'none';
+                    if (guestBanner) guestBanner.style.display = 'block';
                     return;
                 }
-                loggedOut.style.display = 'none';
-                loggedIn.style.display  = 'flex';
-                banner.style.display    = 'block';
+                loggedOut.style.display   = 'none';
+                loggedIn.style.display    = 'flex';
+                banner.style.display      = 'block';
+                if (guestBanner) guestBanner.style.display = 'none';
 
                 const name    = user.user_metadata?.full_name || user.email || '';
                 const firstName = name.split(' ')[0] || '';
