@@ -161,9 +161,10 @@ function buildFeedEventCard(ev, isRecommended) {
     const inputEl        = card.querySelector('.comment-input');
     let loaded = false;
 
-    // Load comment count immediately
+    // Load comment count (silently skip if table doesn't exist yet)
     sb.from('event_comments').select('id', { count: 'exact', head: true }).eq('event_id', rawId)
-        .then(({ count }) => { if (count) countEl.textContent = count; });
+        .then(({ count }) => { if (count) countEl.textContent = count; })
+        .catch(() => {});
 
     card.querySelector('.comment-toggle-btn').addEventListener('click', e => {
         e.stopPropagation();
@@ -202,7 +203,7 @@ async function loadSocialFeed() {
                 .order('created_at', { ascending: false })
                 .limit(10),
             sb.from('user_events')
-                .select('id, title, city, date, location, event_type, description, thumbnail_url, emoji, created_at, registration_enabled, registrations_count')
+                .select('*')
                 .eq('status', 'published')
                 .order('created_at', { ascending: false })
                 .limit(30),
