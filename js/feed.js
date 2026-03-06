@@ -53,15 +53,18 @@ async function loadComments(rawId, listEl) {
 }
 
 async function submitComment(rawId, body, listEl, inputEl, countEl) {
-    const { data: { user } } = await sb.auth.getUser();
-    if (!user) { window.location.href = '/login.html'; return; }
     if (!body.trim()) return;
 
     inputEl.disabled = true;
-    const name = user.user_metadata?.full_name || user.email || 'משתמש';
-    const { error } = await sb.from('event_comments').insert({
-        event_id: rawId, user_id: user.id, body: body.trim(), user_name: name
-    });
+    const { data: { user } } = await sb.auth.getUser();
+    const name = user
+        ? (user.user_metadata?.full_name || user.email || 'משתמש')
+        : 'אורח';
+
+    const row = { event_id: rawId, body: body.trim(), user_name: name };
+    if (user) row.user_id = user.id;
+
+    const { error } = await sb.from('event_comments').insert(row);
     inputEl.disabled = false;
     if (error) { showToast('שגיאה בשליחת תגובה'); return; }
 
