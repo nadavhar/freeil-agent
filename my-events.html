@@ -952,7 +952,7 @@
                 <div class="spinner"></div>
                 <span class="btn-submit-label">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                    <span id="btn-submit-label-text">שלח לאישור</span>
+                    <span id="btn-submit-label-text">פרסם אירוע</span>
                 </span>
             </button>
 
@@ -1005,7 +1005,7 @@ function openAddEvent() {
     document.getElementById('ae-title-err').textContent = '';
     document.getElementById('ae-title').classList.remove('err');
     document.getElementById('add-modal-title').textContent = 'הוסף אירוע חדש';
-    document.getElementById('btn-submit-label-text').textContent = 'שלח לאישור';
+    document.getElementById('btn-submit-label-text').textContent = 'פרסם אירוע';
     document.getElementById('add-event-modal').classList.add('open');
     document.body.style.overflow = 'hidden';
     setTimeout(() => document.getElementById('ae-title').focus(), 100);
@@ -1246,9 +1246,10 @@ async function duplicateEvent(event) {
         description:      event.description,
         event_type:       event.event_type,
         city:             event.city,
-        thumbnail_url:    event.thumbnail,
-        emoji:            event.emoji,
-        status:           'published',
+        thumbnail_url:        event.thumbnail,
+        emoji:                event.emoji,
+        registration_enabled: event.registration_enabled !== false,
+        status:               'published',
     }).select().single();
 
     if (error) { showToast('שגיאה בשכפול האירוע', 'error'); return; }

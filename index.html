@@ -1631,7 +1631,6 @@
                     'Herzliya': 'הרצליה',
                     'Hod HaSharon': 'הוד השרון',
                     'Kfar Saba': 'כפר סבא',
-                    'Rishon LeZion': 'ראשון לציון',
                     'Krayot': 'קריות',
                     'Ashdod': 'אשדוד',
                     'Other': 'אחר',
@@ -1722,7 +1721,6 @@
                     'Herzliya': 'Herzliya',
                     'Hod HaSharon': 'Hod HaSharon',
                     'Kfar Saba': 'Kfar Saba',
-                    'Rishon LeZion': 'Rishon LeZion',
                     'Krayot': 'Krayot',
                     'Ashdod': 'Ashdod',
                     'Other': 'Other',
@@ -2027,9 +2025,15 @@
 
             if (!url) return null;
 
-            // Ensure protocol exists
-            if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('//')) {
-                url = `https://${url}`;
+            // Block non-http protocols (javascript:, data:, vbscript:, etc.)
+            const lower = url.toLowerCase().trim();
+            if (!lower.startsWith('http://') && !lower.startsWith('https://') && !lower.startsWith('//')) {
+                // Try adding https:// if it looks like a bare domain
+                if (lower.includes('.') && !lower.includes(':')) {
+                    url = `https://${url}`;
+                } else {
+                    return null;
+                }
             }
 
             // Handle protocol-relative URLs
@@ -2066,6 +2070,12 @@
 
             // Open Waze (most users in Israel have it)
             window.open(wazeUrl, '_blank');
+        }
+
+        function escHtml(str) {
+            const d = document.createElement('div');
+            d.appendChild(document.createTextNode(str || ''));
+            return d.innerHTML;
         }
 
         function showToast(msg) {
@@ -2177,14 +2187,14 @@
                     <div class="card-body">
                         <div class="card-tags">${typeTag}${cityTag}</div>
                         <div class="card-title-row">
-                            <h3>${ev.title || t('noTitle')}</h3>
+                            <h3>${escHtml(ev.title || t('noTitle'))}</h3>
                             <span class="badge-free">${t('free')}</span>
                         </div>
                         <div class="card-meta">
-                            <div class="meta-item">${calendarIcon}<span>${dateStr}</span></div>
-                            <div class="meta-item">${locationIcon}<span>${ev.location || ''}</span></div>
+                            <div class="meta-item">${calendarIcon}<span>${escHtml(dateStr)}</span></div>
+                            <div class="meta-item">${locationIcon}<span>${escHtml(ev.location || '')}</span></div>
                         </div>
-                        <div class="card-desc">${ev.description || ''}</div>
+                        <div class="card-desc">${escHtml(ev.description || '')}</div>
                         <div class="card-footer">
                             <div class="action-buttons">
                                 <button class="favorite-btn${isFavorite ? ' active' : ''}" data-event-id="${eventId}">${isFavorite ? '♥' : '♡'}</button>
@@ -2482,16 +2492,16 @@
                         <div class="social-item">
                             <div class="social-icon reg-icon">👥</div>
                             <div class="social-content">
-                                <p>מישהו נרשם לאירוע <strong>"${item.title}"</strong></p>
-                                <span class="social-time">${ago}${cityLabel}</span>
+                                <p>מישהו נרשם לאירוע <strong>"${escHtml(item.title)}"</strong></p>
+                                <span class="social-time">${escHtml(ago)}${escHtml(cityLabel)}</span>
                             </div>
                         </div>`;
                     return `
                         <div class="social-item">
-                            <div class="social-icon new-icon">${item.emoji}</div>
+                            <div class="social-icon new-icon">${escHtml(item.emoji)}</div>
                             <div class="social-content">
-                                <p>אירוע חדש: <strong>"${item.title}"</strong></p>
-                                <span class="social-time">${ago}${cityLabel}</span>
+                                <p>אירוע חדש: <strong>"${escHtml(item.title)}"</strong></p>
+                                <span class="social-time">${escHtml(ago)}${escHtml(cityLabel)}</span>
                             </div>
                         </div>`;
                 }).join('');
