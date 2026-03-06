@@ -142,6 +142,7 @@ function buildFeedEventCard(ev, isRecommended) {
                 <div class="action-group">
                     <button class="action-btn add-cal" title="הוספה ליומן">${calPlusIcon}</button>
                     <button class="action-btn share" title="שתף">${shareIcon}</button>
+                    <button class="action-btn comment-toggle-btn" title="תגובות">💬 <span class="comment-count">0</span></button>
                     <button class="action-btn favorite-btn${isFavorite ? ' active' : ''}">${isFavorite ? heartFilled : heartOutline}</button>
                 </div>
                 ${regBtn}
