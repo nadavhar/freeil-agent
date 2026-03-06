@@ -17,6 +17,8 @@ create table if not exists user_events (
   thumbnail_url    text,
   emoji            text        default '📅',
   status           text        default 'published',
+  registration_enabled  boolean  default true,
+  registrations_count   integer  default 0,
   created_at       timestamptz default now(),
   updated_at       timestamptz default now()
 );
@@ -45,3 +47,28 @@ create policy "update_own" on user_events
 
 create policy "delete_own" on user_events
   for delete using (auth.uid() = user_id);
+
+-- Event registrations table
+create table if not exists event_registrations (
+  id         bigserial primary key,
+  user_id    uuid references auth.users(id) on delete cascade not null,
+  event_id   uuid references user_events(id) on delete cascade not null,
+  created_at timestamptz default now(),
+  unique(user_id, event_id)
+);
+
+alter table event_registrations enable row level security;
+
+create policy "insert_own" on event_registrations
+  for insert to authenticated with check (auth.uid() = user_id);
+
+create policy "select_own" on event_registrations
+  for select to authenticated using (auth.uid() = user_id);
+
+-- Increment registrations count RPC
+create or replace function increment_registrations(event_id uuid)
+returns void language plpgsql security definer as $$
+begin
+  update user_events set registrations_count = registrations_count + 1 where id = event_id;
+end;
+$$;
