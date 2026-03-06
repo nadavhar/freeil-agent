@@ -290,7 +290,7 @@ header h1 span { color: #00d4aa; }
 
 /* ── Card footer — single flat row, everything 36px tall ── */
 .card-footer {
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     padding-top: 0.75rem; margin-top: 0.75rem; border-top: 1px solid #f1f5f9;
 }
 /* spacer pushes left-group to start, right-group to end */
