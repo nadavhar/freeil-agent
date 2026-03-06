@@ -290,9 +290,9 @@ header h1 span { color: #00d4aa; }
 
 .card-footer {
     display: flex; align-items: center; justify-content: space-between;
-    padding-top: 0.75rem; margin-top: 0.75rem; border-top: 1px solid #f1f5f9; gap: 8px;
+    padding-top: 0.75rem; margin-top: 0.75rem; border-top: 1px solid #f1f5f9;
 }
-.action-buttons { display: flex; align-items: center; gap: 6px; }
+.action-buttons { display: flex; align-items: center; gap: 8px; }
 
 /* Uniform 36×36 circular icon buttons */
 .action-btn {
