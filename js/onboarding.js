@@ -17,7 +17,7 @@
 
     function goTo(step) {
         obStep = Math.max(0, Math.min(step, TOTAL - 1));
-        slides.style.transform = `translateX(${-obStep * 100}%)`;
+        slides.style.transform = `translateX(calc(${-obStep} * 100vw))`;
         Array.from(dots).forEach((d, i) => d.classList.toggle('active', i === obStep));
         const isLast = obStep === TOTAL - 1;
         nextBtn.innerHTML = isLast
