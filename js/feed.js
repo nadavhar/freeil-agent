@@ -126,7 +126,7 @@ function buildFeedEventCard(ev, isRecommended) {
     card.className = 'event-card' + (ev.thumbnail_url ? ' has-thumb' : '');
     card.innerHTML = `
         ${recBadge}
-        ${ev.thumbnail_url ? `<div class="card-img-wrap"><img class="card-thumb" src="${escHtml(ev.thumbnail_url)}" alt="${escHtml(ev.title || '')}" loading="lazy" onerror="this.style.display='none'"><span class="badge-free-img">חינם</span></div>` : ''}
+        ${ev.thumbnail_url ? `<div class="card-img-wrap"><img class="card-thumb" src="${escHtml(ev.thumbnail_url)}" alt="${escHtml(ev.title || '')}" loading="lazy" onerror="this.style.display='none'"><span class="badge-free-img">חינם</span><button class="favorite-btn fav-overlay${isFavorite ? ' active' : ''}">${isFavorite ? heartFilled : heartOutline}</button></div>` : `<button class="favorite-btn fav-overlay${isFavorite ? ' active' : ''}">${isFavorite ? heartFilled : heartOutline}</button>`}
         <div class="card-body">
             <div class="card-tags">${typeTag}${cityTag}</div>
             <h3 class="private-card-title">${escHtml(ev.title || '')}</h3>
@@ -143,7 +143,6 @@ function buildFeedEventCard(ev, isRecommended) {
                     <button class="action-btn share" title="שתף">${shareIcon}</button>
                     ${hasAddress ? `<button class="action-btn navigate" title="ניווט">${navigateIcon}</button>` : ''}
                     <button class="action-btn comment-toggle-btn" title="תגובות">💬 <span class="comment-count">0</span></button>
-                    <button class="action-btn favorite-btn${isFavorite ? ' active' : ''}">${isFavorite ? heartFilled : heartOutline}</button>
                 </div>
                 ${regBtn}
                 <span class="participants-badge" id="pcount-feed-${rawId}">${usersIcon} ${ev.registrations_count || 0}</span>

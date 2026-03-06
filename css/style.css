@@ -281,6 +281,16 @@ header h1 span { color: #00d4aa; }
     font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
     padding: 3px 10px; border-radius: 20px; pointer-events: none;
 }
+.fav-overlay {
+    position: absolute; top: 10px; left: 10px; z-index: 2;
+    width: 34px; height: 34px; border-radius: 50%; border: none;
+    background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.18s; color: #94a3b8;
+}
+.fav-overlay:hover { background: white; transform: scale(1.1); }
+.fav-overlay.active { color: #ef4444; }
+.fav-overlay svg { width: 16px; height: 16px; }
 .private-card-title { font-size: 1.05rem; font-weight: 700; margin: 0.4rem 0 0.6rem; color: #1e293b; line-height: 1.4; }
 .location-meta { gap: 4px; }
 .navigate-inline {
