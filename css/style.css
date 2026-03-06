@@ -273,6 +273,32 @@ header h1 span { color: #00d4aa; }
 }
 .event-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); border-color: #cbd5e1; transform: translateY(-2px); }
 
+/* ── Private card enhancements ── */
+.card-img-wrap { position: relative; }
+.badge-free-img {
+    position: absolute; top: 10px; right: 10px;
+    background: #22c55e; color: white;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
+    padding: 3px 10px; border-radius: 20px; pointer-events: none;
+}
+.private-card-title { font-size: 1.05rem; font-weight: 700; margin: 0.4rem 0 0.6rem; color: #1e293b; line-height: 1.4; }
+.location-meta { gap: 4px; }
+.navigate-inline {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%; border: none;
+    background: #dbeafe; color: #2563eb; cursor: pointer; padding: 0;
+    flex-shrink: 0; transition: all 0.15s; margin-right: 2px;
+}
+.navigate-inline:hover { background: #3b82f6; color: white; }
+.navigate-inline svg { width: 11px; height: 11px; }
+.private-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 0.75rem; margin-top: 0.75rem; border-top: 1px solid #f1f5f9;
+    gap: 8px;
+}
+.private-footer .action-group { display: flex; align-items: center; gap: 6px; }
+.private-footer .participants-badge { display: flex; align-items: center; gap: 5px; }
+
 .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.6rem; }
 .tag { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 500; }
 .tag-type { background: #f0fdf4; color: #15803d; }
