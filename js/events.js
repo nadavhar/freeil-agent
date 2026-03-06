@@ -122,13 +122,13 @@ function renderEvents(events) {
 
     events.forEach(ev => {
         const card = document.createElement('div');
-        card.className = 'event-card';
 
         // Unique ID: title + date encoded — keeps favorite state stable per event
         const eventId = btoa(encodeURIComponent((ev.title || '') + (ev.date || ''))).replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
 
         const isFavorite = getUserActions(eventId).favorite;
         const isPrivate  = ev.source === 'user';
+        card.className = isPrivate ? 'event-card private-card' : 'event-card';
         const isReg      = isPrivate && localStorage.getItem('reg-' + ev.id) === '1';
         const showRegBtn = isPrivate && ev.registration_enabled;
         const hasLoc     = ev.latitude && ev.longitude;

@@ -123,7 +123,7 @@ function buildFeedEventCard(ev, isRecommended) {
     const hasAddress = ev.location || ev.city;
 
     const card = document.createElement('div');
-    card.className = 'event-card' + (ev.thumbnail_url ? ' has-thumb' : '');
+    card.className = 'event-card private-card' + (ev.thumbnail_url ? ' has-thumb' : '');
     card.innerHTML = `
         ${recBadge}
         ${ev.thumbnail_url ? `<div class="card-img-wrap"><img class="card-thumb" src="${escHtml(ev.thumbnail_url)}" alt="${escHtml(ev.title || '')}" loading="lazy" onerror="this.style.display='none'"><span class="badge-free-img">חינם</span><button class="favorite-btn fav-overlay${isFavorite ? ' active' : ''}">${isFavorite ? heartFilled : heartOutline}</button></div>` : `<button class="favorite-btn fav-overlay${isFavorite ? ' active' : ''}">${isFavorite ? heartFilled : heartOutline}</button>`}
