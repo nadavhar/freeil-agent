@@ -77,6 +77,13 @@ function handleSearchInput(e) {
     clearTimeout(searchDebounceTimer);
     searchDebounceTimer = setTimeout(() => {
         searchQuery = value.trim();
+        if (searchQuery.length >= 2) {
+            const searches = JSON.parse(localStorage.getItem('freeil-searches') || '[]');
+            if (!searches.includes(searchQuery)) {
+                searches.unshift(searchQuery);
+                localStorage.setItem('freeil-searches', JSON.stringify(searches.slice(0, 20)));
+            }
+        }
         applyFilter();
     }, 300);
 }
