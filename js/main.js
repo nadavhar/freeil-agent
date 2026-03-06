@@ -83,6 +83,12 @@ window.onAuthRefreshPrivate = async function () {
     document.getElementById('type-filter-label').textContent   = t('filterCategory');
     document.getElementById('loading').textContent             = t('loading');
 
+    // Handle ?tab= param from other pages' bottom nav
+    const tabParam = new URLSearchParams(location.search).get('tab');
+    if (tabParam && ['private', 'social', 'map'].includes(tabParam)) {
+        switchTab(tabParam);
+    }
+
     // Wire up search input
     document.getElementById('search-input')?.addEventListener('input', handleSearchInput);
 
