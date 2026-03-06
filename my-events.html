@@ -1360,9 +1360,12 @@ async function generateAIImage() {
             return;
         }
 
-        // Show generated image in preview (same flow as manual upload, but no local file)
-        window.selectedImageFile = null;
-        window.aiGeneratedImageUrl = data.url;
+        // Convert base64 data URL → Blob → treat as uploaded file
+        const res2 = await fetch(data.url);
+        const blob = await res2.blob();
+        const file = new File([blob], 'ai-generated.png', { type: blob.type || 'image/png' });
+        window.selectedImageFile = file;
+        window.aiGeneratedImageUrl = null;
         document.getElementById('ae-img-preview').src = data.url;
         document.getElementById('ae-img-preview-wrap').classList.add('visible');
         document.getElementById('ae-upload-zone').style.display = 'none';
@@ -1403,8 +1406,8 @@ async function handleAddEventSubmit(e) {
     btn.classList.add('loading');
     btn.disabled = true;
 
-    // Upload image if selected, or use AI-generated URL directly
-    let thumbnailUrl = window.aiGeneratedImageUrl || null;
+    // Upload image if selected (includes AI-generated images converted to Blob)
+    let thumbnailUrl = null;
     if (window.selectedImageFile) {
         thumbnailUrl = await uploadImage(window.selectedImageFile, currentUser.id);
         if (!thumbnailUrl) showToast('התמונה לא הועלתה, האירוע נשמר בלעדיה', '');
