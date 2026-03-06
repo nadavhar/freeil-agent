@@ -66,7 +66,15 @@ async function submitComment(rawId, body, listEl, inputEl, countEl) {
 
     const { error } = await sb.from('event_comments').insert(row);
     inputEl.disabled = false;
-    if (error) { showToast('שגיאה בשליחת תגובה'); return; }
+    if (error) {
+        console.error('comment insert error:', error.message, error.code);
+        if (error.code === '42P01') {
+            showToast('טבלת תגובות לא קיימת — הרץ את ה-SQL ב-Supabase');
+        } else {
+            showToast('שגיאה בשליחת תגובה: ' + error.message);
+        }
+        return;
+    }
 
     inputEl.value = '';
     // bump counter
