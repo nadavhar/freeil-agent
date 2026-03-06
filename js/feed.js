@@ -20,66 +20,78 @@ function feedRelevanceScore(ev, searches) {
     return searches.reduce((n, term) => n + (haystack.includes(term.toLowerCase()) ? 1 : 0), 0);
 }
 
-// ── Comments ──
+// ── Comments — Supabase with localStorage fallback ──
+function localCommentsKey(rawId) { return `freeil-comments-${rawId}`; }
+
+function getLocalComments(rawId) {
+    return JSON.parse(localStorage.getItem(localCommentsKey(rawId)) || '[]');
+}
+
+function saveLocalComment(rawId, body, name) {
+    const list = getLocalComments(rawId);
+    list.push({ id: 'local-' + Date.now(), body, user_name: name, created_at: new Date().toISOString() });
+    localStorage.setItem(localCommentsKey(rawId), JSON.stringify(list));
+}
+
+function renderCommentList(comments, listEl) {
+    if (!comments.length) {
+        listEl.innerHTML = '<p class="comment-empty">אין תגובות עדיין. היה הראשון!</p>';
+        return;
+    }
+    listEl.innerHTML = comments.map(c => {
+        const initials = (c.user_name || '?').trim().split(' ')
+            .map(w => w[0]).slice(0, 2).join('').toUpperCase();
+        return `
+            <div class="comment-item">
+                <div class="comment-avatar">${escHtml(initials)}</div>
+                <div class="comment-body-wrap">
+                    <span class="comment-author">${escHtml(c.user_name || 'אורח')}</span>
+                    <p class="comment-text">${escHtml(c.body)}</p>
+                    <span class="comment-time">${escHtml(formatTimeAgo(c.created_at))}</span>
+                </div>
+            </div>`;
+    }).join('');
+}
+
 async function loadComments(rawId, listEl) {
     listEl.innerHTML = '<p class="comment-loading">טוען תגובות...</p>';
+
+    let remote = [];
     try {
-        const { data, error } = await sb
-            .from('event_comments')
+        const { data } = await sb.from('event_comments')
             .select('id, body, user_name, created_at')
             .eq('event_id', rawId)
             .order('created_at', { ascending: true });
-        if (error) throw error;
-        if (!data || !data.length) {
-            listEl.innerHTML = '<p class="comment-empty">אין תגובות עדיין. היה הראשון!</p>';
-            return;
-        }
-        listEl.innerHTML = data.map(c => {
-            const initials = (c.user_name || '?').trim().split(' ')
-                .map(w => w[0]).slice(0, 2).join('').toUpperCase();
-            return `
-                <div class="comment-item">
-                    <div class="comment-avatar">${escHtml(initials)}</div>
-                    <div class="comment-body-wrap">
-                        <span class="comment-author">${escHtml(c.user_name || 'אנונימי')}</span>
-                        <p class="comment-text">${escHtml(c.body)}</p>
-                        <span class="comment-time">${escHtml(formatTimeAgo(c.created_at))}</span>
-                    </div>
-                </div>`;
-        }).join('');
-    } catch (e) {
-        listEl.innerHTML = '<p class="comment-empty">שגיאה בטעינת תגובות</p>';
-    }
+        remote = data || [];
+    } catch (_) {}
+
+    // Merge remote + local (local fills gap when table missing/insert failed)
+    const local  = getLocalComments(rawId);
+    const remoteIds = new Set(remote.map(c => c.id));
+    const merged = [...remote, ...local.filter(c => !remoteIds.has(c.id))]
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+    renderCommentList(merged, listEl);
 }
 
 async function submitComment(rawId, body, listEl, inputEl, countEl) {
     if (!body.trim()) return;
 
     inputEl.disabled = true;
-    const { data: { user } } = await sb.auth.getUser();
+    const { data: { user } } = await sb.auth.getUser().catch(() => ({ data: { user: null } }));
     const name = user
         ? (user.user_metadata?.full_name || user.email || 'משתמש')
         : 'אורח';
 
+    // Try Supabase; fall back to localStorage silently
     const row = { event_id: rawId, body: body.trim(), user_name: name };
     if (user) row.user_id = user.id;
-
     const { error } = await sb.from('event_comments').insert(row);
-    inputEl.disabled = false;
-    if (error) {
-        console.error('comment insert error:', error.message, error.code);
-        if (error.code === '42P01') {
-            showToast('טבלת תגובות לא קיימת — הרץ את ה-SQL ב-Supabase');
-        } else {
-            showToast('שגיאה בשליחת תגובה: ' + error.message);
-        }
-        return;
-    }
+    if (error) saveLocalComment(rawId, body.trim(), name);
 
+    inputEl.disabled = false;
     inputEl.value = '';
-    // bump counter
-    const cur = parseInt(countEl.textContent) || 0;
-    countEl.textContent = cur + 1;
+    countEl.textContent = (parseInt(countEl.textContent) || 0) + 1;
     await loadComments(rawId, listEl);
 }
 
