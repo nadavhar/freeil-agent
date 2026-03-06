@@ -64,6 +64,33 @@ async function handleRegister(ev, btn) {
     } catch (e) { /* fails gracefully */ }
 }
 
+// ── Add to Google Calendar ──
+function addToGoogleCalendar(ev) {
+    const title    = encodeURIComponent(ev.title || '');
+    const location = encodeURIComponent(ev.location || ev.city || '');
+    const details  = encodeURIComponent(ev.description || '');
+
+    // Build date: if we have a date, use it as an all-day event (YYYYMMDD)
+    let dates = '';
+    if (ev.date) {
+        const d = ev.date.replace(/-/g, '');
+        // If time provided, build datetime; otherwise all-day
+        if (ev.time) {
+            const t = ev.time.replace(':', '') + '00';
+            dates = `${d}T${t}/${d}T${t}`;
+        } else {
+            // All-day: end = next day
+            const next = new Date(ev.date);
+            next.setDate(next.getDate() + 1);
+            const nextStr = next.toISOString().slice(0, 10).replace(/-/g, '');
+            dates = `${d}/${nextStr}`;
+        }
+    }
+
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&location=${location}&details=${details}`;
+    window.open(url, '_blank', 'noopener');
+}
+
 // ── Card renderer ──
 function renderEvents(events) {
     const list = document.getElementById('event-list');
@@ -84,6 +111,7 @@ function renderEvents(events) {
     const calendarIcon    = `<svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
     const locationIcon    = `<svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
     const shareIcon       = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`;
+    const calPlusIcon     = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="15" x2="12" y2="19"/><line x1="10" y1="17" x2="14" y2="17"/></svg>`;
     const navigateIcon    = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>`;
     const externalLinkIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
 
@@ -135,6 +163,7 @@ function renderEvents(events) {
                     ${partBadge}
                     <span class="footer-spacer"></span>
                     <button class="action-btn share" title="שתף">${shareIcon}</button>
+                    ${isPrivate ? `<button class="action-btn add-cal" title="הוספה ליומן">${calPlusIcon}</button>` : ''}
                     ${hasLoc ? `<button class="action-btn navigate" title="ניווט">${navigateIcon}</button>` : ''}
                     ${sourceLink ? `<a href="${sourceLink}" target="_blank" rel="noopener noreferrer" class="action-btn source" title="${t('source')}" onclick="event.stopPropagation()">${externalLinkIcon}</a>` : ''}
                 </div>
@@ -159,6 +188,12 @@ function renderEvents(events) {
             card.querySelector('.btn-register')?.addEventListener('click', e => {
                 e.stopPropagation();
                 handleRegister(ev, card.querySelector('.btn-register'));
+            });
+        }
+        if (isPrivate) {
+            card.querySelector('.action-btn.add-cal')?.addEventListener('click', e => {
+                e.stopPropagation();
+                addToGoogleCalendar(ev);
             });
         }
 

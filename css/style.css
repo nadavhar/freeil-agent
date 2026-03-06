@@ -311,6 +311,8 @@ header h1 span { color: #00d4aa; }
 .action-btn.navigate:hover { background: #3b82f6; color: white; }
 .action-btn.source  { background: #f1f5f9; color: #64748b; }
 .action-btn.source:hover { background: #e2e8f0; color: #334155; }
+.action-btn.add-cal { background: #f1f5f9; color: #64748b; }
+.action-btn.add-cal:hover { background: #dcfce7; color: #16a34a; transform: scale(1.08); }
 
 /* Pill counters — comments & participants share one style */
 .action-btn.comment-toggle-btn,
