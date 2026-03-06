@@ -37,10 +37,10 @@ function switchTab(tab) {
     });
 
     const showFilters = tab === 'public' || tab === 'private';
-    document.querySelector('.filters-container').style.display     = showFilters ? '' : 'none';
-    document.getElementById('view-events').style.display           = showFilters ? '' : 'none';
-    document.getElementById('view-social').style.display           = tab === 'social' ? '' : 'none';
-    document.getElementById('view-map').style.display              = tab === 'map'    ? '' : 'none';
+    document.querySelector('.filters-container').style.display = showFilters      ? 'block' : 'none';
+    document.getElementById('view-events').style.display       = showFilters      ? 'block' : 'none';
+    document.getElementById('view-social').style.display       = tab === 'social' ? 'block' : 'none';
+    document.getElementById('view-map').style.display          = tab === 'map'    ? 'block' : 'none';
 
     if (showFilters) {
         allEvents = tab === 'private' ? privateEvents : publicEvents;
