@@ -164,7 +164,7 @@ function renderEvents(events) {
                     <span class="footer-spacer"></span>
                     <button class="action-btn share" title="שתף">${shareIcon}</button>
                     ${isPrivate ? `<button class="action-btn add-cal" title="הוספה ליומן">${calPlusIcon}</button>` : ''}
-                    ${hasLoc ? `<button class="action-btn navigate" title="ניווט">${navigateIcon}</button>` : ''}
+                    ${hasLoc ? `<button class="action-btn navigate" title="ניווט">${navigateIcon}</button>` : (isPrivate && (ev.location || ev.city) ? `<button class="action-btn navigate" title="ניווט">${navigateIcon}</button>` : '')}
                     ${sourceLink ? `<a href="${sourceLink}" target="_blank" rel="noopener noreferrer" class="action-btn source" title="${t('source')}" onclick="event.stopPropagation()">${externalLinkIcon}</a>` : ''}
                 </div>
             </div>
@@ -182,6 +182,12 @@ function renderEvents(events) {
             card.querySelector('.action-btn.navigate').addEventListener('click', e => {
                 e.stopPropagation();
                 navigateToLocation(ev.latitude, ev.longitude);
+            });
+        } else if (isPrivate && (ev.location || ev.city)) {
+            card.querySelector('.action-btn.navigate')?.addEventListener('click', e => {
+                e.stopPropagation();
+                const query = encodeURIComponent((ev.location || '') + (ev.city ? ' ' + ev.city : ''));
+                window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank', 'noopener');
             });
         }
         if (showRegBtn && !isReg) {
