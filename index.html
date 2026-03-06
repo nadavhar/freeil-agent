@@ -1164,9 +1164,199 @@
             cursor: default;
         }
         .btn-register.registered:hover { transform: none; box-shadow: none; }
+
+        /* ══════════════════════════════════════════════════════════════
+           ONBOARDING OVERLAY
+        ══════════════════════════════════════════════════════════════ */
+        #ob-overlay {
+            position: fixed; inset: 0; z-index: 9999;
+            overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+        #ob-overlay.ob-hidden { display: none; }
+
+        .ob-slides-wrap { flex: 1; overflow: hidden; position: relative; }
+        .ob-slides {
+            display: flex; height: 100%;
+            transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+        .ob-slide {
+            min-width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 2.5rem 2rem 1.5rem;
+            text-align: center;
+            color: #fff;
+        }
+
+        /* Per-slide gradients */
+        .ob-slide:nth-child(1) { background: linear-gradient(160deg,#0f2027 0%,#1a3a4a 60%,#203a43 100%); }
+        .ob-slide:nth-child(2) { background: linear-gradient(160deg,#1a1a2e 0%,#2d1b69 100%); }
+        .ob-slide:nth-child(3) { background: linear-gradient(160deg,#0d2137 0%,#1a3557 100%); }
+        .ob-slide:nth-child(4) { background: linear-gradient(160deg,#0f0c29 0%,#302b63 60%,#1a1a2e 100%); }
+
+        .ob-emoji {
+            font-size: 4.5rem; line-height: 1;
+            margin-bottom: 1.5rem;
+            animation: obPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+        @keyframes obPop {
+            from { transform: scale(0.6); opacity: 0; }
+            to   { transform: scale(1);   opacity: 1; }
+        }
+        .ob-title {
+            font-size: 1.9rem; font-weight: 800;
+            margin: 0 0 0.75rem; line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+        .ob-subtitle {
+            font-size: 1rem; line-height: 1.6;
+            opacity: 0.82; max-width: 320px;
+            margin: 0 auto 1.75rem;
+        }
+        .ob-features {
+            list-style: none; margin: 0 0 1rem; padding: 0;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .ob-features li {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px; padding: 10px 16px;
+            font-size: 0.92rem; font-weight: 600;
+            backdrop-filter: blur(4px);
+        }
+        .ob-features li span.ob-fi { font-size: 1.2rem; }
+
+        /* CTA slide */
+        .ob-cta-btns { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px; }
+        .ob-cta-primary {
+            background: #00d4aa; color: #0f172a;
+            border: none; border-radius: 14px;
+            padding: 15px 24px; font-size: 1rem; font-weight: 800;
+            cursor: pointer; font-family: inherit;
+            transition: transform 0.15s, box-shadow 0.15s;
+            box-shadow: 0 4px 20px rgba(0,212,170,0.4);
+        }
+        .ob-cta-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,212,170,0.5); }
+        .ob-cta-location {
+            background: rgba(255,255,255,0.12);
+            color: #fff; border: 1.5px solid rgba(255,255,255,0.25);
+            border-radius: 14px; padding: 13px 24px;
+            font-size: 0.92rem; font-weight: 700;
+            cursor: pointer; font-family: inherit;
+            backdrop-filter: blur(6px);
+            transition: background 0.2s;
+        }
+        .ob-cta-location:hover { background: rgba(255,255,255,0.2); }
+
+        /* Bottom controls */
+        .ob-controls {
+            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(8px);
+            padding: 16px 24px calc(16px + env(safe-area-inset-bottom));
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        }
+        .ob-skip {
+            background: none; border: none; color: rgba(255,255,255,0.55);
+            font-size: 0.88rem; font-weight: 600; cursor: pointer;
+            font-family: inherit; padding: 8px 4px;
+        }
+        .ob-skip:hover { color: #fff; }
+        .ob-dots { display: flex; gap: 7px; }
+        .ob-dot {
+            width: 8px; height: 8px; border-radius: 8px;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        .ob-dot.active { background: #00d4aa; width: 22px; }
+        .ob-next {
+            background: #00d4aa; color: #0f172a;
+            border: none; border-radius: 50px;
+            padding: 10px 22px; font-size: 0.92rem; font-weight: 800;
+            cursor: pointer; font-family: inherit;
+            display: flex; align-items: center; gap: 6px;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .ob-next:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,212,170,0.45); }
+        .ob-next.ob-last { background: #fff; color: #1a1a2e; }
     </style>
 </head>
 <body>
+
+    <!-- ══ ONBOARDING OVERLAY ══ -->
+    <div id="ob-overlay" class="ob-hidden">
+
+        <div class="ob-slides-wrap">
+            <div class="ob-slides" id="ob-slides">
+
+                <!-- Step 1: Discover -->
+                <div class="ob-slide">
+                    <div class="ob-emoji">🎉</div>
+                    <h2 class="ob-title">גלו אירועים חינם</h2>
+                    <p class="ob-subtitle">מאות קונצרטים, פסטיבלים, סיורים ותערוכות — בחינם, בכל הארץ, מעודכן מדי יום</p>
+                    <ul class="ob-features">
+                        <li><span class="ob-fi">🎵</span> קונצרטים ומוזיקה חיה</li>
+                        <li><span class="ob-fi">🏛️</span> מוזיאונים ותערוכות</li>
+                        <li><span class="ob-fi">🌿</span> פסטיבלים ואירועי טבע</li>
+                    </ul>
+                </div>
+
+                <!-- Step 2: Community -->
+                <div class="ob-slide">
+                    <div class="ob-emoji">✨</div>
+                    <h2 class="ob-title">קהילה שיוצרת</h2>
+                    <p class="ob-subtitle">הכירו אירועים פרטיים שנוצרו על ידי אנשים כמוכם — מפגשים, סדנאות ומיט-אפים</p>
+                    <ul class="ob-features">
+                        <li><span class="ob-fi">👥</span> אירועים קהילתיים ייחודיים</li>
+                        <li><span class="ob-fi">🤝</span> חיבורים ומפגשים אמיתיים</li>
+                        <li><span class="ob-fi">✅</span> הרשמה בלחיצה אחת</li>
+                    </ul>
+                </div>
+
+                <!-- Step 3: Create -->
+                <div class="ob-slide">
+                    <div class="ob-emoji">📅</div>
+                    <h2 class="ob-title">צרו אירוע בקלות</h2>
+                    <p class="ob-subtitle">פרסמו אירוע תוך דקות — הוסיפו תמונה, תאריך ומיקום, וקבלו רשומים בזמן אמת</p>
+                    <ul class="ob-features">
+                        <li><span class="ob-fi">📸</span> העלאת תמונה בגרירה</li>
+                        <li><span class="ob-fi">📍</span> בחירת עיר ומיקום</li>
+                        <li><span class="ob-fi">🔔</span> ניהול הרשמות ומשתתפים</li>
+                    </ul>
+                </div>
+
+                <!-- Step 4: Join -->
+                <div class="ob-slide">
+                    <div class="ob-emoji">🚀</div>
+                    <h2 class="ob-title">הצטרפו עכשיו</h2>
+                    <p class="ob-subtitle">אפשרו מיקום לגלות אירועים קרובים אליכם, והירשמו כדי לשמור מועדפים ולנהל אירועים</p>
+                    <div class="ob-cta-btns">
+                        <a href="/register.html" class="ob-cta-primary">הירשמו חינם →</a>
+                        <button class="ob-cta-location" onclick="obRequestLocation()">📍 אפשרו מיקום</button>
+                    </div>
+                </div>
+
+            </div><!-- /ob-slides -->
+        </div><!-- /ob-slides-wrap -->
+
+        <!-- Controls bar -->
+        <div class="ob-controls">
+            <button class="ob-skip" onclick="obFinish()">דלג</button>
+            <div class="ob-dots" id="ob-dots">
+                <div class="ob-dot active"></div>
+                <div class="ob-dot"></div>
+                <div class="ob-dot"></div>
+                <div class="ob-dot"></div>
+            </div>
+            <button class="ob-next" id="ob-next-btn" onclick="obNext()">
+                הבא
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+
+    </div><!-- /ob-overlay -->
+
     <header>
         <div class="header-inner">
             <div class="header-logo">
@@ -1338,6 +1528,54 @@
         </button>
     </nav>
 
+
+    <!-- Onboarding logic (no deps) -->
+    <script>
+        (function () {
+            const OB_KEY = 'freeil-ob-done';
+            if (localStorage.getItem(OB_KEY)) return; // already seen
+
+            let obStep = 0;
+            const TOTAL = 4;
+            const overlay  = document.getElementById('ob-overlay');
+            const slides   = document.getElementById('ob-slides');
+            const dots     = document.getElementById('ob-dots').children;
+            const nextBtn  = document.getElementById('ob-next-btn');
+
+            overlay.classList.remove('ob-hidden');
+
+            function goTo(step) {
+                obStep = Math.max(0, Math.min(step, TOTAL - 1));
+                slides.style.transform = `translateX(${obStep * 100}%)`;
+                // RTL: slides go right-to-left
+                slides.style.transform = `translateX(${-obStep * 100}%)`;
+                Array.from(dots).forEach((d, i) => d.classList.toggle('active', i === obStep));
+                const isLast = obStep === TOTAL - 1;
+                nextBtn.innerHTML = isLast
+                    ? 'בואו נתחיל <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>'
+                    : 'הבא <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+                nextBtn.classList.toggle('ob-last', isLast);
+            }
+
+            window.obNext   = () => obStep < TOTAL - 1 ? goTo(obStep + 1) : obFinish();
+            window.obFinish = () => { localStorage.setItem(OB_KEY, '1'); overlay.classList.add('ob-hidden'); };
+            window.obRequestLocation = () => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(() => {}, () => {});
+                }
+            };
+
+            // Swipe support
+            let startX = 0;
+            overlay.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+            overlay.addEventListener('touchend', e => {
+                const dx = e.changedTouches[0].clientX - startX;
+                if (Math.abs(dx) > 50) dx < 0 ? obNext() : goTo(obStep - 1);
+            }, { passive: true });
+
+            goTo(0);
+        })();
+    </script>
 
     <script>
         // --- Translations ---
