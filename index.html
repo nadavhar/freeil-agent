@@ -1021,6 +1021,19 @@
             padding: 1rem 1.25rem;
         }
 
+        /* ── Participants badge ── */
+        .participants-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 4px 10px;
+        }
+
         /* ── Register button ── */
         .btn-register {
             background: linear-gradient(135deg, #667eea, #764ba2);
@@ -1687,10 +1700,33 @@
         async function handleRegister(ev, btn) {
             const { data: { user } } = await sb.auth.getUser();
             if (!user) { window.location.href = '/login.html'; return; }
+
+            // Optimistic UI
             btn.textContent = '✓ נרשמת';
             btn.classList.add('registered');
             localStorage.setItem('reg-' + ev.id, '1');
+
+            // Update participant counter badge
+            const badge = document.getElementById('pcount-' + ev.id);
+            if (badge) {
+                const current = ev.registrations_count || 0;
+                ev.registrations_count = current + 1;
+                badge.textContent = '👥 ' + ev.registrations_count;
+            }
+
             showToast('נרשמת לאירוע בהצלחה!');
+
+            // Save to Supabase
+            try {
+                const rawId = ev._rawId;
+                const { error } = await sb.from('event_registrations').insert({
+                    user_id:  user.id,
+                    event_id: rawId,
+                });
+                if (!error) {
+                    await sb.rpc('increment_registrations', { event_id: rawId });
+                }
+            } catch (e) { /* fails gracefully */ }
         }
 
         function renderEvents(events) {
@@ -1734,12 +1770,16 @@
                 // Favorite state
                 const isFavorite = userActions.favorite;
 
-                // Register button (private tab only)
+                // Register button + counter (private tab only)
                 const isPrivate = ev.source === 'user';
                 const regKey = 'reg-' + ev.id;
                 const isRegistered = isPrivate && localStorage.getItem(regKey) === '1';
-                const registerBtn = isPrivate
+                const showRegBtn = isPrivate && ev.registration_enabled;
+                const registerBtn = showRegBtn
                     ? `<button class="btn-register${isRegistered ? ' registered' : ''}" data-ev-id="${ev.id}">${isRegistered ? '✓ נרשמת' : 'הרשמה'}</button>`
+                    : '';
+                const participantsBadge = isPrivate
+                    ? `<span class="participants-badge" id="pcount-${ev.id}">👥 ${ev.registrations_count}</span>`
                     : '';
 
                 const thumbHtml = ev.thumbnail
@@ -1764,6 +1804,7 @@
                             <div class="action-buttons">
                                 <button class="favorite-btn${isFavorite ? ' active' : ''}" data-event-id="${eventId}">${isFavorite ? '♥' : '♡'}</button>
                                 ${registerBtn}
+                                ${participantsBadge}
                             </div>
                             <div class="action-buttons">
                                 <button class="action-btn whatsapp" title="${t('shareWhatsApp')}">${whatsappIcon}</button>
@@ -1796,7 +1837,7 @@
                 }
 
                 // Register button click (private events)
-                if (isPrivate && !isRegistered) {
+                if (showRegBtn && !isRegistered) {
                     const regBtn = card.querySelector('.btn-register');
                     if (regBtn) {
                         regBtn.addEventListener('click', (e) => {
@@ -2077,17 +2118,20 @@
 
         function mapUserEventRow(row) {
             return {
-                id:          'user-' + row.id,
-                title:       row.title,
-                date:        row.date        || '',
-                time:        row.time        || '',
-                location:    row.location    || '',
-                city:        row.city        || '',
-                description: row.description || '',
-                event_type:  row.event_type  || 'other',
-                thumbnail:   row.thumbnail_url || '',
-                emoji:       row.emoji       || '📅',
-                source:      'user',
+                id:                   'user-' + row.id,
+                _rawId:               row.id,
+                title:                row.title,
+                date:                 row.date        || '',
+                time:                 row.time        || '',
+                location:             row.location    || '',
+                city:                 row.city        || '',
+                description:          row.description || '',
+                event_type:           row.event_type  || 'other',
+                thumbnail:            row.thumbnail_url || '',
+                emoji:                row.emoji       || '📅',
+                source:               'user',
+                registration_enabled: row.registration_enabled !== false,
+                registrations_count:  row.registrations_count || 0,
             };
         }
 

@@ -469,6 +469,38 @@
         .img-upload-label span { color: #00d4aa; }
         .img-upload-hint { font-size: 0.75rem; color: #94a3b8; }
 
+        /* Registration toggle */
+        .toggle-field { margin-top: 4px; }
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+        .toggle-label { font-weight: 700; font-size: 0.9rem; color: #1e293b; margin-bottom: 2px; }
+        .toggle-hint  { font-size: 0.78rem; color: #94a3b8; }
+        .toggle-switch { position: relative; width: 46px; height: 26px; flex-shrink: 0; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; inset: 0;
+            background: #cbd5e1; border-radius: 26px;
+            cursor: pointer; transition: background 0.25s;
+        }
+        .toggle-slider::before {
+            content: '';
+            position: absolute; width: 20px; height: 20px;
+            left: 3px; bottom: 3px;
+            background: #fff; border-radius: 50%;
+            transition: transform 0.25s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+        .toggle-switch input:checked + .toggle-slider { background: #00d4aa; }
+        .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
+
         .img-preview-wrap {
             display: none; position: relative;
             border-radius: 14px; overflow: hidden; height: 150px;
@@ -903,6 +935,19 @@
                 </div>
             </div>
 
+            <div class="field toggle-field">
+                <div class="toggle-row">
+                    <div>
+                        <div class="toggle-label">אפשר הרשמה לאירוע</div>
+                        <div class="toggle-hint">מציג כפתור הרשמה על כרטיס האירוע</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="ae-registration" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
             <button type="submit" class="btn-submit-event" id="btn-submit-event">
                 <div class="spinner"></div>
                 <span class="btn-submit-label">
@@ -978,8 +1023,9 @@ function openEditEvent(ev) {
     document.getElementById('ae-time').value     = ev.time     || '';
     document.getElementById('ae-city').value     = ev.city     || '';
     document.getElementById('ae-type').value     = ev.event_type || '';
-    document.getElementById('ae-location').value = ev.location || '';
-    document.getElementById('ae-desc').value     = ev.description || '';
+    document.getElementById('ae-location').value     = ev.location || '';
+    document.getElementById('ae-desc').value          = ev.description || '';
+    document.getElementById('ae-registration').checked = ev.registration_enabled !== false;
     document.getElementById('add-event-modal').classList.add('open');
     document.body.style.overflow = 'hidden';
     setTimeout(() => document.getElementById('ae-title').focus(), 100);
@@ -1260,12 +1306,13 @@ async function handleAddEventSubmit(e) {
     document.getElementById('ae-title').classList.remove('err');
     document.getElementById('ae-title-err').textContent = '';
 
-    const dateVal = document.getElementById('ae-date').value;
-    const timeVal = document.getElementById('ae-time').value;
-    const city    = document.getElementById('ae-city').value.trim();
-    const type    = document.getElementById('ae-type').value;
-    const loc     = document.getElementById('ae-location').value.trim();
-    const desc    = document.getElementById('ae-desc').value.trim();
+    const dateVal      = document.getElementById('ae-date').value;
+    const timeVal      = document.getElementById('ae-time').value;
+    const city         = document.getElementById('ae-city').value.trim();
+    const type         = document.getElementById('ae-type').value;
+    const loc          = document.getElementById('ae-location').value.trim();
+    const desc         = document.getElementById('ae-desc').value.trim();
+    const regEnabled   = document.getElementById('ae-registration').checked;
 
     const btn = document.getElementById('btn-submit-event');
     btn.classList.add('loading');
@@ -1282,12 +1329,13 @@ async function handleAddEventSubmit(e) {
         // ── UPDATE existing event ──
         const updates = {
             title,
-            date:          dateVal  || null,
-            time:          timeVal  || null,
-            city:          city     || null,
-            event_type:    type     || null,
-            location:      loc      || null,
-            description:   desc     || null,
+            date:                 dateVal    || null,
+            time:                 timeVal    || null,
+            city:                 city       || null,
+            event_type:           type       || null,
+            location:             loc        || null,
+            description:          desc       || null,
+            registration_enabled: regEnabled,
         };
         if (thumbnailUrl) updates.thumbnail_url = thumbnailUrl;
 
@@ -1318,16 +1366,17 @@ async function handleAddEventSubmit(e) {
 
     // ── INSERT new event ──
     const { data: newRow, error } = await sb.from('user_events').insert({
-        user_id:       currentUser.id,
+        user_id:              currentUser.id,
         title,
-        date:          dateVal       || null,
-        time:          timeVal       || null,
-        city:          city          || null,
-        event_type:    type          || null,
-        location:      loc           || null,
-        description:   desc          || null,
-        thumbnail_url: thumbnailUrl  || null,
-        status:        'published',
+        date:                 dateVal       || null,
+        time:                 timeVal       || null,
+        city:                 city          || null,
+        event_type:           type          || null,
+        location:             loc           || null,
+        description:          desc          || null,
+        thumbnail_url:        thumbnailUrl  || null,
+        registration_enabled: regEnabled,
+        status:               'published',
     }).select().single();
 
     btn.classList.remove('loading');
@@ -1412,10 +1461,12 @@ function normalizeRow(row) {
         description:     row.description,
         event_type:      row.event_type,
         city:            row.city,
-        thumbnail:       row.thumbnail_url || null,
-        emoji:           row.emoji || '📅',
-        status:          row.status,
-        rejectionReason: row.rejection_reason || null,
+        thumbnail:            row.thumbnail_url || null,
+        emoji:                row.emoji || '📅',
+        status:               row.status,
+        registration_enabled: row.registration_enabled !== false,
+        registrations_count:  row.registrations_count || 0,
+        rejectionReason:      row.rejection_reason || null,
     };
 }
 
