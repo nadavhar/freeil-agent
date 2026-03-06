@@ -42,6 +42,9 @@
 
     <!-- Supabase — must load before any script that uses `sb` -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- Leaflet (map view) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         const sb = window.supabase.createClient(
             'https://iymmfwjsmaziymmwijjn.supabase.co',
@@ -939,8 +942,8 @@
             }
         }
 
-        /* ── Tab Switcher ── */
-        .tab-switcher {
+        /* ── Desktop Tab Bar (replaces old tab-switcher on desktop) ── */
+        .desktop-tabs {
             display: flex;
             gap: 8px;
             padding: 12px 1rem;
@@ -950,29 +953,115 @@
             top: 0;
             z-index: 50;
         }
-        .tab-btn {
+        .dtab {
             flex: 1;
             padding: 10px 16px;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             background: #f8fafc;
             color: #64748b;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
             font-family: inherit;
         }
-        .tab-btn.active {
+        .dtab.active {
             background: #1a1a2e;
             color: #fff;
             border-color: #1a1a2e;
             box-shadow: 0 4px 12px rgba(26,26,46,0.25);
         }
-        .tab-btn:not(.active):hover {
-            border-color: #1a1a2e;
-            color: #1a1a2e;
+        .dtab:not(.active):hover { border-color: #1a1a2e; color: #1a1a2e; }
+
+        /* ── Bottom Nav (mobile only) ── */
+        .bottom-nav {
+            display: none;
         }
+        @media (max-width: 768px) {
+            .desktop-tabs { display: none; }
+            .bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0; left: 0; right: 0;
+                z-index: 200;
+                background: rgba(255,255,255,0.88);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                border-top: 1px solid rgba(0,0,0,0.08);
+                padding-bottom: env(safe-area-inset-bottom);
+                box-shadow: 0 -4px 24px rgba(0,0,0,0.07);
+            }
+            .event-list-container, #view-social, #view-map {
+                padding-bottom: calc(72px + env(safe-area-inset-bottom));
+            }
+        }
+        .bnav-btn {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: 10px 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #94a3b8;
+            font-family: inherit;
+            font-size: 0.68rem;
+            font-weight: 600;
+            transition: color 0.2s;
+            position: relative;
+        }
+        .bnav-btn svg { transition: transform 0.2s; }
+        .bnav-btn.active { color: #00d4aa; }
+        .bnav-btn.active svg { transform: translateY(-1px); }
+        .bnav-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            width: 18px; height: 3px;
+            background: #00d4aa;
+            border-radius: 3px;
+            animation: dotIn 0.2s ease;
+        }
+        @keyframes dotIn {
+            from { opacity: 0; transform: scaleX(0); }
+            to   { opacity: 1; transform: scaleX(1); }
+        }
+
+        /* ── Social Feed ── */
+        #view-social { display: none; }
+        .social-feed { padding: 1rem; max-width: 680px; margin: 0 auto; }
+        .social-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            margin-bottom: 10px;
+        }
+        .social-icon {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .social-icon.reg-icon  { background: #eff6ff; }
+        .social-icon.new-icon  { background: #f0fdf4; }
+        .social-content p { margin: 0 0 4px; font-size: 0.88rem; color: #1e293b; line-height: 1.4; }
+        .social-time { font-size: 0.75rem; color: #94a3b8; }
+        .social-empty { text-align: center; color: #94a3b8; padding: 3rem 1rem; }
+        .social-loading { text-align: center; color: #94a3b8; padding: 2rem; }
+
+        /* ── Map View ── */
+        #view-map { display: none; }
+        #map-el { height: calc(100vh - 140px); min-height: 400px; }
+        .leaflet-container { font-family: inherit; }
 
         /* ── FAB ── */
         .fab-add-event {
@@ -1180,16 +1269,48 @@
         </div>
     </div>
 
-    <!-- Tab Switcher -->
-    <div class="tab-switcher">
-        <button id="tab-public"  class="tab-btn active" onclick="switchTab('public')">🌐 ציבורי</button>
-        <button id="tab-private" class="tab-btn"        onclick="switchTab('private')">✨ פרטי</button>
+    <!-- Desktop Tab Bar -->
+    <div class="desktop-tabs">
+        <button class="dtab active" data-tab="public"  onclick="switchTab('public')">🌐 ציבורי</button>
+        <button class="dtab"        data-tab="private" onclick="switchTab('private')">✨ קהילה</button>
+        <button class="dtab"        data-tab="social"  onclick="switchTab('social')">📢 פיד</button>
+        <button class="dtab"        data-tab="map"     onclick="switchTab('map')">🗺️ מפה</button>
     </div>
 
-    <!-- Event List Section -->
-    <div class="event-list-container">
+    <!-- Event List (public + private tabs) -->
+    <div class="event-list-container" id="view-events">
         <div id="event-list"><div id="loading"></div></div>
     </div>
+
+    <!-- Social Feed -->
+    <div id="view-social">
+        <div class="social-feed" id="social-feed"></div>
+    </div>
+
+    <!-- Map -->
+    <div id="view-map">
+        <div id="map-el"></div>
+    </div>
+
+    <!-- Bottom Navigation (mobile only) -->
+    <nav class="bottom-nav">
+        <button class="bnav-btn active" data-tab="public" onclick="switchTab('public')">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span>ציבורי</span>
+        </button>
+        <button class="bnav-btn" data-tab="private" onclick="switchTab('private')">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>קהילה</span>
+        </button>
+        <button class="bnav-btn" data-tab="social" onclick="switchTab('social')">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span>פיד</span>
+        </button>
+        <button class="bnav-btn" data-tab="map" onclick="switchTab('map')">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+            <span>מפה</span>
+        </button>
+    </nav>
 
 
     <script>
@@ -2022,20 +2143,111 @@
             });
         }
 
+        let mapInstance = null;
+
         function switchTab(tab) {
             activeTab = tab;
-            document.getElementById('tab-public').classList.toggle('active', tab === 'public');
-            document.getElementById('tab-private').classList.toggle('active', tab === 'private');
-            allEvents = tab === 'private' ? privateEvents : publicEvents;
-            activeDateFilter = 'all';
-            activeRegionFilter = 'all';
-            activeCityFilter = 'all';
-            activeTypeFilter = 'all';
-            searchQuery = '';
-            const si = document.getElementById('search-input');
-            if (si) si.value = '';
-            buildFilters();
-            applyFilter();
+
+            // Update all nav buttons (desktop + mobile)
+            document.querySelectorAll('.dtab, .bnav-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.tab === tab);
+            });
+
+            // Show/hide filters
+            const showFilters = tab === 'public' || tab === 'private';
+            document.querySelector('.filters-container').style.display = showFilters ? '' : 'none';
+
+            // Show/hide views
+            document.getElementById('view-events').style.display = showFilters ? '' : 'none';
+            document.getElementById('view-social').style.display = tab === 'social' ? '' : 'none';
+            document.getElementById('view-map').style.display    = tab === 'map'    ? '' : 'none';
+
+            if (showFilters) {
+                allEvents = tab === 'private' ? privateEvents : publicEvents;
+                activeDateFilter = 'all'; activeRegionFilter = 'all';
+                activeCityFilter = 'all'; activeTypeFilter = 'all';
+                searchQuery = '';
+                const si = document.getElementById('search-input');
+                if (si) si.value = '';
+                buildFilters();
+                applyFilter();
+            } else if (tab === 'social') {
+                loadSocialFeed();
+            } else if (tab === 'map') {
+                initMap();
+            }
+        }
+
+        function formatTimeAgo(dateStr) {
+            const diff = Date.now() - new Date(dateStr).getTime();
+            const mins = Math.floor(diff / 60000);
+            if (mins < 2)  return 'עכשיו';
+            if (mins < 60) return `לפני ${mins} דקות`;
+            const hrs = Math.floor(mins / 60);
+            if (hrs < 24)  return `לפני ${hrs} שעות`;
+            const days = Math.floor(hrs / 24);
+            return `לפני ${days} ימים`;
+        }
+
+        async function loadSocialFeed() {
+            const feedEl = document.getElementById('social-feed');
+            feedEl.innerHTML = '<p class="social-loading">טוען פיד...</p>';
+            try {
+                const [{ data: regs }, { data: newEvs }] = await Promise.all([
+                    sb.from('event_registrations')
+                        .select('created_at, user_events(title, city)')
+                        .order('created_at', { ascending: false }).limit(30),
+                    sb.from('user_events')
+                        .select('title, city, created_at, emoji')
+                        .eq('status', 'published')
+                        .order('created_at', { ascending: false }).limit(20),
+                ]);
+                const items = [];
+                (regs || []).forEach(r => {
+                    if (r.user_events) items.push({ type: 'reg', time: r.created_at, title: r.user_events.title, city: r.user_events.city });
+                });
+                (newEvs || []).forEach(e => {
+                    items.push({ type: 'event', time: e.created_at, title: e.title, city: e.city, emoji: e.emoji || '📅' });
+                });
+                items.sort((a, b) => new Date(b.time) - new Date(a.time));
+                if (!items.length) { feedEl.innerHTML = '<p class="social-empty">אין פעילות עדיין</p>'; return; }
+                feedEl.innerHTML = items.map(item => {
+                    const ago = formatTimeAgo(item.time);
+                    const cityLabel = item.city ? ' · ' + getCityLabel(item.city) : '';
+                    if (item.type === 'reg') return `
+                        <div class="social-item">
+                            <div class="social-icon reg-icon">👥</div>
+                            <div class="social-content">
+                                <p>מישהו נרשם לאירוע <strong>"${item.title}"</strong></p>
+                                <span class="social-time">${ago}${cityLabel}</span>
+                            </div>
+                        </div>`;
+                    return `
+                        <div class="social-item">
+                            <div class="social-icon new-icon">${item.emoji}</div>
+                            <div class="social-content">
+                                <p>אירוע חדש: <strong>"${item.title}"</strong></p>
+                                <span class="social-time">${ago}${cityLabel}</span>
+                            </div>
+                        </div>`;
+                }).join('');
+            } catch (e) {
+                feedEl.innerHTML = '<p class="social-empty">שגיאה בטעינת הפיד</p>';
+            }
+        }
+
+        function initMap() {
+            if (mapInstance) { mapInstance.invalidateSize(); return; }
+            mapInstance = L.map('map-el', { center: [31.5, 34.9], zoom: 8 });
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(mapInstance);
+            const eventsWithLocation = [...publicEvents, ...privateEvents].filter(e => e.latitude && e.longitude);
+            eventsWithLocation.forEach(ev => {
+                L.marker([ev.latitude, ev.longitude])
+                    .bindPopup(`<strong>${ev.title}</strong><br>${ev.date || ''}${ev.city ? ' · ' + getCityLabel(ev.city) : ''}`)
+                    .addTo(mapInstance);
+            });
         }
 
         function resetAllFilters() {
