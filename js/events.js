@@ -156,7 +156,6 @@ function renderEvents(events) {
                         <div class="meta-item">${calendarIcon}<span>${escHtml(dateStr)}</span></div>
                         <div class="meta-item location-meta">
                             ${locationIcon}<span>${escHtml(ev.location || '')}</span>
-                            ${hasAddress ? `<button class="navigate-inline" title="ניווט">${navigateIcon}</button>` : ''}
                         </div>
                     </div>
                     <div class="card-desc">${escHtml(ev.description || '')}</div>
@@ -164,6 +163,7 @@ function renderEvents(events) {
                         <div class="action-group">
                             <button class="action-btn add-cal" title="הוספה ליומן">${calPlusIcon}</button>
                             <button class="action-btn share" title="שתף">${shareIcon}</button>
+                            ${hasAddress ? `<button class="action-btn navigate" title="ניווט">${navigateIcon}</button>` : ''}
                             <button class="action-btn favorite-btn${isFavorite ? ' active' : ''}" data-event-id="${eventId}">${isFavorite ? heartFilled : heartOutline}</button>
                         </div>
                         ${regBtn}
@@ -216,7 +216,7 @@ function renderEvents(events) {
                 e.stopPropagation();
                 addToGoogleCalendar(ev);
             });
-            card.querySelector('.navigate-inline')?.addEventListener('click', e => {
+            card.querySelector('.action-btn.navigate')?.addEventListener('click', e => {
                 e.stopPropagation();
                 const query = encodeURIComponent((ev.location || '') + (ev.city ? ' ' + ev.city : ''));
                 window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank', 'noopener');

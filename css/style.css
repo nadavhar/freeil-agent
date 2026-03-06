@@ -294,7 +294,7 @@ header h1 span { color: #00d4aa; }
 .private-footer {
     display: flex; align-items: center; justify-content: space-between;
     padding-top: 0.75rem; margin-top: 0.75rem; border-top: 1px solid #f1f5f9;
-    gap: 8px;
+    gap: 4px;
 }
 .private-footer .action-group { display: flex; align-items: center; gap: 6px; }
 .private-footer .participants-badge { display: flex; align-items: center; gap: 5px; }
