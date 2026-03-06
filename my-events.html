@@ -518,6 +518,25 @@
         }
         .img-preview-remove:hover { background: rgba(220,38,38,0.9); }
 
+        .ai-image-btn {
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            width: 100%; margin-top: 10px; padding: 10px 16px;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: #fff; border: none; border-radius: 10px;
+            font-size: 0.85rem; font-weight: 700; font-family: inherit;
+            cursor: pointer; transition: opacity 0.15s, transform 0.1s;
+        }
+        .ai-image-btn:hover { opacity: 0.9; }
+        .ai-image-btn:active { transform: scale(0.98); }
+        .ai-image-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+        .ai-image-btn .ai-spinner {
+            width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: #fff; border-radius: 50%;
+            animation: spin 0.7s linear infinite; display: none;
+        }
+        .ai-image-btn.loading .ai-spinner { display: block; }
+        .ai-image-btn.loading .ai-btn-text { opacity: 0.6; }
+
         .btn-submit-event {
             width: 100%; height: 52px;
             background: linear-gradient(135deg, #00d4aa, #00b894);
@@ -941,6 +960,10 @@
                     <div class="img-upload-label">גרור תמונה לכאן או <span>לחץ לבחירה</span></div>
                     <div class="img-upload-hint">JPG · PNG · WEBP · עד 5MB</div>
                 </div>
+                <button type="button" class="ai-image-btn" id="ae-ai-image-btn" onclick="generateAIImage()">
+                    <div class="ai-spinner"></div>
+                    <span class="ai-btn-text">✨ צור תמונה עם AI</span>
+                </button>
             </div>
 
             <div class="field toggle-field">
@@ -1059,6 +1082,9 @@ function removeImage() {
     if (zone)      zone.style.display = '';
     // selectedImageFile reset handled by second script if it loaded; safe to ignore here
     if (typeof selectedImageFile !== 'undefined') window.selectedImageFile = null;
+    window.aiGeneratedImageUrl = null;
+    const aiBtn = document.getElementById('ae-ai-image-btn');
+    if (aiBtn) aiBtn.style.display = '';
 }
 /* Fallback signOut — clears Supabase localStorage keys and redirects.
    Works even if the Supabase CDN fails. The second script overrides this
@@ -1301,6 +1327,56 @@ async function uploadImage(file, userId) {
 }
 
 /* ══════════════════════════════════════════════════════════════
+   AI IMAGE GENERATION
+══════════════════════════════════════════════════════════════ */
+async function generateAIImage() {
+    const title = document.getElementById('ae-title').value.trim();
+    const desc  = document.getElementById('ae-desc').value.trim();
+
+    if (!title) {
+        showToast('נא להזין שם לאירוע תחילה', 'error');
+        document.getElementById('ae-title').focus();
+        return;
+    }
+    if (desc.length < 20) {
+        showToast('נא להוסיף תיאור מפורט יותר (לפחות 20 תווים) לפני יצירת תמונה', 'error');
+        document.getElementById('ae-desc').focus();
+        return;
+    }
+
+    const btn = document.getElementById('ae-ai-image-btn');
+    btn.disabled = true;
+    btn.classList.add('loading');
+
+    try {
+        const res = await fetch('/api/generate-image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, description: desc }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.url) {
+            showToast(data.error || 'שגיאה ביצירת תמונה', 'error');
+            return;
+        }
+
+        // Show generated image in preview (same flow as manual upload, but no local file)
+        window.selectedImageFile = null;
+        window.aiGeneratedImageUrl = data.url;
+        document.getElementById('ae-img-preview').src = data.url;
+        document.getElementById('ae-img-preview-wrap').classList.add('visible');
+        document.getElementById('ae-upload-zone').style.display = 'none';
+        btn.style.display = 'none';
+        showToast('התמונה נוצרה בהצלחה!', 'success');
+    } catch (e) {
+        showToast('שגיאה ביצירת תמונה — נסה שוב', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════
    ADD EVENT FORM SUBMIT
 ══════════════════════════════════════════════════════════════ */
 async function handleAddEventSubmit(e) {
@@ -1327,8 +1403,8 @@ async function handleAddEventSubmit(e) {
     btn.classList.add('loading');
     btn.disabled = true;
 
-    // Upload image if selected
-    let thumbnailUrl = null;
+    // Upload image if selected, or use AI-generated URL directly
+    let thumbnailUrl = window.aiGeneratedImageUrl || null;
     if (window.selectedImageFile) {
         thumbnailUrl = await uploadImage(window.selectedImageFile, currentUser.id);
         if (!thumbnailUrl) showToast('התמונה לא הועלתה, האירוע נשמר בלעדיה', '');
