@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>האירועים שלי — FreeIL</title>
+    <meta name="theme-color" content="#1a1a2e">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <style>
+        /* ── Reset ── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { overflow-x: hidden; max-width: 100vw; width: 100%; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #1a1a2e;
+            padding-top: 64px;
+        }
+
+        /* ── Header — mirrors index.html ── */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .header-inner {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 0.875rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .header-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: white;
+            white-space: nowrap;
+        }
+        .header-title span { color: #00d4aa; }
+        .add-event-btn {
+            display: flex; align-items: center; gap: 6px;
+            background: #00d4aa;
+            color: #0f172a;
+            border: none;
+            padding: 0 16px;
+            height: 38px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .add-event-btn:hover { background: #00bfa0; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,212,170,0.3); }
+        .add-event-btn svg { flex-shrink: 0; }
+
+        /* ── Page container ── */
+        .page-container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 1.25rem 1rem 5rem;
+        }
+
+        /* ── Stats row ── */
+        /* ── Event count heading ── */
+        .events-count-heading {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 1rem;
+        }
+        .events-count-heading span { color: #334155; }
+
+        /* ── Event list ── */
+        .events-list { display: flex; flex-direction: column; gap: 10px; }
+
+        /* ── Event row ── */
+        .event-row {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 14px 14px 10px;
+            transition: box-shadow 0.2s, border-color 0.2s;
+            position: relative;
+        }
+        .event-row:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: #cbd5e1; }
+
+
+        /* Thumbnail */
+        .event-thumb {
+            width: 64px; height: 64px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #f1f5f9;
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+        .event-thumb img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .event-thumb .thumb-placeholder {
+            font-size: 1.6rem;
+        }
+
+        /* Info block */
+        .event-info { flex: 1; min-width: 0; }
+        .event-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.3;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .event-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .event-date {
+            font-size: 0.75rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .event-date svg { opacity: 0.6; }
+
+
+        /* Rejection reason tooltip */
+        .rejection-reason {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: help;
+            margin-right: 4px;
+        }
+        .rejection-reason .tooltip-icon {
+            width: 16px; height: 16px;
+            background: #fecaca;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: #dc2626;
+        }
+        .rejection-reason .tooltip-text {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 6px);
+            right: -8px;
+            background: #1e293b;
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 400;
+            padding: 6px 10px;
+            border-radius: 8px;
+            white-space: nowrap;
+            max-width: 220px;
+            white-space: normal;
+            z-index: 50;
+            line-height: 1.4;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+        .rejection-reason .tooltip-text::after {
+            content: '';
+            position: absolute;
+            top: 100%; right: 12px;
+            border: 5px solid transparent;
+            border-top-color: #1e293b;
+        }
+        .rejection-reason:hover .tooltip-text,
+        .rejection-reason:focus .tooltip-text { display: block; }
+
+        /* ── Action menu (three dots) ── */
+        .action-menu-wrapper { position: relative; flex-shrink: 0; }
+        .three-dot-btn {
+            width: 34px; height: 34px;
+            background: transparent;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+        .three-dot-btn:hover { background: #f1f5f9; color: #1e293b; border-color: #cbd5e1; }
+        .three-dot-btn.active { background: #f1f5f9; border-color: #cbd5e1; color: #1e293b; }
+
+        .action-dropdown {
+            display: none;
+            position: fixed;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            overflow: hidden;
+            min-width: 160px;
+            z-index: 9999;
+        }
+        .action-dropdown.open { display: block; }
+
+        .action-dropdown button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 16px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1e293b;
+            transition: background 0.15s;
+            text-align: right;
+        }
+        .action-dropdown button:hover { background: #f8fafc; }
+        .action-dropdown button svg { flex-shrink: 0; color: #64748b; }
+        .action-dropdown .action-delete { color: #dc2626; }
+        .action-dropdown .action-delete svg { color: #dc2626; }
+        .action-dropdown .action-delete:hover { background: #fef2f2; }
+        .action-dropdown hr { border: none; border-top: 1px solid #f1f5f9; margin: 2px 0; }
+
+        /* ── Empty state ── */
+        .empty-state {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        .empty-state.visible { display: flex; }
+        .empty-illustration {
+            font-size: 4.5rem;
+            margin-bottom: 1.25rem;
+            line-height: 1;
+            filter: grayscale(0.2);
+        }
+        .empty-state h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+        .empty-state p {
+            font-size: 0.875rem;
+            color: #64748b;
+            max-width: 280px;
+            line-height: 1.6;
+            margin-bottom: 1.75rem;
+        }
+        .cta-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #00d4aa;
+            color: #0f172a;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 16px rgba(0,212,170,0.3);
+        }
+        .cta-btn:hover { background: #00bfa0; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,212,170,0.4); }
+
+        /* ── Shared modal overlay ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 950;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        @media (min-width: 480px) {
+            .modal-overlay { align-items: center; }
+        }
+        .modal {
+            background: #fff;
+            border-radius: 24px 24px 0 0;
+            padding: 2rem 1.75rem;
+            width: 100%;
+            max-width: 500px;
+            animation: slideUp 0.3s cubic-bezier(0.34,1.2,0.64,1);
+            max-height: 92vh;
+            overflow-y: auto;
+            box-shadow: 0 -4px 30px rgba(0,0,0,0.08), 0 25px 60px rgba(0,0,0,0.18);
+        }
+        @media (min-width: 480px) {
+            .modal { border-radius: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.1); }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(48px); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
+        .modal-icon {
+            width: 52px; height: 52px;
+            background: #fef2f2;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .modal h3 { font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.4rem; }
+        .modal p  { font-size: 0.875rem; color: #64748b; line-height: 1.6; margin-bottom: 1.5rem; }
+        .modal-title-preview {
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn-delete-confirm {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-delete-confirm:hover { background: #b91c1c; }
+        .btn-cancel {
+            background: #f1f5f9;
+            color: #475569;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-cancel:hover { background: #e2e8f0; }
+
+        /* ── Add Event modal form ── */
+        .add-modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .add-modal-header-left { display: flex; align-items: center; gap: 12px; }
+        .add-modal-icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,212,170,0.06));
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: #00d4aa; flex-shrink: 0;
+        }
+        .add-modal-header h3 { font-size: 1.05rem; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.02em; }
+        .add-modal-header p  { font-size: 0.75rem; color: #94a3b8; margin: 2px 0 0; }
+        .modal-close-x {
+            width: 34px; height: 34px;
+            background: #f8fafc; border: 1px solid #e8edf4; border-radius: 10px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            color: #94a3b8; transition: all 0.15s; flex-shrink: 0;
+        }
+        .modal-close-x:hover { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
+
+        .add-form { display: flex; flex-direction: column; gap: 14px; }
+        .add-form .field { display: flex; flex-direction: column; gap: 6px; }
+        .add-form label {
+            font-size: 0.7rem; font-weight: 700; color: #64748b;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .add-form .required { color: #ef4444; margin-right: 2px; }
+        .add-form input,
+        .add-form textarea,
+        .add-form select {
+            width: 100%;
+            border: 1.5px solid #e8edf4;
+            border-radius: 12px;
+            background: #f8fafc;
+            font-size: 0.9rem;
+            color: #0f172a;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            padding: 11px 14px;
+        }
+        .add-form input:focus,
+        .add-form textarea:focus,
+        .add-form select:focus {
+            border-color: #00d4aa;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(0,212,170,0.1);
+        }
+        .add-form input.err,
+        .add-form textarea.err { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.08); }
+        .add-form textarea { resize: vertical; min-height: 88px; line-height: 1.6; }
+        .add-form .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .add-form .field-err { font-size: 0.7rem; color: #ef4444; font-weight: 600; min-height: 14px; }
+        .add-form .field-err:empty { display: none; }
+
+        /* Icon-prefixed inputs */
+        .input-icon-wrap { position: relative; }
+        .input-icon-wrap .field-icon {
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            color: #b0bcc8; pointer-events: none; display: flex; align-items: center;
+        }
+        .input-icon-wrap input { padding-right: 38px; }
+
+        /* Image upload */
+        .img-upload-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 1.75rem 1.25rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #f8fafc;
+            position: relative;
+        }
+        .img-upload-zone:hover,
+        .img-upload-zone.drag-over {
+            border-color: #00d4aa;
+            background: rgba(0,212,170,0.03);
+            box-shadow: 0 0 0 4px rgba(0,212,170,0.07);
+        }
+        .img-upload-zone input[type="file"] {
+            position: absolute; inset: 0; opacity: 0; cursor: pointer;
+            width: 100%; height: 100%; padding: 0; border: none; background: none;
+        }
+        .img-upload-icon-wrap {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, rgba(0,212,170,0.12), rgba(0,212,170,0.04));
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 10px; color: #00d4aa;
+        }
+        .img-upload-label { font-size: 0.85rem; font-weight: 700; color: #334155; margin-bottom: 3px; }
+        .img-upload-label span { color: #00d4aa; }
+        .img-upload-hint { font-size: 0.75rem; color: #94a3b8; }
+
+        .img-preview-wrap {
+            display: none; position: relative;
+            border-radius: 14px; overflow: hidden; height: 150px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        .img-preview-wrap.visible { display: block; }
+        .img-preview-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .img-preview-remove {
+            position: absolute; top: 8px; left: 8px;
+            width: 30px; height: 30px;
+            background: rgba(15,23,42,0.7); border: none; border-radius: 50%;
+            color: white; cursor: pointer; font-size: 13px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.15s; backdrop-filter: blur(4px);
+        }
+        .img-preview-remove:hover { background: rgba(220,38,38,0.9); }
+
+        .btn-submit-event {
+            width: 100%; height: 52px;
+            background: linear-gradient(135deg, #00d4aa, #00b894);
+            color: #0f172a;
+            border: none; border-radius: 14px;
+            font-size: 0.95rem; font-weight: 800;
+            cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin-top: 6px;
+            box-shadow: 0 4px 16px rgba(0,212,170,0.3);
+            letter-spacing: -0.01em;
+        }
+        .btn-submit-event:hover:not(:disabled) {
+            background: linear-gradient(135deg, #00e0b8, #00c9a0);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 8px 24px rgba(0,212,170,0.4);
+        }
+        .btn-submit-event:active:not(:disabled) { transform: translateY(0) scale(0.99); }
+        .btn-submit-event:disabled { background: #e8edf4; color: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-submit-event .spinner { display: none; width: 20px; height: 20px; border: 2.5px solid rgba(15,23,42,0.25); border-top-color: #0f172a; border-radius: 50%; animation: spin 0.7s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn-submit-event.loading .btn-submit-label { display: none; }
+        .btn-submit-event.loading .spinner { display: block; }
+
+        /* ── Toast notification ── */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e293b;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            z-index: 1100;
+            transition: transform 0.35s cubic-bezier(0.34,1.4,0.64,1), opacity 0.35s ease;
+            opacity: 0;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            pointer-events: none;
+        }
+        .toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.success { background: #059669; }
+        .toast.error   { background: #dc2626; }
+
+        /* New event highlight pulse */
+        @keyframes newEventPulse {
+            0%   { box-shadow: 0 0 0 0 rgba(0,212,170,0.5), 0 4px 16px rgba(0,0,0,0.07); border-color: #00d4aa; }
+            60%  { box-shadow: 0 0 0 8px rgba(0,212,170,0), 0 4px 16px rgba(0,0,0,0.07); border-color: #00d4aa; }
+            100% { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: #e2e8f0; }
+        }
+        .event-row.new-event { animation: newEventPulse 1.2s ease forwards; }
+
+        /* ── Section heading ── */
+        .section-heading {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #94a3b8;
+            margin-bottom: 0.75rem;
+        }
+
+        /* ── Hamburger menu ── */
+        .hamburger-btn {
+            width: 38px; height: 38px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.85);
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .hamburger-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); }
+
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.55);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 800;
+        }
+        .menu-overlay.open { display: block; }
+
+        .side-menu {
+            position: fixed;
+            top: 0; right: -280px;
+            width: 280px; height: 100%;
+            background: #0f172a;
+            z-index: 900;
+            transition: right 0.28s cubic-bezier(0.4,0,0.2,1);
+            display: flex; flex-direction: column;
+            box-shadow: -8px 0 32px rgba(0,0,0,0.3);
+        }
+        .side-menu.open { right: 0; }
+
+        .side-menu-header {
+            padding: 1.25rem 1.25rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .side-menu-logo { font-size: 1.4rem; font-weight: 800; color: white; letter-spacing: -0.02em; }
+        .side-menu-logo span { color: #00d4aa; }
+        .menu-close-btn {
+            width: 34px; height: 34px;
+            background: rgba(255,255,255,0.06);
+            border: none; border-radius: 8px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .menu-close-btn:hover { background: rgba(255,255,255,0.12); color: white; }
+
+        .side-menu-user {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            display: flex; align-items: center; gap: 12px;
+        }
+        .menu-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: #00d4aa;
+            color: #0f172a;
+            font-size: 0.85rem; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .menu-user-info { min-width: 0; }
+        .menu-user-name { font-size: 0.9rem; font-weight: 700; color: white; }
+        .menu-user-email { font-size: 0.72rem; color: rgba(255,255,255,0.45); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .side-menu-nav { flex: 1; padding: 0.75rem 0; }
+        .menu-nav-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 13px 1.25rem;
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-size: 0.9rem; font-weight: 500;
+            transition: all 0.15s;
+            cursor: pointer;
+            border: none; background: transparent; width: 100%; text-align: right;
+            font-family: inherit;
+        }
+        .menu-nav-item:hover { background: rgba(255,255,255,0.06); color: white; }
+        .menu-nav-item.active { color: #00d4aa; background: rgba(0,212,170,0.08); }
+        .menu-nav-item svg { flex-shrink: 0; opacity: 0.7; }
+        .menu-nav-item.active svg { opacity: 1; color: #00d4aa; }
+
+        .side-menu-footer {
+            padding: 0.75rem 0 1.25rem;
+            border-top: 1px solid rgba(255,255,255,0.07);
+        }
+        .menu-signout {
+            display: flex; align-items: center; gap: 14px;
+            padding: 13px 1.25rem;
+            color: #f87171;
+            font-size: 0.9rem; font-weight: 500;
+            cursor: pointer;
+            border: none; background: transparent; width: 100%; text-align: right;
+            font-family: inherit;
+            transition: background 0.15s;
+        }
+        .menu-signout:hover { background: rgba(239,68,68,0.08); }
+    </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════ -->
+<header>
+    <div class="header-inner">
+        <div class="header-left">
+            <button class="hamburger-btn" onclick="openMenu()" aria-label="תפריט">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="3" y1="6"  x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+            <div class="header-title">ניהול <span>האירועים שלי</span></div>
+        </div>
+        <button class="add-event-btn" onclick="openAddEvent()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            הוסף אירוע
+        </button>
+    </div>
+</header>
+
+<!-- ════════════════════════════════════════════
+     SIDE MENU
+════════════════════════════════════════════ -->
+<div class="menu-overlay" id="menu-overlay" onclick="closeMenu()"></div>
+<nav class="side-menu" id="side-menu">
+    <div class="side-menu-header">
+        <div class="side-menu-logo">Free<span>IL</span></div>
+        <button class="menu-close-btn" onclick="closeMenu()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+    </div>
+
+    <div class="side-menu-user">
+        <div class="menu-avatar" id="menu-avatar">?</div>
+        <div class="menu-user-info">
+            <div class="menu-user-name" id="menu-user-name">טוען...</div>
+            <div class="menu-user-email" id="menu-user-email"></div>
+        </div>
+    </div>
+
+    <div class="side-menu-nav">
+        <a href="/" class="menu-nav-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            דף הבית
+        </a>
+        <a href="/my-events.html" class="menu-nav-item active">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            האירועים שלי
+        </a>
+        <button class="menu-nav-item" onclick="closeMenu(); openAddEvent()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            הוסף אירוע חדש
+        </button>
+    </div>
+
+    <div class="side-menu-footer">
+        <button class="menu-signout" onclick="signOut()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            התנתק
+        </button>
+    </div>
+</nav>
+
+<!-- ════════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════════ -->
+<main class="page-container">
+
+    <!-- Event count -->
+    <div class="events-count-heading" id="events-count-heading" style="display:none;">
+        האירועים שלי — <span id="count-all">0</span> אירועים
+    </div>
+
+    <!-- Event list -->
+    <div class="events-list" id="events-list"></div>
+
+    <!-- Empty state (shown when no events) -->
+    <div class="empty-state" id="empty-state">
+        <div class="empty-illustration">🎪</div>
+        <h2>עוד לא הוספת אירועים</h2>
+        <p>שתף אירוע חינמי עם הקהילה ועזור לאחרים למצוא חוויות נהדרות בחינם!</p>
+        <button class="cta-btn" onclick="openAddEvent()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            צור את האירוע הראשון שלך
+        </button>
+    </div>
+
+</main>
+
+<!-- ════════════════════════════════════════════
+     ADD EVENT MODAL
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="add-event-modal" onclick="handleAddModalOverlayClick(event)">
+    <div class="modal">
+        <div class="add-modal-header">
+            <div class="add-modal-header-left">
+                <div class="add-modal-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+                <div>
+                    <h3 id="add-modal-title">הוסף אירוע חדש</h3>
+                    <p>האירוע יעבור בדיקה לפני פרסום</p>
+                </div>
+            </div>
+            <button class="modal-close-x" onclick="closeAddEvent()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+
+        <form class="add-form" id="add-event-form" novalidate onsubmit="handleAddEventSubmit(event)">
+
+            <div class="field">
+                <label for="ae-title">שם האירוע <span class="required">*</span></label>
+                <input type="text" id="ae-title" placeholder="למשל: קונצרט חינם בפארק" maxlength="120">
+                <span class="field-err" id="ae-title-err"></span>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label for="ae-date">תאריך</label>
+                    <div class="input-icon-wrap">
+                        <span class="field-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+                        <input type="date" id="ae-date">
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="ae-time">שעה</label>
+                    <div class="input-icon-wrap">
+                        <span class="field-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                        <input type="time" id="ae-time">
+                    </div>
+                </div>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label for="ae-city">עיר</label>
+                    <div class="input-icon-wrap">
+                        <span class="field-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                        <select id="ae-city">
+                            <option value="">בחר עיר...</option>
+                            <option value="Tel Aviv">תל אביב</option>
+                            <option value="Jerusalem">ירושלים</option>
+                            <option value="Haifa">חיפה</option>
+                            <option value="Beer Sheva">באר שבע</option>
+                            <option value="Eilat">אילת</option>
+                            <option value="Petah Tikva">פתח תקווה</option>
+                            <option value="Rishon LeZion">ראשון לציון</option>
+                            <option value="Ashdod">אשדוד</option>
+                            <option value="Herzliya">הרצליה</option>
+                            <option value="Holon">חולון</option>
+                            <option value="Bat Yam">בת ים</option>
+                            <option value="Kfar Saba">כפר סבא</option>
+                            <option value="Hod HaSharon">הוד השרון</option>
+                            <option value="Krayot">קריות</option>
+                            <option value="Nazareth">נצרת</option>
+                            <option value="Tiberias">טבריה</option>
+                            <option value="Safed">צפת</option>
+                            <option value="Akko">עכו</option>
+                            <option value="Other">אחר</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="ae-type">סוג אירוע</label>
+                    <select id="ae-type">
+                        <option value="">בחר קטגוריה...</option>
+                        <option value="concert">🎵 קונצרטים</option>
+                        <option value="festival">🎪 פסטיבלים</option>
+                        <option value="theater">🎭 תיאטרון</option>
+                        <option value="culture">🏛️ תרבות</option>
+                        <option value="art">🎨 אמנות</option>
+                        <option value="exhibition">🖼️ תערוכות</option>
+                        <option value="museum">🏛️ מוזיאונים</option>
+                        <option value="film">🎬 קולנוע</option>
+                        <option value="comedy">😂 סטנדאפ</option>
+                        <option value="dance">💃 ריקודים</option>
+                        <option value="sport">⚽ ספורט</option>
+                        <option value="outdoor">🏕️ פעילות חוץ</option>
+                        <option value="nature">🌿 טבע</option>
+                        <option value="beach">🏖️ חוף</option>
+                        <option value="food">🍕 אוכל</option>
+                        <option value="market">🛍️ שווקים</option>
+                        <option value="tour">🗺️ סיורים</option>
+                        <option value="workshop">🛠️ סדנאות</option>
+                        <option value="lecture">📚 הרצאות</option>
+                        <option value="tech">💻 טכנולוגיה</option>
+                        <option value="family">👨‍👩‍👧 משפחה</option>
+                        <option value="kids">🧒 ילדים</option>
+                        <option value="community">🤝 קהילה</option>
+                        <option value="volunteering">💚 התנדבות</option>
+                        <option value="wellness">🧘 בריאות</option>
+                        <option value="yoga">🧘 יוגה</option>
+                        <option value="meditation">🌸 מדיטציה</option>
+                        <option value="nightlife">🌙 חיי לילה</option>
+                        <option value="party">🎉 מסיבות</option>
+                        <option value="photography">📷 צילום</option>
+                        <option value="pride">🏳️‍🌈 גאווה</option>
+                        <option value="other">✨ אחר</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="ae-location">מיקום</label>
+                <div class="input-icon-wrap">
+                    <span class="field-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+                    <input type="text" id="ae-location" placeholder="כתובת או שם המקום">
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="ae-desc">תיאור האירוע</label>
+                <textarea id="ae-desc" placeholder="ספר על האירוע — מה יקרה, למי זה מתאים, מה להביא..." rows="3"></textarea>
+            </div>
+
+            <div class="field">
+                <label>תמונה לאירוע</label>
+                <!-- Preview (shown after file chosen) -->
+                <div class="img-preview-wrap" id="ae-img-preview-wrap">
+                    <img id="ae-img-preview" src="" alt="תצוגה מקדימה">
+                    <button type="button" class="img-preview-remove" onclick="removeImage()" title="הסר תמונה">✕</button>
+                </div>
+                <!-- Upload zone (hidden after file chosen) -->
+                <div class="img-upload-zone" id="ae-upload-zone">
+                    <input type="file" id="ae-image" accept="image/*" onchange="handleImagePick(event)">
+                    <div class="img-upload-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                    <div class="img-upload-label">גרור תמונה לכאן או <span>לחץ לבחירה</span></div>
+                    <div class="img-upload-hint">JPG · PNG · WEBP · עד 5MB</div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit-event" id="btn-submit-event">
+                <div class="spinner"></div>
+                <span class="btn-submit-label">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    <span id="btn-submit-label-text">שלח לאישור</span>
+                </span>
+            </button>
+
+        </form>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     DELETE CONFIRMATION MODAL
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="delete-modal" onclick="handleModalOverlayClick(event)">
+    <div class="modal">
+        <div class="modal-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6"/><path d="M14 11v6"/>
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+            </svg>
+        </div>
+        <h3>מחיקת אירוע</h3>
+        <p>האם אתה בטוח שברצונך למחוק את <span class="modal-title-preview" id="modal-event-title"></span>? פעולה זו אינה ניתנת לביטול.</p>
+        <div class="modal-actions">
+            <button class="btn-delete-confirm" onclick="confirmDelete()">כן, מחק</button>
+            <button class="btn-cancel" onclick="closeDeleteModal()">ביטול</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   UI FUNCTIONS — defined first, no dependencies
+══════════════════════════════════════════════════════════════ */
+function openMenu() {
+    document.getElementById('side-menu').classList.add('open');
+    document.getElementById('menu-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeMenu() {
+    document.getElementById('side-menu').classList.remove('open');
+    document.getElementById('menu-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+function openAddEvent() {
+    editingEventId = null;
+    document.getElementById('add-event-form').reset();
+    document.getElementById('ae-title-err').textContent = '';
+    document.getElementById('ae-title').classList.remove('err');
+    document.getElementById('add-modal-title').textContent = 'הוסף אירוע חדש';
+    document.getElementById('btn-submit-label-text').textContent = 'שלח לאישור';
+    document.getElementById('add-event-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('ae-title').focus(), 100);
+}
+function openEditEvent(ev) {
+    editingEventId = ev.id;
+    document.getElementById('add-event-form').reset();
+    document.getElementById('ae-title-err').textContent = '';
+    document.getElementById('ae-title').classList.remove('err');
+    document.getElementById('add-modal-title').textContent = 'ערוך אירוע';
+    document.getElementById('btn-submit-label-text').textContent = 'שמור שינויים';
+    // Pre-fill fields
+    document.getElementById('ae-title').value    = ev.title    || '';
+    document.getElementById('ae-date').value     = ev.date     || '';
+    document.getElementById('ae-time').value     = ev.time     || '';
+    document.getElementById('ae-city').value     = ev.city     || '';
+    document.getElementById('ae-type').value     = ev.event_type || '';
+    document.getElementById('ae-location').value = ev.location || '';
+    document.getElementById('ae-desc').value     = ev.description || '';
+    document.getElementById('add-event-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('ae-title').focus(), 100);
+}
+function closeAddEvent() {
+    editingEventId = null;
+    document.getElementById('add-event-modal').classList.remove('open');
+    document.body.style.overflow = '';
+    removeImage();
+}
+function handleAddModalOverlayClick(e) {
+    if (e.target === e.currentTarget) closeAddEvent();
+}
+/* removeImage has no Supabase deps — keep it here so closeAddEvent can call it safely */
+function removeImage() {
+    const preview  = document.getElementById('ae-img-preview-wrap');
+    const zone     = document.getElementById('ae-upload-zone');
+    const imgInput = document.getElementById('ae-image');
+    const imgEl    = document.getElementById('ae-img-preview');
+    if (imgInput)  imgInput.value = '';
+    if (imgEl)     imgEl.src = '';
+    if (preview)   preview.classList.remove('visible');
+    if (zone)      zone.style.display = '';
+    // selectedImageFile reset handled by second script if it loaded; safe to ignore here
+    if (typeof selectedImageFile !== 'undefined') window.selectedImageFile = null;
+}
+/* Fallback signOut — clears Supabase localStorage keys and redirects.
+   Works even if the Supabase CDN fails. The second script overrides this
+   with the proper SDK call when loaded. */
+function signOut() {
+    Object.keys(localStorage).forEach(k => {
+        if (k.startsWith('sb-')) localStorage.removeItem(k);
+    });
+    window.location.href = '/';
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════════════
+   SUPABASE CLIENT
+══════════════════════════════════════════════════════════════ */
+const { createClient } = window.supabase;
+const sb = createClient(
+    'https://iymmfwjsmaziymmwijjn.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5bW1md2pzbWF6aXltbXdpampuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDA4NjEsImV4cCI6MjA4ODI3Njg2MX0.caAHy7Ie28m17akWRL98Zisoi91FJLtKkpwStmLjSh0'
+);
+
+/* ══════════════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════════════ */
+let events = [];
+let currentUser = null;
+let pendingDeleteId = null;
+let openDropdownEl = null;
+let editingEventId = null;
+
+/* ══════════════════════════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════════════════════════ */
+function render() {
+    const heading = document.getElementById('events-count-heading');
+    document.getElementById('count-all').textContent = events.length;
+    heading.style.display = events.length === 0 ? 'none' : 'block';
+
+    const list  = document.getElementById('events-list');
+    const empty = document.getElementById('empty-state');
+
+    if (events.length === 0) {
+        list.innerHTML = '';
+        empty.classList.add('visible');
+        return;
+    }
+    empty.classList.remove('visible');
+    list.innerHTML = events.map(buildRow).join('');
+
+    list.querySelectorAll('.three-dot-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleDropdown(btn.dataset.id, btn);
+        });
+    });
+
+    list.querySelectorAll('[data-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleAction(btn.dataset.action, btn.dataset.id);
+        });
+    });
+}
+
+function buildRow(ev) {
+    const thumbHtml = ev.thumbnail
+        ? `<img src="${ev.thumbnail}" alt="${escHtml(ev.title)}" loading="lazy">`
+        : `<span class="thumb-placeholder">${ev.emoji || '📅'}</span>`;
+
+    const dateHtml = ev.date
+        ? `<span class="event-date">
+             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+             ${formatDate(ev.date)}${ev.time ? ' · ' + ev.time : ''}
+           </span>`
+        : '';
+
+    const cityHtml = ev.city
+        ? `<span class="event-date">
+             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+             ${escHtml(ev.city)}
+           </span>`
+        : '';
+
+    return `
+      <div class="event-row" id="row-${ev.id}">
+        <div class="event-thumb">${thumbHtml}</div>
+        <div class="event-info">
+          <div class="event-title" title="${escHtml(ev.title)}">${escHtml(ev.title)}</div>
+          <div class="event-meta">
+            ${dateHtml}
+            ${cityHtml}
+          </div>
+        </div>
+        <div class="action-menu-wrapper">
+          <button class="three-dot-btn" data-id="${ev.id}" aria-label="פעולות" aria-haspopup="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="5"  r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
+            </svg>
+          </button>
+          <div class="action-dropdown" id="dropdown-${ev.id}">
+            <button data-action="edit" data-id="${ev.id}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              ערוך
+            </button>
+            <button data-action="duplicate" data-id="${ev.id}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              שכפל
+            </button>
+            <hr>
+            <button class="action-delete" data-action="delete" data-id="${ev.id}">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+              מחק
+            </button>
+          </div>
+        </div>
+      </div>`;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DROPDOWN LOGIC
+══════════════════════════════════════════════════════════════ */
+function toggleDropdown(id, btn) {
+    const dropdown = document.getElementById(`dropdown-${id}`);
+
+    if (openDropdownEl && openDropdownEl !== dropdown) {
+        closeAllDropdowns();
+    }
+
+    const isOpen = dropdown.classList.contains('open');
+    if (isOpen) {
+        dropdown.classList.remove('open');
+        btn.classList.remove('active');
+        openDropdownEl = null;
+        return;
+    }
+
+    // Position using fixed coordinates so it's never clipped
+    const rect = btn.getBoundingClientRect();
+    dropdown.style.top  = (rect.bottom + 6) + 'px';
+    dropdown.style.left = rect.left + 'px';
+
+    // If dropdown would go off right edge, align to right of button
+    dropdown.classList.add('open');
+    const dw = dropdown.offsetWidth;
+    if (rect.left + dw > window.innerWidth - 8) {
+        dropdown.style.left = (rect.right - dw) + 'px';
+    }
+
+    btn.classList.add('active');
+    openDropdownEl = dropdown;
+}
+
+function closeAllDropdowns() {
+    document.querySelectorAll('.action-dropdown.open').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.three-dot-btn.active').forEach(b => b.classList.remove('active'));
+    openDropdownEl = null;
+}
+
+document.addEventListener('click', closeAllDropdowns);
+
+/* ══════════════════════════════════════════════════════════════
+   ACTION HANDLERS
+══════════════════════════════════════════════════════════════ */
+function handleAction(action, id) {
+    closeAllDropdowns();
+    const event = events.find(e => e.id === id);
+    if (!event) return;
+
+    if (action === 'edit') {
+        openEditEvent(event);
+    }
+
+    if (action === 'duplicate') {
+        duplicateEvent(event);
+    }
+
+    if (action === 'delete') {
+        pendingDeleteId = id;
+        document.getElementById('modal-event-title').textContent = `"${event.title}"`;
+        document.getElementById('delete-modal').classList.add('open');
+    }
+}
+
+async function duplicateEvent(event) {
+    const { data, error } = await sb.from('user_events').insert({
+        user_id:          currentUser.id,
+        title:            event.title + ' (עותק)',
+        date:             event.date,
+        time:             event.time,
+        location:         event.location,
+        description:      event.description,
+        event_type:       event.event_type,
+        city:             event.city,
+        thumbnail_url:    event.thumbnail,
+        emoji:            event.emoji,
+        status:           'published',
+    }).select().single();
+
+    if (error) { showToast('שגיאה בשכפול האירוע', 'error'); return; }
+    events.unshift(normalizeRow(data));
+    render();
+    showToast('האירוע שוכפל ✓', 'success');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   IMAGE PICK / REMOVE
+══════════════════════════════════════════════════════════════ */
+window.selectedImageFile = null;
+
+function handleImagePick(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+        showToast('התמונה גדולה מדי — מקסימום 5MB', 'error');
+        e.target.value = '';
+        return;
+    }
+    window.selectedImageFile = file;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        document.getElementById('ae-img-preview').src = ev.target.result;
+        document.getElementById('ae-img-preview-wrap').classList.add('visible');
+        document.getElementById('ae-upload-zone').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+}
+
+async function uploadImage(file, userId) {
+    const ext  = file.name.split('.').pop().toLowerCase();
+    const path = `${userId}/${Date.now()}.${ext}`;
+    const { data, error } = await sb.storage
+        .from('event-images')
+        .upload(path, file, { upsert: false, contentType: file.type });
+    if (error) return null;
+    const { data: urlData } = sb.storage.from('event-images').getPublicUrl(path);
+    return urlData?.publicUrl || null;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ADD EVENT FORM SUBMIT
+══════════════════════════════════════════════════════════════ */
+async function handleAddEventSubmit(e) {
+    e.preventDefault();
+
+    const title = document.getElementById('ae-title').value.trim();
+    if (!title) {
+        document.getElementById('ae-title').classList.add('err');
+        document.getElementById('ae-title-err').textContent = 'נא להזין שם לאירוע';
+        return;
+    }
+    document.getElementById('ae-title').classList.remove('err');
+    document.getElementById('ae-title-err').textContent = '';
+
+    const dateVal = document.getElementById('ae-date').value;
+    const timeVal = document.getElementById('ae-time').value;
+    const city    = document.getElementById('ae-city').value.trim();
+    const type    = document.getElementById('ae-type').value;
+    const loc     = document.getElementById('ae-location').value.trim();
+    const desc    = document.getElementById('ae-desc').value.trim();
+
+    const btn = document.getElementById('btn-submit-event');
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    // Upload image if selected
+    let thumbnailUrl = null;
+    if (window.selectedImageFile) {
+        thumbnailUrl = await uploadImage(window.selectedImageFile, currentUser.id);
+        if (!thumbnailUrl) showToast('התמונה לא הועלתה, האירוע נשמר בלעדיה', '');
+    }
+
+    if (editingEventId) {
+        // ── UPDATE existing event ──
+        const updates = {
+            title,
+            date:          dateVal  || null,
+            time:          timeVal  || null,
+            city:          city     || null,
+            event_type:    type     || null,
+            location:      loc      || null,
+            description:   desc     || null,
+        };
+        if (thumbnailUrl) updates.thumbnail_url = thumbnailUrl;
+
+        const { data: updated, error } = await sb
+            .from('user_events')
+            .update(updates)
+            .eq('id', editingEventId)
+            .select().single();
+
+        btn.classList.remove('loading');
+        btn.disabled = false;
+
+        if (error) {
+            console.error('Update error:', error);
+            showToast('שגיאה: ' + (error.message || 'לא ניתן לעדכן'), 'error');
+            return;
+        }
+
+        if (updated) {
+            const idx = events.findIndex(e => e.id === editingEventId);
+            if (idx !== -1) events[idx] = normalizeRow(updated);
+        }
+        render();
+        closeAddEvent();
+        showToast('האירוע עודכן בהצלחה ✓', 'success');
+        return;
+    }
+
+    // ── INSERT new event ──
+    const { data: newRow, error } = await sb.from('user_events').insert({
+        user_id:       currentUser.id,
+        title,
+        date:          dateVal       || null,
+        time:          timeVal       || null,
+        city:          city          || null,
+        event_type:    type          || null,
+        location:      loc           || null,
+        description:   desc          || null,
+        thumbnail_url: thumbnailUrl  || null,
+        status:        'published',
+    }).select().single();
+
+    btn.classList.remove('loading');
+    btn.disabled = false;
+
+    if (error) {
+        console.error('Insert error:', error);
+        showToast('שגיאה: ' + (error.message || 'לא ניתן לשמור את האירוע'), 'error');
+        return;
+    }
+
+    if (newRow) {
+        events.unshift(normalizeRow(newRow));
+    } else {
+        const { data: rows, error: selErr } = await sb
+            .from('user_events')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .order('created_at', { ascending: false });
+        if (selErr) console.error('Select error:', selErr);
+        events = (rows || []).map(normalizeRow);
+    }
+
+    render();
+    closeAddEvent();
+    showToast('האירוע פורסם בהצלחה ✓', 'success');
+    const newId = events[0]?.id;
+    if (newId) setTimeout(() => {
+        const row = document.getElementById('row-' + newId);
+        if (row) { row.classList.add('new-event'); row.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    }, 50);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DELETE MODAL
+══════════════════════════════════════════════════════════════ */
+async function confirmDelete() {
+    if (!pendingDeleteId) return;
+
+    const { error } = await sb
+        .from('user_events')
+        .delete()
+        .eq('id', pendingDeleteId);
+
+    if (error) { showToast('שגיאה במחיקת האירוע', 'error'); closeDeleteModal(); return; }
+
+    events = events.filter(e => e.id !== pendingDeleteId);
+    pendingDeleteId = null;
+    closeDeleteModal();
+    render();
+    showToast('האירוע נמחק בהצלחה', 'success');
+}
+
+function closeDeleteModal() {
+    document.getElementById('delete-modal').classList.remove('open');
+    pendingDeleteId = null;
+}
+
+function handleModalOverlayClick(e) {
+    if (e.target === e.currentTarget) closeDeleteModal();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   NAVIGATION & MENU
+══════════════════════════════════════════════════════════════ */
+// Override the fallback signOut (defined in first script block) with proper SDK version
+signOut = async function () {
+    try { await sb.auth.signOut(); } catch (e) { /* ignore */ }
+    window.location.href = '/';
+};
+
+/* ══════════════════════════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════════════════════════ */
+function normalizeRow(row) {
+    return {
+        id:              row.id,
+        title:           row.title,
+        date:            row.date,
+        time:            row.time,
+        location:        row.location,
+        description:     row.description,
+        event_type:      row.event_type,
+        city:            row.city,
+        thumbnail:       row.thumbnail_url || null,
+        emoji:           row.emoji || '📅',
+        status:          row.status,
+        rejectionReason: row.rejection_reason || null,
+    };
+}
+
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    try {
+        const d = new Date(dateStr + 'T00:00:00');
+        return d.toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch { return dateStr; }
+}
+
+function escHtml(str) {
+    const d = document.createElement('div');
+    d.appendChild(document.createTextNode(str || ''));
+    return d.innerHTML;
+}
+
+let toastTimer;
+function showToast(msg, type = '') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `toast ${type} visible`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('visible'), 4500);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INIT — check session then load events
+══════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = '/'; return; }
+    currentUser = session.user;
+
+    // Populate side menu user info
+    const name = currentUser.user_metadata?.full_name || currentUser.email || '';
+    const initials = name.trim()
+        ? name.trim().split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
+        : '?';
+    document.getElementById('menu-avatar').textContent     = initials;
+    document.getElementById('menu-user-name').textContent  = name.split(' ')[0] || currentUser.email;
+    document.getElementById('menu-user-email').textContent = currentUser.email || '';
+
+    const { data, error } = await sb
+        .from('user_events')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Load error:', error);
+        showToast('שגיאה בטעינת האירועים: ' + (error.message || error.code || 'בדוק את הגדרות Supabase'), 'error');
+        return;
+    }
+    events = (data || []).map(normalizeRow);
+    render();
+});
+</script>
+</body>
+</html>

@@ -11,23 +11,23 @@
     <meta name="author" content="FreeIL">
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
-    <link rel="canonical" href="https://free-il.netlify.app/">
+    <link rel="canonical" href="https://freeil.vercel.app/">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://free-il.netlify.app/">
+    <meta property="og:url" content="https://freeil.vercel.app/">
     <meta property="og:title" content="FreeIL — אירועים חינם בישראל">
     <meta property="og:description" content="מצאו מאות אירועים חינם בכל הארץ - קונצרטים, פסטיבלים, סיורים, סדנאות, אוכל, טבע ועוד. עודכן יומית!">
-    <meta property="og:image" content="https://free-il.netlify.app/og-image.png">
+    <meta property="og:image" content="https://freeil.vercel.app/og-image.png">
     <meta property="og:locale" content="he_IL">
     <meta property="og:site_name" content="FreeIL">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://free-il.netlify.app/">
+    <meta name="twitter:url" content="https://freeil.vercel.app/">
     <meta name="twitter:title" content="FreeIL — אירועים חינם בישראל">
     <meta name="twitter:description" content="מצאו מאות אירועים חינם בכל הארץ - קונצרטים, פסטיבלים, סיורים, סדנאות ועוד!">
-    <meta name="twitter:image" content="https://free-il.netlify.app/og-image.png">
+    <meta name="twitter:image" content="https://freeil.vercel.app/og-image.png">
 
     <!-- Additional SEO -->
     <meta name="theme-color" content="#1a1a2e">
@@ -40,6 +40,15 @@
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
 
+    <!-- Supabase — must load before any script that uses `sb` -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        const sb = window.supabase.createClient(
+            'https://iymmfwjsmaziymmwijjn.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5bW1md2pzbWF6aXltbXdpampuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDA4NjEsImV4cCI6MjA4ODI3Njg2MX0.caAHy7Ie28m17akWRL98Zisoi91FJLtKkpwStmLjSh0'
+        );
+    </script>
+
     <!-- Structured Data - Organization -->
     <script type="application/ld+json">
     {
@@ -47,12 +56,12 @@
       "@type": "WebSite",
       "name": "FreeIL",
       "alternateName": "אירועים חינם בישראל",
-      "url": "https://free-il.netlify.app/",
+      "url": "https://freeil.vercel.app/",
       "description": "מנוע חיפוש לאירועים חינם בישראל - קונצרטים, פסטיבלים, סיורים, סדנאות ועוד",
       "inLanguage": ["he", "en"],
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "https://free-il.netlify.app/?search={search_term_string}",
+        "target": "https://freeil.vercel.app/?search={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     }
@@ -65,7 +74,7 @@
       "@type": "WebApplication",
       "name": "FreeIL",
       "description": "אפליקציה למציאת אירועים חינם בישראל",
-      "url": "https://free-il.netlify.app/",
+      "url": "https://freeil.vercel.app/",
       "applicationCategory": "Entertainment",
       "operatingSystem": "Web",
       "offers": {
@@ -106,105 +115,348 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f5f7fa;
             color: #1a1a2e;
-            padding-top: 64px; /* Space for sticky header */
+            padding-top: 60px;
         }
 
-        /* Header - Modern Glassmorphism */
+        /* ── Header ── */
         header {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             z-index: 1000;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: #0f172a;
             color: white;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
         .header-inner {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0.875rem 1rem;
+            padding: 0 1rem;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
         }
-        .header-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
+        /* Logo */
+        .header-logo { display: flex; align-items: center; }
         header h1 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 800;
             margin: 0;
             line-height: 1;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
+            color: white;
         }
-        header h1 span {
-            color: #00d4aa;
-        }
+        header h1 span { color: #00d4aa; }
+
+        /* Event counter — centered absolutely */
         .event-counter {
-            background: rgba(0, 212, 170, 0.12);
-            color: #00d4aa;
-            padding: 6px 14px;
+            position: absolute;
+            left: 50%; transform: translateX(-50%);
+            background: rgba(0,212,170,0.08);
+            color: rgba(0,212,170,0.85);
+            padding: 5px 13px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            border: 1px solid rgba(0, 212, 170, 0.2);
+            border: 1px solid rgba(0,212,170,0.15);
+            white-space: nowrap;
+            pointer-events: none;
         }
+
+        /* Right-side actions */
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            flex-shrink: 0; /* never compress the action group */
         }
         #lang-toggle {
             background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: rgba(255, 255, 255, 0.8);
-            padding: 0 14px;
-            height: 38px;
-            min-width: 38px;
-            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.7);
+            padding: 0 10px;
+            height: 34px;
+            flex-shrink: 0;
+            border-radius: 7px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 500;
             touch-action: manipulation;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+            transition: all 0.2s;
         }
-        #lang-toggle:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.25);
-            color: white;
-        }
-        #lang-toggle svg {
+        #lang-toggle:hover { background: rgba(255,255,255,0.07); color: white; }
+        #lang-toggle svg { flex-shrink: 0; }
+        #lang-text { font-size: 0.75rem; }
+
+        /* Auth header buttons */
+        .auth-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            height: 36px; padding: 0 14px;
+            border-radius: 8px;
+            font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+            touch-action: manipulation;
+            text-decoration: none; white-space: nowrap;
+            border: none;
             flex-shrink: 0;
         }
-        #lang-text {
-            font-size: 0.8rem;
+        .auth-btn.login {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.9);
+        }
+        .auth-btn.login:hover { background: rgba(255,255,255,0.13); color: white; }
+        .auth-btn.register {
+            background: #00d4aa;
+            color: #0f172a;
+        }
+        .auth-btn.register:hover { background: #00bfa0; transform: translateY(-1px); }
+        .auth-btn-add {
+            display: inline-flex; align-items: center; gap: 6px;
+            height: 36px; padding: 0 14px;
+            background: rgba(0,212,170,0.12);
+            border: 1px solid rgba(0,212,170,0.25);
+            color: #00d4aa;
+            border-radius: 8px;
+            font-size: 0.8rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s;
+            text-decoration: none; white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .auth-btn-add:hover { background: rgba(0,212,170,0.2); }
+
+        /* ── Mobile header responsive fixes ── */
+        @media (max-width: 479px) {
+            /* Hide counter on mobile — absolute position causes overlap with actions */
+            .event-counter { display: none; }
+            /* Tighter gaps and padding */
+            .header-actions { gap: 6px; }
+            .auth-btn  { padding: 0 10px; font-size: 0.75rem; height: 34px; }
+            .auth-btn-add { padding: 0 10px; font-size: 0.75rem; height: 34px; }
+            #lang-toggle { padding: 0 8px; height: 34px; }
+        }
+        @media (max-width: 359px) {
+            /* Very narrow screens: hide lang text, icon only */
+            #lang-text { display: none; }
+            #lang-toggle { padding: 0 7px; min-width: 32px; }
+            .auth-btn  { padding: 0 8px; }
+            .auth-btn-add { padding: 0 8px; }
+            .header-actions { gap: 5px; }
         }
 
-        /* Hero Section */
+        /* User avatar + dropdown */
+        .user-menu-wrapper {
+            position: relative;
+        }
+        .user-avatar-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            padding: 0 10px;
+            height: 38px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+        }
+        .user-avatar-btn:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.3);
+        }
+        .user-avatar {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            background: #00d4aa;
+            color: #0f172a;
+            font-size: 0.7rem;
+            font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .user-name-short {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.9);
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        @media (max-width: 400px) { .user-name-short { display: none; } }
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: calc(100% + 8px);
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+            overflow: hidden;
+            min-width: 180px;
+            z-index: 2000;
+        }
+        .user-dropdown.open { display: block; }
+        .user-dropdown-header {
+            padding: 12px 16px 10px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .user-dropdown-email {
+            font-size: 0.72rem;
+            color: #64748b;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .user-dropdown a,
+        .user-dropdown button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 11px 16px;
+            background: transparent;
+            border: none;
+            text-decoration: none;
+            font-size: 0.83rem;
+            font-weight: 500;
+            color: #1e293b;
+            cursor: pointer;
+            transition: background 0.15s;
+            text-align: right;
+            font-family: inherit;
+        }
+        .user-dropdown a:hover,
+        .user-dropdown button:hover { background: #f8fafc; }
+        .user-dropdown .dropdown-signout { color: #dc2626; }
+        .user-dropdown .dropdown-signout:hover { background: #fef2f2; }
+        .user-dropdown svg { flex-shrink: 0; opacity: 0.65; }
+
+        /* ── Hero Section ── */
         .hero-section {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            padding: 1.25rem 1rem;
+            background: #0f172a;
+            padding: 2.5rem 1rem 2rem;
             text-align: center;
         }
+        .hero-title {
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+        }
+        .hero-title span { color: #00d4aa; }
         .hero-tagline {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.95rem;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+            margin: 0 0 1.75rem;
+            font-weight: 400;
+        }
+        /* Search bar inside hero */
+        .hero-search {
+            max-width: 560px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .hero-search .search-icon {
+            position: absolute;
+            right: 14px; top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.35);
+            pointer-events: none;
+            display: flex; align-items: center;
+        }
+        .hero-search .search-input {
+            width: 100%;
+            height: 52px;
+            background: rgba(255,255,255,0.07);
+            border: 1.5px solid rgba(255,255,255,0.12);
+            border-radius: 14px;
+            padding: 0 48px 0 48px;
+            font-size: 1rem;
+            color: white;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .hero-search .search-input::placeholder { color: rgba(255,255,255,0.35); }
+        .hero-search .search-input:focus {
+            border-color: rgba(0,212,170,0.5);
+            background: rgba(255,255,255,0.1);
+        }
+        .hero-search .search-clear {
+            position: absolute;
+            left: 14px; top: 50%; transform: translateY(-50%);
+            background: transparent; border: none; cursor: pointer;
+            color: rgba(255,255,255,0.4); display: none;
+            align-items: center; padding: 4px;
+        }
+        .hero-search .search-clear.visible { display: flex; }
+
+        /* Post-login welcome section */
+        .post-login-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-bottom: 1px solid rgba(0,212,170,0.15);
+            padding: 1.5rem 1.25rem;
+        }
+        .post-login-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .post-login-greeting { color: white; }
+        .post-login-greeting h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 0 0 4px;
+        }
+        .post-login-greeting h3 span { color: #00d4aa; }
+        .post-login-greeting p {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.82rem;
             margin: 0;
-            font-weight: 500;
+        }
+        .post-login-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .post-login-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 18px;
+            height: 40px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.15s;
+        }
+        .post-login-btn:hover { opacity: 0.85; }
+        .post-login-btn.primary { background: #00d4aa; color: #0f172a; }
+        .post-login-btn.secondary {
+            background: rgba(255,255,255,0.08);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        @media (max-width: 480px) {
+            .post-login-inner { flex-direction: column; align-items: flex-start; }
         }
 
         /* Filters Section - Sticky Control Bar */
         .filters-container {
             position: sticky;
-            top: 64px;
+            top: 60px;
             z-index: 100;
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(12px);
@@ -686,6 +938,109 @@
                 font-size: 1.1rem;
             }
         }
+
+        /* ── Tab Switcher ── */
+        .tab-switcher {
+            display: flex;
+            gap: 8px;
+            padding: 12px 1rem;
+            background: #fff;
+            border-bottom: 2px solid #f0f4f8;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-family: inherit;
+        }
+        .tab-btn.active {
+            background: #1a1a2e;
+            color: #fff;
+            border-color: #1a1a2e;
+            box-shadow: 0 4px 12px rgba(26,26,46,0.25);
+        }
+        .tab-btn:not(.active):hover {
+            border-color: #1a1a2e;
+            color: #1a1a2e;
+        }
+
+        /* ── FAB ── */
+        .fab-add-event {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            background: linear-gradient(135deg, #00d4aa, #00b894);
+            color: #0f172a;
+            border: none;
+            border-radius: 56px;
+            padding: 14px 22px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,212,170,0.45);
+            display: none;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            animation: fabIn 0.3s ease;
+        }
+        .fab-add-event:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 24px rgba(0,212,170,0.55);
+        }
+        @keyframes fabIn {
+            from { opacity: 0; transform: translateY(16px) scale(0.9); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ── Card thumbnail ── */
+        .card-thumb {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px 12px 0 0;
+            display: block;
+        }
+        .event-card.has-thumb {
+            padding: 0;
+            overflow: hidden;
+        }
+        .event-card.has-thumb .card-body {
+            padding: 1rem 1.25rem;
+        }
+
+        /* ── Register button ── */
+        .btn-register {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-register:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+        .btn-register.registered {
+            background: #e2e8f0;
+            color: #64748b;
+            cursor: default;
+        }
+        .btn-register.registered:hover { transform: none; box-shadow: none; }
     </style>
 </head>
 <body>
@@ -696,11 +1051,44 @@
                 <div id="event-counter" class="event-counter">0 אירועים</div>
             </div>
             <div class="header-actions">
+                <!-- Logged-out -->
+                <div id="auth-logged-out" style="display:flex; align-items:center; gap:8px;">
+                    <a href="/login.html" class="auth-btn register">כניסה / הרשמה</a>
+                </div>
+
+                <!-- Logged-in -->
+                <div id="auth-logged-in" style="display:none; align-items:center; gap:8px;">
+                    <a href="/my-events.html" class="auth-btn-add">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        הוסף אירוע
+                    </a>
+                    <div class="user-menu-wrapper">
+                        <button class="user-avatar-btn" id="user-avatar-btn" onclick="toggleUserDropdown(event)">
+                            <div class="user-avatar" id="user-avatar-initials">?</div>
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </button>
+                        <div class="user-dropdown" id="user-dropdown">
+                            <div class="user-dropdown-header">
+                                <div style="font-size:0.78rem; font-weight:600; color:#1e293b; margin-bottom:2px;" id="user-name-short"></div>
+                                <div class="user-dropdown-email" id="user-dropdown-email"></div>
+                            </div>
+                            <a href="/my-events.html">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                האירועים שלי
+                            </a>
+                            <hr style="border:none;border-top:1px solid #f1f5f9;margin:2px 0;">
+                            <button class="dropdown-signout" onclick="signOut()">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                התנתק
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <button id="lang-toggle" onclick="setLanguage(currentLang === 'he' ? 'en' : 'he')">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 6px;">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
                     </svg>
                     <span id="lang-text">EN</span>
                 </button>
@@ -710,7 +1098,40 @@
 
     <!-- Hero Section -->
     <div class="hero-section">
+        <h2 class="hero-title">גלו אירועים <span>חינמיים</span> בכל הארץ</h2>
         <p id="tagline" class="hero-tagline">אירועים חינם בתל אביב, ירושלים, חיפה, באר שבע ועוד</p>
+        <!-- Search bar lives here -->
+        <div class="hero-search">
+            <span class="search-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                </svg>
+            </span>
+            <input type="text" id="search-input" class="search-input" placeholder="חפש אירוע, עיר או תיאור..." autocomplete="off">
+            <button id="search-clear" class="search-clear" onclick="clearSearch()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Post-login welcome section (hidden until user signs in) -->
+    <div id="post-login-section" class="post-login-section" style="display:none;">
+        <div class="post-login-inner">
+            <div class="post-login-greeting">
+                <h3>שלום, <span id="post-login-name"></span></h3>
+                <p>ברוך הבא ל-FreeIL — גלה אירועים, הוסף אירועים, ושתף עם חברים</p>
+            </div>
+            <div class="post-login-actions">
+                <a href="/my-events.html#add" class="post-login-btn primary">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    הוסף אירוע
+                </a>
+                <a href="/my-events.html" class="post-login-btn secondary">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    האירועים שלי
+                </a>
+            </div>
+        </div>
     </div>
 
     <!-- Filters Section -->
@@ -727,24 +1148,6 @@
                 </svg>
                 <span id="reset-text">איפוס</span>
             </button>
-        </div>
-        <!-- Search Bar -->
-        <div class="search-container">
-            <div class="search-wrapper">
-                <span class="search-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.3-4.3"></path>
-                    </svg>
-                </span>
-                <input type="text" id="search-input" class="search-input" placeholder="חפש אירוע, עיר או תיאור..." autocomplete="off">
-                <button id="search-clear" class="search-clear" onclick="clearSearch()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 6 6 18"></path>
-                        <path d="m6 6 12 12"></path>
-                    </svg>
-                </button>
-            </div>
         </div>
         <div class="filter-row">
             <div id="date-filter-label" class="filter-label">מתי</div>
@@ -764,10 +1167,17 @@
         </div>
     </div>
 
+    <!-- Tab Switcher -->
+    <div class="tab-switcher">
+        <button id="tab-public"  class="tab-btn active" onclick="switchTab('public')">🌐 ציבורי</button>
+        <button id="tab-private" class="tab-btn"        onclick="switchTab('private')">✨ פרטי</button>
+    </div>
+
     <!-- Event List Section -->
     <div class="event-list-container">
         <div id="event-list"><div id="loading"></div></div>
     </div>
+
 
     <script>
         // --- Translations ---
@@ -1001,6 +1411,9 @@
         }
 
         let allEvents = [];
+        let publicEvents = [];
+        let privateEvents = [];
+        let activeTab = 'public';
         let activeTypeFilter = 'all';
         let activeCityFilter = 'all';
         let activeDateFilter = 'all';
@@ -1257,6 +1670,29 @@
             window.open(wazeUrl, '_blank');
         }
 
+        function showToast(msg) {
+            let t = document.getElementById('main-toast');
+            if (!t) {
+                t = document.createElement('div');
+                t.id = 'main-toast';
+                t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:12px 24px;border-radius:12px;font-size:0.95rem;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:opacity 0.3s;pointer-events:none;';
+                document.body.appendChild(t);
+            }
+            t.textContent = msg;
+            t.style.opacity = '1';
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => { t.style.opacity = '0'; }, 3000);
+        }
+
+        async function handleRegister(ev, btn) {
+            const { data: { user } } = await sb.auth.getUser();
+            if (!user) { window.location.href = '/login.html'; return; }
+            btn.textContent = '✓ נרשמת';
+            btn.classList.add('registered');
+            localStorage.setItem('reg-' + ev.id, '1');
+            showToast('נרשמת לאירוע בהצלחה!');
+        }
+
         function renderEvents(events) {
             const list = document.getElementById('event-list');
             list.innerHTML = '';
@@ -1298,25 +1734,42 @@
                 // Favorite state
                 const isFavorite = userActions.favorite;
 
+                // Register button (private tab only)
+                const isPrivate = ev.source === 'user';
+                const regKey = 'reg-' + ev.id;
+                const isRegistered = isPrivate && localStorage.getItem(regKey) === '1';
+                const registerBtn = isPrivate
+                    ? `<button class="btn-register${isRegistered ? ' registered' : ''}" data-ev-id="${ev.id}">${isRegistered ? '✓ נרשמת' : 'הרשמה'}</button>`
+                    : '';
+
+                const thumbHtml = ev.thumbnail
+                    ? `<img class="card-thumb" src="${ev.thumbnail}" alt="${ev.title || ''}" loading="lazy" onerror="this.style.display='none'">`
+                    : '';
+                if (ev.thumbnail) card.classList.add('has-thumb');
+
                 card.innerHTML = `
-                    <div class="card-tags">${typeTag}${cityTag}</div>
-                    <div class="card-title-row">
-                        <h3>${ev.title || t('noTitle')}</h3>
-                        <span class="badge-free">${t('free')}</span>
-                    </div>
-                    <div class="card-meta">
-                        <div class="meta-item">${calendarIcon}<span>${dateStr}</span></div>
-                        <div class="meta-item">${locationIcon}<span>${ev.location || ''}</span></div>
-                    </div>
-                    <div class="card-desc">${ev.description || ''}</div>
-                    <div class="card-footer">
-                        <div class="action-buttons">
-                            <button class="favorite-btn${isFavorite ? ' active' : ''}" data-event-id="${eventId}">${isFavorite ? '♥' : '♡'}</button>
+                    ${thumbHtml}
+                    <div class="card-body">
+                        <div class="card-tags">${typeTag}${cityTag}</div>
+                        <div class="card-title-row">
+                            <h3>${ev.title || t('noTitle')}</h3>
+                            <span class="badge-free">${t('free')}</span>
                         </div>
-                        <div class="action-buttons">
-                            <button class="action-btn whatsapp" title="${t('shareWhatsApp')}">${whatsappIcon}</button>
-                            ${hasLocation ? `<button class="action-btn navigate" title="ניווט">${navigateIcon}</button>` : ''}
-                            ${sourceLink ? `<a href="${sourceLink}" target="_blank" rel="noopener noreferrer" class="action-btn source" title="${t('source')}" onclick="event.stopPropagation()">${externalLinkIcon}</a>` : ''}
+                        <div class="card-meta">
+                            <div class="meta-item">${calendarIcon}<span>${dateStr}</span></div>
+                            <div class="meta-item">${locationIcon}<span>${ev.location || ''}</span></div>
+                        </div>
+                        <div class="card-desc">${ev.description || ''}</div>
+                        <div class="card-footer">
+                            <div class="action-buttons">
+                                <button class="favorite-btn${isFavorite ? ' active' : ''}" data-event-id="${eventId}">${isFavorite ? '♥' : '♡'}</button>
+                                ${registerBtn}
+                            </div>
+                            <div class="action-buttons">
+                                <button class="action-btn whatsapp" title="${t('shareWhatsApp')}">${whatsappIcon}</button>
+                                ${hasLocation ? `<button class="action-btn navigate" title="ניווט">${navigateIcon}</button>` : ''}
+                                ${sourceLink ? `<a href="${sourceLink}" target="_blank" rel="noopener noreferrer" class="action-btn source" title="${t('source')}" onclick="event.stopPropagation()">${externalLinkIcon}</a>` : ''}
+                            </div>
                         </div>
                     </div>
                 `;
@@ -1340,6 +1793,17 @@
                         e.stopPropagation();
                         navigateToLocation(ev.latitude, ev.longitude, ev.location);
                     });
+                }
+
+                // Register button click (private events)
+                if (isPrivate && !isRegistered) {
+                    const regBtn = card.querySelector('.btn-register');
+                    if (regBtn) {
+                        regBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            handleRegister(ev, regBtn);
+                        });
+                    }
                 }
 
                 list.appendChild(card);
@@ -1436,8 +1900,10 @@
         }
 
         function buildCityFilters() {
-            // Get cities based on selected region
-            let cities = [...new Set(allEvents.map(e => e.city).filter(Boolean))];
+            // Always show all known cities; in public tab also include any extra cities from events
+            const knownCities = Object.keys(translations.he.cities).filter(c => c !== 'Other');
+            const eventCities = allEvents.map(e => e.city).filter(Boolean);
+            let cities = [...new Set([...knownCities, ...eventCities])];
             const regionCitiesList = getCitiesForRegion(activeRegionFilter);
             if (regionCitiesList) {
                 cities = cities.filter(c => regionCitiesList.includes(c));
@@ -1467,7 +1933,10 @@
         }
 
         function buildCategoryFilters() {
-            const types = [...new Set(allEvents.map(e => e.event_type).filter(Boolean))];
+            // Always show all known categories; also include any extra types from events
+            const knownTypes = Object.keys(translations.he.types);
+            const eventTypes = allEvents.map(e => e.event_type).filter(Boolean);
+            const types = [...new Set([...knownTypes, ...eventTypes])];
             const sortedTypes = getSortedCategories(types);
             const typeBar = document.getElementById('type-filters');
             typeBar.innerHTML = '';
@@ -1510,6 +1979,22 @@
 
                 typeBar.appendChild(btn);
             });
+        }
+
+        function switchTab(tab) {
+            activeTab = tab;
+            document.getElementById('tab-public').classList.toggle('active', tab === 'public');
+            document.getElementById('tab-private').classList.toggle('active', tab === 'private');
+            allEvents = tab === 'private' ? privateEvents : publicEvents;
+            activeDateFilter = 'all';
+            activeRegionFilter = 'all';
+            activeCityFilter = 'all';
+            activeTypeFilter = 'all';
+            searchQuery = '';
+            const si = document.getElementById('search-input');
+            if (si) si.value = '';
+            buildFilters();
+            applyFilter();
         }
 
         function resetAllFilters() {
@@ -1590,26 +2075,62 @@
         document.getElementById('type-filter-label').textContent = t('filterCategory');
         document.getElementById('loading').textContent = t('loading');
 
-        // --- Load events ---
-        fetch('events.json')
-            .then(r => {
-                if (!r.ok) throw new Error('events.json not found');
-                return r.json();
-            })
-            .then(data => {
-                allEvents = data;
-                updateEventCounter(allEvents.length);
+        function mapUserEventRow(row) {
+            return {
+                id:          'user-' + row.id,
+                title:       row.title,
+                date:        row.date        || '',
+                time:        row.time        || '',
+                location:    row.location    || '',
+                city:        row.city        || '',
+                description: row.description || '',
+                event_type:  row.event_type  || 'other',
+                thumbnail:   row.thumbnail_url || '',
+                emoji:       row.emoji       || '📅',
+                source:      'user',
+            };
+        }
+
+        async function fetchPrivateEvents() {
+            try {
+                const { data } = await sb
+                    .from('user_events')
+                    .select('*')
+                    .eq('status', 'published')
+                    .order('created_at', { ascending: false });
+                return (data || []).map(mapUserEventRow);
+            } catch (e) { return []; }
+        }
+
+        // Called from IIFE when auth state changes (login/logout)
+        window.onAuthRefreshPrivate = async function () {
+            privateEvents = await fetchPrivateEvents();
+            if (activeTab === 'private') {
+                allEvents = privateEvents;
                 buildFilters();
-                renderEvents(allEvents);
-            })
-            .catch(err => {
-                document.getElementById('event-list').innerHTML = `
-                    <p style="padding:1rem;color:#c0392b">
-                        ${t('errorLoad')}<br>
-                        <code>${t('errorHint')}</code>
-                    </p>`;
-                console.error(err);
-            });
+                applyFilter();
+            }
+        };
+
+        // --- Load events ---
+        Promise.all([
+            fetch('events.json').then(r => r.ok ? r.json() : []).catch(() => []),
+            fetchPrivateEvents(),
+        ]).then(([scraped, userEvents]) => {
+            publicEvents = scraped;
+            privateEvents = userEvents;
+            allEvents = publicEvents; // default tab = public
+            updateEventCounter(allEvents.length);
+            buildFilters();
+            renderEvents(allEvents);
+        }).catch(err => {
+            document.getElementById('event-list').innerHTML = `
+                <p style="padding:1rem;color:#c0392b">
+                    ${t('errorLoad')}<br>
+                    <code>${t('errorHint')}</code>
+                </p>`;
+            console.error(err);
+        });
     </script>
 
     <!-- SEO Footer -->
@@ -1726,5 +2247,69 @@
             navigator.serviceWorker.register('/sw.js');
         }
     </script>
+
+    <!-- Supabase auth state in header -->
+    <script>
+        (function () {
+            // sb is already created in <head>
+
+            function setAuthUI(user) {
+                const loggedOut    = document.getElementById('auth-logged-out');
+                const loggedIn     = document.getElementById('auth-logged-in');
+                const postLoginSec = document.getElementById('post-login-section');
+                if (!user) {
+                    loggedOut.style.display    = 'flex';
+                    loggedIn.style.display     = 'none';
+                    postLoginSec.style.display = 'none';
+                    return;
+                }
+                loggedOut.style.display    = 'none';
+                loggedIn.style.display     = 'flex';
+                postLoginSec.style.display = 'block';
+
+                const name      = user.user_metadata?.full_name || user.email || '';
+                const firstName = name.split(' ')[0] || '';
+                const initials  = name.trim()
+                    ? name.trim().split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
+                    : '?';
+
+                document.getElementById('user-avatar-initials').textContent = initials;
+                document.getElementById('user-name-short').textContent      = firstName;
+                document.getElementById('user-dropdown-email').textContent  = user.email || '';
+                document.getElementById('post-login-name').textContent      = firstName;
+            }
+
+            // Initial session check
+            sb.auth.getSession().then(({ data: { session } }) => {
+                setAuthUI(session?.user || null);
+            });
+
+            // Live updates (login / logout in another tab)
+            sb.auth.onAuthStateChange((_event, session) => {
+                setAuthUI(session?.user || null);
+                if (typeof window.onAuthRefreshPrivate === 'function') {
+                    window.onAuthRefreshPrivate();
+                }
+            });
+
+            window.toggleUserDropdown = function (e) {
+                e.stopPropagation();
+                document.getElementById('user-dropdown').classList.toggle('open');
+            };
+
+            window.signOut = async function () {
+                try { await sb.auth.signOut(); } catch (e) { /* ignore */ }
+                window.location.href = '/';
+            };
+
+            // Close dropdown on outside click
+            document.addEventListener('click', function () {
+                const dd = document.getElementById('user-dropdown');
+                if (dd) dd.classList.remove('open');
+            });
+        })();
+    </script>
+
+
 </body>
 </html>

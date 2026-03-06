@@ -11,10 +11,13 @@ Usage:
 import json
 import os
 import sys
+import zoneinfo
 from collections import Counter
 from datetime import datetime, timedelta
 from difflib import SequenceMatcher
 from pathlib import Path
+
+IL_TZ = zoneinfo.ZoneInfo("Asia/Jerusalem")
 
 import anthropic
 
@@ -80,7 +83,7 @@ Return a JSON array where each event has these exact fields:
 - event_type: one of {types_list}
 - description: brief description in Hebrew (1-2 sentences)
 - is_free: true
-- source: website where you found the event
+- source: full URL of the specific event page (e.g. https://site.com/events/event-name), not just the homepage domain
 
 Return ONLY a valid JSON array. No markdown fences, no extra text."""
 
@@ -134,7 +137,7 @@ def cleanup_expired_events(events):
 
     Keeps recurring/permanent events (date_display contains recurring keywords).
     """
-    cutoff = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+    cutoff = (datetime.now(IL_TZ) - timedelta(days=30)).strftime("%Y-%m-%d")
     recurring_keywords = [
         "יומי", "כל יום", "כל שבת", "כל שישי", "every", "daily", "weekly",
         "פתוח", "קבוע", "שעות פתיחה", "כל ה", "recurring",
@@ -190,7 +193,7 @@ def scan_with_claude():
     cities_text = "\n".join(f"- {en} ({he})" for en, he in CITIES)
     cities_list = json.dumps([c[0] for c in CITIES])
     types_list = json.dumps(EVENT_TYPES)
-    today = datetime.now().strftime("%Y-%m-%d")
+    today = datetime.now(IL_TZ).strftime("%Y-%m-%d")
 
     prompt = SCAN_PROMPT.format(
         cities_text=cities_text,
@@ -338,7 +341,7 @@ def main():
             continue
 
         # Fill in missing optional fields
-        event.setdefault("date", datetime.now().strftime("%Y-%m-%d"))
+        event.setdefault("date", datetime.now(IL_TZ).strftime("%Y-%m-%d"))
         event.setdefault("date_display", "")
         event.setdefault("description", "")
         event.setdefault("source", "web_search")
