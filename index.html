@@ -2075,32 +2075,47 @@
         document.getElementById('type-filter-label').textContent = t('filterCategory');
         document.getElementById('loading').textContent = t('loading');
 
+        function mapUserEventRow(row) {
+            return {
+                id:          'user-' + row.id,
+                title:       row.title,
+                date:        row.date        || '',
+                time:        row.time        || '',
+                location:    row.location    || '',
+                city:        row.city        || '',
+                description: row.description || '',
+                event_type:  row.event_type  || 'other',
+                thumbnail:   row.thumbnail_url || '',
+                emoji:       row.emoji       || '📅',
+                source:      'user',
+            };
+        }
+
+        async function fetchPrivateEvents() {
+            try {
+                const { data } = await sb
+                    .from('user_events')
+                    .select('*')
+                    .eq('status', 'published')
+                    .order('created_at', { ascending: false });
+                return (data || []).map(mapUserEventRow);
+            } catch (e) { return []; }
+        }
+
+        // Called from IIFE when auth state changes (login/logout)
+        window.onAuthRefreshPrivate = async function () {
+            privateEvents = await fetchPrivateEvents();
+            if (activeTab === 'private') {
+                allEvents = privateEvents;
+                buildFilters();
+                applyFilter();
+            }
+        };
+
         // --- Load events ---
-        // Load events.json + user-submitted events in parallel
         Promise.all([
             fetch('events.json').then(r => r.ok ? r.json() : []).catch(() => []),
-            (async () => {
-                try {
-                    const { data } = await sb
-                        .from('user_events')
-                        .select('*')
-                        .eq('status', 'published')
-                        .order('created_at', { ascending: false });
-                    return (data || []).map(row => ({
-                        id:          'user-' + row.id,
-                        title:       row.title,
-                        date:        row.date        || '',
-                        time:        row.time        || '',
-                        location:    row.location    || '',
-                        city:        row.city        || '',
-                        description: row.description || '',
-                        event_type:  row.event_type  || 'other',
-                        thumbnail:   row.thumbnail_url || '',
-                        emoji:       row.emoji       || '📅',
-                        source:      'user',
-                    }));
-                } catch (e) { return []; }
-            })(),
+            fetchPrivateEvents(),
         ]).then(([scraped, userEvents]) => {
             publicEvents = scraped;
             privateEvents = userEvents;
@@ -2272,6 +2287,9 @@
             // Live updates (login / logout in another tab)
             sb.auth.onAuthStateChange((_event, session) => {
                 setAuthUI(session?.user || null);
+                if (typeof window.onAuthRefreshPrivate === 'function') {
+                    window.onAuthRefreshPrivate();
+                }
             });
 
             window.toggleUserDropdown = function (e) {
