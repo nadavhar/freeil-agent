@@ -42,25 +42,27 @@ function toggleFavorite(eventId, btn) {
 
 // ── Registration ──
 async function handleRegister(ev, btn) {
-    const { data: { user } } = await sb.auth.getUser();
-    if (!user) { window.location.href = '/login.html'; return; }
-
-    // Optimistic UI
+    // Optimistic UI — works for everyone, logged in or not
     btn.textContent = '✓ נרשמת';
     btn.classList.add('registered');
     localStorage.setItem('reg-' + ev.id, '1');
 
-    const badge = document.getElementById('pcount-' + ev.id);
+    const badge = document.getElementById('pcount-' + ev.id) || document.getElementById('pcount-feed-' + ev._rawId);
     if (badge) {
-        ev.registrations_count = (ev.registrations_count || 0) + 1;
-        badge.textContent = '👥 ' + ev.registrations_count;
+        const current = parseInt(badge.textContent.replace(/\D/g, '')) || 0;
+        badge.innerHTML = badge.innerHTML.replace(/\d+$/, current + 1);
     }
     showToast('נרשמת לאירוע בהצלחה!');
 
     try {
         const rawId = ev._rawId;
-        const { error } = await sb.from('event_registrations').insert({ user_id: user.id, event_id: rawId });
-        if (!error) await sb.rpc('increment_registrations', { event_id: rawId });
+        await sb.rpc('increment_registrations', { event_id: rawId });
+
+        // Also save to DB if logged in
+        const { data: { user } } = await sb.auth.getUser();
+        if (user) {
+            await sb.from('event_registrations').insert({ user_id: user.id, event_id: rawId });
+        }
     } catch (e) { /* fails gracefully */ }
 }
 
