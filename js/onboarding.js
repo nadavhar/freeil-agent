@@ -2,6 +2,9 @@
    Onboarding — 4-step overlay shown once to first-time visitors.
    No external dependencies — runs immediately on parse.
 ══════════════════════════════════════════════════════════════ */
+// Safe no-ops for returning visitors (IIFE returns early, these get overwritten for new visitors)
+window.obNext = window.obFinish = window.obRequestLocation = function () {};
+
 (function () {
     const OB_KEY = 'freeil-ob-done';
     if (localStorage.getItem(OB_KEY)) return; // already seen
