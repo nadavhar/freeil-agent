@@ -1059,8 +1059,11 @@ function openAddEvent() {
     document.getElementById('ae-title').classList.remove('err');
     document.getElementById('add-modal-title').textContent = 'הוסף אירוע חדש';
     document.getElementById('btn-submit-label-text').textContent = 'פרסם אירוע';
+    const titleInput = document.getElementById('ae-title');
+    titleInput.setAttribute('readonly', true);
     document.getElementById('add-event-modal').classList.add('open');
     document.body.style.overflow = 'hidden';
+    setTimeout(() => titleInput.removeAttribute('readonly'), 300);
 }
 function openEditEvent(ev) {
     editingEventId = ev.id;
