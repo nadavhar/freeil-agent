@@ -446,14 +446,6 @@
         }
         .input-icon-wrap { width: 100%; display: block; overflow: hidden; }
         .input-icon-wrap input, .input-icon-wrap select { width: 100%; box-sizing: border-box; padding-right: 38px; }
-        .datetime-input {
-            display: block;
-            width: 100% !important;
-            max-width: 100% !important;
-            box-sizing: border-box !important;
-            direction: ltr;
-            text-align: right;
-        }
 
         /* Image upload */
         .img-upload-zone {
@@ -863,14 +855,6 @@
                 <span class="field-err" id="ae-title-err"></span>
             </div>
 
-            <div class="field">
-                <label for="ae-date">תאריך</label>
-                <input type="date" id="ae-date" class="datetime-input">
-            </div>
-            <div class="field">
-                <label for="ae-time">שעה</label>
-                <input type="time" id="ae-time" class="datetime-input">
-            </div>
 
             <div class="field-row">
                 <div class="field">
@@ -1059,8 +1043,6 @@ function openEditEvent(ev) {
     document.getElementById('btn-submit-label-text').textContent = 'שמור שינויים';
     // Pre-fill fields
     document.getElementById('ae-title').value    = ev.title    || '';
-    document.getElementById('ae-date').value     = ev.date     || '';
-    document.getElementById('ae-time').value     = ev.time     || '';
     document.getElementById('ae-city').value     = ev.city     || '';
     document.getElementById('ae-type').value     = ev.event_type || '';
     document.getElementById('ae-location').value     = ev.location || '';
@@ -1402,8 +1384,6 @@ async function handleAddEventSubmit(e) {
     document.getElementById('ae-title').classList.remove('err');
     document.getElementById('ae-title-err').textContent = '';
 
-    const dateVal      = document.getElementById('ae-date').value;
-    const timeVal      = document.getElementById('ae-time').value;
     const city         = document.getElementById('ae-city').value.trim();
     const type         = document.getElementById('ae-type').value;
     const loc          = document.getElementById('ae-location').value.trim();
@@ -1425,8 +1405,6 @@ async function handleAddEventSubmit(e) {
         // ── UPDATE existing event ──
         const updates = {
             title,
-            date:                 dateVal    || null,
-            time:                 timeVal    || null,
             city:                 city       || null,
             event_type:           type       || null,
             location:             loc        || null,
@@ -1464,8 +1442,6 @@ async function handleAddEventSubmit(e) {
     const { data: newRow, error } = await sb.from('user_events').insert({
         user_id:              currentUser.id,
         title,
-        date:                 dateVal       || null,
-        time:                 timeVal       || null,
         city:                 city          || null,
         event_type:           type          || null,
         location:             loc           || null,
