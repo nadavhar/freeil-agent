@@ -437,16 +437,6 @@
         /* Date & Time row */
         .dt-row { display: flex; flex-direction: column; gap: 12px; width: 100%; }
         @media (min-width: 640px) { .dt-row { flex-direction: row; } .dt-row .field { flex: 1; min-width: 0; } }
-        .dt-row input[type="date"],
-        .dt-row input[type="time"] {
-            width: 100%; max-width: 100%; box-sizing: border-box;
-            display: block; min-width: 0;
-        }
-        .dt-row input[type="date"]::-webkit-calendar-picker-indicator,
-        .dt-row input[type="time"]::-webkit-calendar-picker-indicator {
-            position: absolute; left: 0; width: 100%; height: 100%;
-            opacity: 0; cursor: pointer;
-        }
         .add-form .field-row { display: flex; flex-direction: column; gap: 12px; }
         .add-form .field-row .field { width: 100%; }
         .add-form .field-err { font-size: 0.7rem; color: #ef4444; font-weight: 600; min-height: 14px; }
@@ -872,11 +862,11 @@
             <div class="dt-row">
                 <div class="field">
                     <label for="ae-date">תאריך</label>
-                    <input type="date" id="ae-date">
+                    <input type="text" id="ae-date" placeholder="DD/MM/YYYY" maxlength="10" inputmode="numeric">
                 </div>
                 <div class="field">
                     <label for="ae-time">שעה</label>
-                    <input type="time" id="ae-time">
+                    <input type="text" id="ae-time" placeholder="HH:MM" maxlength="5" inputmode="numeric">
                 </div>
             </div>
 
@@ -1067,7 +1057,7 @@ function openEditEvent(ev) {
     document.getElementById('btn-submit-label-text').textContent = 'שמור שינויים';
     // Pre-fill fields
     document.getElementById('ae-title').value    = ev.title    || '';
-    document.getElementById('ae-date').value     = ev.date     || '';
+    document.getElementById('ae-date').value     = ev.date ? ev.date.split('-').reverse().join('/') : '';
     document.getElementById('ae-time').value     = ev.time     || '';
     document.getElementById('ae-city').value     = ev.city     || '';
     document.getElementById('ae-type').value     = ev.event_type || '';
@@ -1410,8 +1400,30 @@ async function handleAddEventSubmit(e) {
     document.getElementById('ae-title').classList.remove('err');
     document.getElementById('ae-title-err').textContent = '';
 
-    const dateVal      = document.getElementById('ae-date').value;
-    const timeVal      = document.getElementById('ae-time').value;
+    const dateRaw  = document.getElementById('ae-date').value.trim();
+    const timeRaw  = document.getElementById('ae-time').value.trim();
+
+    // Validate and convert date DD/MM/YYYY → YYYY-MM-DD
+    let dateVal = null;
+    if (dateRaw) {
+        const dm = dateRaw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (!dm) {
+            showToast('פורמט תאריך לא תקין — יש להזין DD/MM/YYYY', 'error');
+            return;
+        }
+        dateVal = `${dm[3]}-${dm[2].padStart(2,'0')}-${dm[1].padStart(2,'0')}`;
+    }
+
+    // Validate time HH:MM
+    let timeVal = null;
+    if (timeRaw) {
+        const tm = timeRaw.match(/^(\d{1,2}):(\d{2})$/);
+        if (!tm) {
+            showToast('פורמט שעה לא תקין — יש להזין HH:MM', 'error');
+            return;
+        }
+        timeVal = `${tm[1].padStart(2,'0')}:${tm[2]}`;
+    }
     const city         = document.getElementById('ae-city').value.trim();
     const type         = document.getElementById('ae-type').value;
     const loc          = document.getElementById('ae-location').value.trim();
