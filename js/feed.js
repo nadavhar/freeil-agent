@@ -131,7 +131,7 @@ function buildFeedEventCard(ev, isRecommended) {
             <div class="card-tags">${typeTag}${cityTag}</div>
             <h3 class="private-card-title">${escHtml(ev.title || '')}</h3>
             <div class="card-meta">
-                <div class="meta-item">${calendarIcon}<span>${escHtml(ev.date || '')}</span></div>
+                <div class="meta-item">${calendarIcon}<span>${escHtml((() => { if (!ev.date) return ''; const [y,m,d] = ev.date.split('-'); const f = `${d}/${m}`; return ev.time ? `${f} · ${ev.time}` : f; })())}</span></div>
                 <div class="meta-item location-meta">
                     ${locationIcon}<span>${escHtml(ev.location || '')}</span>
                 </div>

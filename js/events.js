@@ -134,6 +134,12 @@ function renderEvents(events) {
         const hasLoc     = ev.latitude && ev.longitude;
         const sourceLink = getSafeLink(ev);
         const dateStr    = ev.date_display || ev.date || '';
+        const privateDateStr = (() => {
+            if (!ev.date) return '';
+            const [y, m, d] = ev.date.split('-');
+            const formatted = `${d}/${m}`;
+            return ev.time ? `${formatted} · ${ev.time}` : formatted;
+        })();
 
         const cityTag = ev.city        ? `<span class="tag tag-city">${escHtml(getCityLabel(ev.city))}</span>` : '';
         const typeTag = ev.event_type  ? `<span class="tag tag-type">${escHtml(getTypeLabel(ev.event_type))}</span>` : '';
@@ -155,7 +161,7 @@ function renderEvents(events) {
                     <div class="card-tags">${typeTag}${cityTag}</div>
                     <h3 class="private-card-title">${escHtml(ev.title || t('noTitle'))}</h3>
                     <div class="card-meta">
-                        <div class="meta-item">${calendarIcon}<span>${escHtml(dateStr)}</span></div>
+                        <div class="meta-item">${calendarIcon}<span>${escHtml(privateDateStr)}</span></div>
                         <div class="meta-item location-meta">
                             ${locationIcon}<span>${escHtml(ev.location || '')}</span>
                         </div>
