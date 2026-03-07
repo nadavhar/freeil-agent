@@ -399,7 +399,7 @@
         }
         .modal-close-x:hover { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
 
-        .add-form { display: flex; flex-direction: column; gap: 14px; }
+        .add-form { display: flex; flex-direction: column; gap: 14px; width: 100%; overflow: hidden; }
         .add-form .field { display: flex; flex-direction: column; gap: 6px; }
         .add-form label {
             font-size: 0.7rem; font-weight: 700; color: #64748b;
@@ -444,8 +444,10 @@
             position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
             color: #b0bcc8; pointer-events: none; display: flex; align-items: center;
         }
-        .input-icon-wrap { width: 100%; }
+        .input-icon-wrap { width: 100%; display: block; overflow: hidden; }
         .input-icon-wrap input, .input-icon-wrap select { width: 100%; box-sizing: border-box; padding-right: 38px; }
+        .add-form input[type="date"],
+        .add-form input[type="time"] { direction: ltr; text-align: right; }
 
         /* Image upload */
         .img-upload-zone {
