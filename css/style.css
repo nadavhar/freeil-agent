@@ -283,8 +283,18 @@ header h1 span { color: #00d4aa; }
     font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
     padding: 3px 10px; border-radius: 20px; pointer-events: none;
 }
-.fav-overlay {
+.card-top-left {
     position: absolute; top: 10px; left: 10px; z-index: 2;
+    display: flex; align-items: center; gap: 6px;
+}
+.pcount-overlay {
+    background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
+    border-radius: 20px; padding: 4px 9px;
+    font-size: 0.75rem; font-weight: 600; color: #334155;
+    display: flex; align-items: center; gap: 4px;
+}
+.fav-overlay {
+    position: static; z-index: 2;
     width: 34px; height: 34px; border-radius: 50%; border: none;
     background: rgba(255,255,255,0.85); backdrop-filter: blur(4px);
     display: inline-flex; align-items: center; justify-content: center;
