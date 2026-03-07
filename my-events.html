@@ -435,16 +435,16 @@
         .add-form textarea { resize: vertical; min-height: 88px; line-height: 1.6; }
 
         /* Date & Time row */
-        .dt-row { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-        @media (min-width: 640px) { .dt-row { flex-direction: row; } .dt-row .field { flex: 1; min-width: 0; } }
+        .dt-row { display: flex; flex-direction: column; gap: 12px; width: 75%; }
+        @media (min-width: 640px) { .dt-row { flex-direction: row; width: 100%; } .dt-row .field { flex: 1; min-width: 0; } }
         .dt-row input[type="date"], .dt-row input[type="time"] {
             width: 100%; box-sizing: border-box; direction: ltr; text-align: right;
-            padding-right: 2.2rem;
+            padding-right: 2rem; font-size: 0.8rem;
         }
-        .input-icon-wrap { position: relative; width: 70%; }
+        .input-icon-wrap { position: relative; width: 100%; }
         .input-icon-wrap .input-icon {
             position: absolute; right: 0.6rem; top: 50%; transform: translateY(-50%);
-            width: 16px; height: 16px; color: #9ca3af; pointer-events: none; z-index: 1;
+            width: 14px; height: 14px; color: #9ca3af; pointer-events: none; z-index: 1;
         }
         .add-form .field-row { display: flex; flex-direction: column; gap: 12px; }
         .add-form .field-row .field { width: 100%; }
