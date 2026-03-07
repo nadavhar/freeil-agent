@@ -433,6 +433,20 @@
         .add-form input.err,
         .add-form textarea.err { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.08); }
         .add-form textarea { resize: vertical; min-height: 88px; line-height: 1.6; }
+
+        /* Date & Time row */
+        .dt-row { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        @media (min-width: 640px) { .dt-row { flex-direction: row; } .dt-row .field { flex: 1; min-width: 0; } }
+        .dt-row input[type="date"],
+        .dt-row input[type="time"] {
+            width: 100%; max-width: 100%; box-sizing: border-box;
+            display: block; min-width: 0;
+        }
+        .dt-row input[type="date"]::-webkit-calendar-picker-indicator,
+        .dt-row input[type="time"]::-webkit-calendar-picker-indicator {
+            position: absolute; left: 0; width: 100%; height: 100%;
+            opacity: 0; cursor: pointer;
+        }
         .add-form .field-row { display: flex; flex-direction: column; gap: 12px; }
         .add-form .field-row .field { width: 100%; }
         .add-form .field-err { font-size: 0.7rem; color: #ef4444; font-weight: 600; min-height: 14px; }
@@ -855,6 +869,16 @@
                 <span class="field-err" id="ae-title-err"></span>
             </div>
 
+            <div class="dt-row">
+                <div class="field">
+                    <label for="ae-date">תאריך</label>
+                    <input type="date" id="ae-date">
+                </div>
+                <div class="field">
+                    <label for="ae-time">שעה</label>
+                    <input type="time" id="ae-time">
+                </div>
+            </div>
 
             <div class="field-row">
                 <div class="field">
@@ -1043,6 +1067,8 @@ function openEditEvent(ev) {
     document.getElementById('btn-submit-label-text').textContent = 'שמור שינויים';
     // Pre-fill fields
     document.getElementById('ae-title').value    = ev.title    || '';
+    document.getElementById('ae-date').value     = ev.date     || '';
+    document.getElementById('ae-time').value     = ev.time     || '';
     document.getElementById('ae-city').value     = ev.city     || '';
     document.getElementById('ae-type').value     = ev.event_type || '';
     document.getElementById('ae-location').value     = ev.location || '';
@@ -1384,6 +1410,8 @@ async function handleAddEventSubmit(e) {
     document.getElementById('ae-title').classList.remove('err');
     document.getElementById('ae-title-err').textContent = '';
 
+    const dateVal      = document.getElementById('ae-date').value;
+    const timeVal      = document.getElementById('ae-time').value;
     const city         = document.getElementById('ae-city').value.trim();
     const type         = document.getElementById('ae-type').value;
     const loc          = document.getElementById('ae-location').value.trim();
@@ -1405,6 +1433,8 @@ async function handleAddEventSubmit(e) {
         // ── UPDATE existing event ──
         const updates = {
             title,
+            date:                 dateVal    || null,
+            time:                 timeVal    || null,
             city:                 city       || null,
             event_type:           type       || null,
             location:             loc        || null,
@@ -1442,6 +1472,8 @@ async function handleAddEventSubmit(e) {
     const { data: newRow, error } = await sb.from('user_events').insert({
         user_id:              currentUser.id,
         title,
+        date:                 dateVal       || null,
+        time:                 timeVal       || null,
         city:                 city          || null,
         event_type:           type          || null,
         location:             loc           || null,
