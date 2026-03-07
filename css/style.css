@@ -225,7 +225,7 @@ header h1 span { color: #00d4aa; }
 }
 .reset-filters.visible { display: inline-flex; }
 .reset-filters:hover { background: #fee2e2; }
-.filter-row { position: relative; margin-bottom: 0.25rem; padding: 0 1rem; }
+.filter-row { position: relative; margin-bottom: 0.25rem; padding: 0 1rem; overflow: hidden; }
 .filter-row:last-child { margin-bottom: 0; }
 .filter-label { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 2px; }
 .filter-bar {
