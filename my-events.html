@@ -438,7 +438,12 @@
         @media (min-width: 640px) { .dt-row { flex-direction: row; } .dt-row .field { flex: 1; min-width: 0; } }
         .dt-row input[type="date"], .dt-row input[type="time"] {
             width: 100%; box-sizing: border-box; font-size: 16px;
-            min-height: 44px; -webkit-appearance: none;
+            min-height: 44px; -webkit-appearance: none; padding-left: 40px;
+        }
+        .dt-icon-wrap { position: relative; width: 100%; }
+        .dt-icon-wrap .dt-icon {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            width: 16px; height: 16px; color: #9ca3af; pointer-events: none;
         }
         .add-form .field-row { display: flex; flex-direction: column; gap: 12px; }
         .add-form .field-row .field { width: 100%; }
@@ -865,11 +870,17 @@
             <div class="dt-row">
                 <div class="field">
                     <label for="ae-date">תאריך</label>
-                    <input type="date" id="ae-date">
+                    <div class="dt-icon-wrap">
+                        <svg class="dt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <input type="date" id="ae-date">
+                    </div>
                 </div>
                 <div class="field">
                     <label for="ae-time">שעה</label>
-                    <input type="time" id="ae-time">
+                    <div class="dt-icon-wrap">
+                        <svg class="dt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+                        <input type="time" id="ae-time">
+                    </div>
                 </div>
             </div>
 
