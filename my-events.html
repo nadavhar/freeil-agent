@@ -1039,7 +1039,6 @@ function openAddEvent() {
     document.getElementById('btn-submit-label-text').textContent = 'פרסם אירוע';
     document.getElementById('add-event-modal').classList.add('open');
     document.body.style.overflow = 'hidden';
-    setTimeout(() => document.getElementById('ae-title').focus(), 100);
 }
 function openEditEvent(ev) {
     editingEventId = ev.id;
@@ -1059,7 +1058,6 @@ function openEditEvent(ev) {
     document.getElementById('ae-registration').checked = ev.registration_enabled !== false;
     document.getElementById('add-event-modal').classList.add('open');
     document.body.style.overflow = 'hidden';
-    setTimeout(() => document.getElementById('ae-title').focus(), 100);
 }
 function closeAddEvent() {
     editingEventId = null;
