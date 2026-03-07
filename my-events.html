@@ -446,8 +446,14 @@
         }
         .input-icon-wrap { width: 100%; display: block; overflow: hidden; }
         .input-icon-wrap input, .input-icon-wrap select { width: 100%; box-sizing: border-box; padding-right: 38px; }
-        .add-form input[type="date"],
-        .add-form input[type="time"] { direction: ltr; text-align: right; }
+        .datetime-input {
+            display: block;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+            direction: ltr;
+            text-align: right;
+        }
 
         /* Image upload */
         .img-upload-zone {
@@ -857,21 +863,13 @@
                 <span class="field-err" id="ae-title-err"></span>
             </div>
 
-            <div class="field-row">
-                <div class="field">
-                    <label for="ae-date">תאריך</label>
-                    <div class="input-icon-wrap">
-                        <span class="field-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
-                        <input type="date" id="ae-date">
-                    </div>
-                </div>
-                <div class="field">
-                    <label for="ae-time">שעה</label>
-                    <div class="input-icon-wrap">
-                        <span class="field-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
-                        <input type="time" id="ae-time">
-                    </div>
-                </div>
+            <div class="field">
+                <label for="ae-date">תאריך</label>
+                <input type="date" id="ae-date" class="datetime-input">
+            </div>
+            <div class="field">
+                <label for="ae-time">שעה</label>
+                <input type="time" id="ae-time" class="datetime-input">
             </div>
 
             <div class="field-row">
