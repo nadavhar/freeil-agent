@@ -11,7 +11,9 @@
     <style>
         /* ── Reset ── */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { overflow-x: hidden; max-width: 100vw; width: 100%; }
+        html { overflow-x: hidden; }
+        html, body { max-width: 100vw; width: 100%; }
+        body { overflow-x: hidden; position: relative; touch-action: pan-y; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f5f7fa;
