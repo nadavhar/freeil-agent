@@ -446,12 +446,6 @@ header h1 span { color: #00d4aa; }
 .bnav-btn svg { transition: transform 0.2s; }
 .bnav-btn.active { color: #00d4aa; }
 .bnav-btn.active svg { transform: translateY(-1px); }
-.bnav-btn.active::after {
-    content: ''; position: absolute; bottom: 6px;
-    width: 18px; height: 3px; background: #00d4aa;
-    border-radius: 3px; animation: dotIn 0.2s ease;
-}
-@keyframes dotIn { from { opacity: 0; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
 
 /* ── Social Feed ── */
 #view-social { display: none; }
