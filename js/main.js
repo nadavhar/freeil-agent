@@ -31,6 +31,7 @@ function setLanguage(lang) {
 // ── Tab switching ──
 function switchTab(tab) {
     activeTab = tab;
+    window.scrollTo(0, 0);
 
     document.querySelectorAll('.dtab, .bnav-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.tab === tab);
@@ -66,6 +67,10 @@ window.onAuthRefreshPrivate = async function () {
         applyFilter();
     }
 };
+
+// ── Scroll to top on page load and hash/param changes ──
+window.scrollTo(0, 0);
+window.addEventListener('hashchange', () => window.scrollTo(0, 0));
 
 // ── Bootstrap ──
 (function init() {
