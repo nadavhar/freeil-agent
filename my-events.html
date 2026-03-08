@@ -295,6 +295,7 @@
         .cta-btn:hover { background: #00bfa0; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,212,170,0.4); }
 
         /* ── Shared modal overlay ── */
+        /* z-index 1050 > bottom-nav z-index 1000, so nav bar doesn't cover the modal */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -302,7 +303,7 @@
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            z-index: 950;
+            z-index: 1050;
             align-items: flex-end;
             justify-content: center;
         }
@@ -400,7 +401,7 @@
         }
         .modal-close-x:hover { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
 
-        .add-form { display: flex; flex-direction: column; gap: 14px; width: 100%; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+        .add-form { display: flex; flex-direction: column; gap: 14px; width: 100%; padding-bottom: 24px; }
         .add-form .field { display: flex; flex-direction: column; gap: 6px; }
         .add-form label {
             font-size: 0.7rem; font-weight: 700; color: #64748b;
