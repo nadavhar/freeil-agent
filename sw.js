@@ -1,4 +1,4 @@
-const CACHE_NAME = 'freeil-v1';
+const CACHE_NAME = 'freeil-v3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
