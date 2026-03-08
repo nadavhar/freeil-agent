@@ -29,32 +29,6 @@
     "source": "imj.org.il"
   },
   {
-    "title": "מוזיאון ישראל - פעילויות חינם לילדים",
-    "date": "2026-02-04",
-    "date_display": "בשעות פתיחת המוזיאון",
-    "location": "מוזיאון ישראל, אגף הנוער, ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.7741,
-    "longitude": 35.2042,
-    "event_type": "family",
-    "description": "פעילויות חינם לילדים באגף הנוער של מוזיאון ישראל. סדנאות אמנות ותערוכות אינטראקטיביות.",
-    "is_free": true,
-    "source": "imj.org.il"
-  },
-  {
-    "title": "יד ושם - כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ד 9:00-17:00, ה 9:00-20:00, ו 9:00-14:00",
-    "location": "יד ושם, הר הזיכרון, ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.7743,
-    "longitude": 35.1755,
-    "event_type": "museum",
-    "description": "מוזיאון השואה הרשמי של ישראל. כניסה חינם (עמלת הרשמה קטנה להזמנה מקוונת).",
-    "is_free": true,
-    "source": "yadvashem.org"
-  },
-  {
     "title": "מוזיאון הכט - כניסה חינם",
     "date": "2026-02-04",
     "date_display": "יומי בשעות הפתיחה",
@@ -66,32 +40,6 @@
     "description": "כניסה חינם וסיורים מודרכים בחינם (בהזמנה מראש). אוספי ארכיאולוגיה, אמנות והיסטוריה ימית.",
     "is_free": true,
     "source": "hecht.haifa.ac.il"
-  },
-  {
-    "title": "גלריית גניה שרייבר - חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ה בשעות האוניברסיטה",
-    "location": "קמפוס אוניברסיטת תל אביב",
-    "city": "Tel Aviv",
-    "latitude": 32.1133,
-    "longitude": 34.8044,
-    "event_type": "art",
-    "description": "גלריית אמנות אוניברסיטאית בחינם המתמקדת באמנות מודרנית ואמנים ישראלים. תערוכות מתחלפות לאורך השנה.",
-    "is_free": true,
-    "source": "tau.ac.il"
-  },
-  {
-    "title": "גלריות שדרות רוטשילד - כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "שעות הגלריות משתנות",
-    "location": "שדרות רוטשילד, תל אביב",
-    "city": "Tel Aviv",
-    "latitude": 32.0636,
-    "longitude": 34.7729,
-    "event_type": "art",
-    "description": "כניסה חינם לגלריות אמנות עכשווית לאורך שדרות רוטשילד. גלריה גורדון, גלריה שטרן, גלריה אלון שגב ועוד.",
-    "is_free": true,
-    "source": "timeout.com"
   },
   {
     "title": "יוגה חינם בפארק הירקון",
@@ -188,19 +136,6 @@
     "source": "neweuropetours.eu"
   },
   {
-    "title": "GuruWalk סיורים חינם - חיפה",
-    "date": "2026-02-04",
-    "date_display": "בדקו באתר ללוח זמנים",
-    "location": "המושבה הגרמנית, חיפה",
-    "city": "Haifa",
-    "latitude": 32.8211,
-    "longitude": 35.0007,
-    "event_type": "tour",
-    "description": "סיורי הליכה חינם בחיפה עם מדריכים מקומיים. שלמו כפי יכולתכם לפי ההנאה.",
-    "is_free": true,
-    "source": "guruwalk.com"
-  },
-  {
     "title": "הכותל המערבי - חינם 24/7",
     "date": "2026-02-04",
     "date_display": "פתוח 24/7",
@@ -227,19 +162,6 @@
     "source": "unitedwithisrael.org"
   },
   {
-    "title": "פארק טדי - מזרקות מים חינם",
-    "date": "2026-02-04",
-    "date_display": "ערבים (חודשים חמים)",
-    "location": "פארק טדי, ליד חומות העיר העתיקה, ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.7733,
-    "longitude": 35.2252,
-    "event_type": "family",
-    "description": "מופע מזרקות מים חינם בן 30 דקות כל שעה-שעתיים. להירטב בחינם ופתוח לקהל!",
-    "is_free": true,
-    "source": "freetoursbyfoot.com"
-  },
-  {
     "title": "טיילות האס-שרובר-גולדמן - חינם",
     "date": "2026-02-04",
     "date_display": "פתוח יומי",
@@ -251,19 +173,6 @@
     "description": "שלושה שבילי הליכה מרהיבים עם נופים מרהיבים של ירושלים והסביבה. כניסה חינם.",
     "is_free": true,
     "source": "travelingisrael.com"
-  },
-  {
-    "title": "שוק הכרמל - כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ו בוקר עד אחה\"צ",
-    "location": "שוק הכרמל, תל אביב",
-    "city": "Tel Aviv",
-    "latitude": 32.0677,
-    "longitude": 34.7688,
-    "event_type": "market",
-    "description": "השוק הגדול והעמוס ביותר בתל אביב. דוכנים צבעוניים עם פירות יבשים, תבלינים, בגדים ועוד. שוק אמנים בימי ג/ו.",
-    "is_free": true,
-    "source": "touristisrael.com"
   },
   {
     "title": "שרונה מרקט - כניסה חינם",
@@ -303,19 +212,6 @@
     "description": "כניסה חינם לחוף בת גלים, חוף דדו וחוף השקט. מקומות פופולריים לשחייה, מנוחה ויוגה בחינם.",
     "is_free": true,
     "source": "israel21c.org"
-  },
-  {
-    "title": "בית אבי חי - אירועים והרצאות חינם",
-    "date": "2026-02-04",
-    "date_display": "בדקו באתר ללוח זמנים",
-    "location": "רחוב המלך ג'ורג' 44, ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.7802,
-    "longitude": 35.2192,
-    "event_type": "lecture",
-    "description": "הרצאות, תערוכות ואירועי תרבות חינם על פילוסופיה יהודית-ישראלית, אמנות והיסטוריה. חניה חינם למשתתפים.",
-    "is_free": true,
-    "source": "bac.org.il"
   },
   {
     "title": "TEDxTelAvivUniversity",
@@ -474,45 +370,6 @@
     "source": "tripadvisor.com"
   },
   {
-    "title": "סיור נווה צדק - חינם",
-    "date": "2026-02-04",
-    "date_display": "עצמאי בכל זמן",
-    "location": "שכונת נווה צדק, תל אביב",
-    "city": "Tel Aviv",
-    "latitude": 32.0589,
-    "longitude": 34.7656,
-    "event_type": "tour",
-    "description": "סיור הליכה עצמאי חינם בשכונה ההיסטורית המקסימה של תל אביב. אדריכלות באוהאוס יפה ובוטיקים.",
-    "is_free": true,
-    "source": "secrettelaviv.com"
-  },
-  {
-    "title": "שוק נחלת בנימין - אמנות ומלאכה",
-    "date": "2026-02-04",
-    "date_display": "ימי שלישי ושישי",
-    "location": "רחוב נחלת בנימין, תל אביב",
-    "city": "Tel Aviv",
-    "latitude": 32.0667,
-    "longitude": 34.77,
-    "event_type": "art",
-    "description": "שוק אמנות ומלאכה חיצוני חינם עם אמנים מקומיים. הופעות רחוב ומוצרים בעבודת יד.",
-    "is_free": true,
-    "source": "secrettelaviv.com"
-  },
-  {
-    "title": "שוק מחנה יהודה - כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ה 8:00-19:00, ו 8:00-15:00",
-    "location": "מחנה יהודה, ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.7847,
-    "longitude": 35.2125,
-    "event_type": "market",
-    "description": "השוק הפתוח המפורסם של ירושלים. כניסה חינם לדוכני אוכל, תבלינים ותרבות מקומית. חיי לילה בימי ה/ו.",
-    "is_free": true,
-    "source": "itraveljerusalem.com"
-  },
-  {
     "title": "שוק הפשפשים ביפו - כניסה חינם",
     "date": "2026-02-04",
     "date_display": "יומי חוץ משבת",
@@ -526,19 +383,6 @@
     "source": "timeout.com"
   },
   {
-    "title": "מוזיאון הנגב לאמנות - כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ה 10:00-16:00, ש 10:00-14:00",
-    "location": "רחוב העצמאות 60, העיר העתיקה באר שבע",
-    "city": "Beer Sheva",
-    "latitude": 31.243,
-    "longitude": 34.7913,
-    "event_type": "museum",
-    "description": "מוזיאון אמנות בבניין היסטורי מהתקופה העות'מאנית. כניסה חינם לתערוכות אמנות עכשווית וישראלית.",
-    "is_free": true,
-    "source": "tripadvisor.com"
-  },
-  {
     "title": "תל באר שבע - אתר מורשת עולמית",
     "date": "2026-02-04",
     "date_display": "יומי 8:00-17:00 (חורף), 8:00-18:00 (קיץ)",
@@ -550,19 +394,6 @@
     "description": "עיר תנ\"כית עתיקה ואתר אונסק\"ו. חקרו את הבאר העמוקה בישראל (69 מ') וחורבות עתיקות מ-4000 לפנה\"ס.",
     "is_free": true,
     "source": "parks.org.il"
-  },
-  {
-    "title": "מרכז המבקרים באר אברהם",
-    "date": "2026-02-04",
-    "date_display": "א-ה 9:00-17:00",
-    "location": "דרך חברון 1, באר שבע",
-    "city": "Beer Sheva",
-    "latitude": 31.2389,
-    "longitude": 34.7933,
-    "event_type": "museum",
-    "description": "באר היסטורית המיוחסת לאברהם אבינו. מרכז מבקרים עם תערוכות מולטימדיה על מורשת אברהם.",
-    "is_free": true,
-    "source": "dannythedigger.com"
   },
   {
     "title": "השוק הבדואי - שוק יום חמישי",
@@ -594,58 +425,6 @@
     "source": "bgu.ac.il"
   },
   {
-    "title": "שיעורי סלסה וריקוד חינם - אוניברסיטת בן גוריון",
-    "date": "2026-02-04",
-    "date_display": "בדקו לוח אירועים",
-    "location": "קמפוס אוניברסיטת בן גוריון",
-    "city": "Beer Sheva",
-    "latitude": 31.2614,
-    "longitude": 34.7995,
-    "event_type": "yoga",
-    "description": "שיעורי סלסה, אקרו-יוגה וריקוד חינם פתוחים לקהל באוניברסיטת בן גוריון.",
-    "is_free": true,
-    "source": "bgu.ac.il"
-  },
-  {
-    "title": "סיור בעיר העתיקה באר שבע",
-    "date": "2026-02-04",
-    "date_display": "עצמאי בכל זמן",
-    "location": "העיר העתיקה, באר שבע",
-    "city": "Beer Sheva",
-    "latitude": 31.243,
-    "longitude": 34.7913,
-    "event_type": "tour",
-    "description": "סיור עצמאי חינם בעיר העתיקה ההיסטורית של באר שבע מהתקופה העות'מאנית. בניינים משוחזרים ואדריכלות יפה.",
-    "is_free": true,
-    "source": "touristisrael.com"
-  },
-  {
-    "title": "מוזיאון לונדע לילדים",
-    "date": "2026-02-04",
-    "date_display": "בדקו באתר לשעות",
-    "location": "באר שבע",
-    "city": "Beer Sheva",
-    "latitude": 31.252,
-    "longitude": 34.789,
-    "event_type": "family",
-    "description": "מוזיאון ילדים אינטראקטיבי עם תערוכות מעשיות לכל הגילאים. ימי כניסה חינם מיוחדים בחגים.",
-    "is_free": true,
-    "source": "tripadvisor.com"
-  },
-  {
-    "title": "מוזיאון חיל האוויר - סיורים מודרכים חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ה 8:00-17:00",
-    "location": "בסיס חצרים, ליד באר שבע",
-    "city": "Beer Sheva",
-    "latitude": 31.2333,
-    "longitude": 34.6667,
-    "event_type": "museum",
-    "description": "סיורים מודרכים חינם על ידי חיילי צה\"ל. אוסף גדול של מטוסים, מסוקים ותותחי נ\"מ. התקשרו מראש לתיאום.",
-    "is_free": true,
-    "source": "touristisrael.com"
-  },
-  {
     "title": "פארק נחל באר שבע - חינם",
     "date": "2026-02-04",
     "date_display": "פתוח 24/7",
@@ -670,19 +449,6 @@
     "description": "חגיגה שנתית של תיאטרון אלטרנטיבי, מוזיקה והופעות רחוב. אירועי חוצות רבים בחינם.",
     "is_free": true,
     "source": "anglo-list.com"
-  },
-  {
-    "title": "101 חוויות חינם - אילת",
-    "date": "2026-02-04",
-    "date_display": "נובמבר 2025 - מרץ 2026",
-    "location": "מיקומים שונים, אילת",
-    "city": "Eilat",
-    "latitude": 29.5577,
-    "longitude": 34.9519,
-    "event_type": "festival",
-    "description": "תכנית 101 חוויות חינם של עיריית אילת כולל יוגה, טיולים, זומבה, שייט, צלילה, סדנאות תיפוף ועוד. הרשמה באתר התיירות.",
-    "is_free": true,
-    "source": "eilat.city"
   },
   {
     "title": "פארק הצפרות אילת - כניסה חינם",
@@ -779,32 +545,6 @@
     "source": "eilat.city"
   },
   {
-    "title": "יוגה חינם בחוף אילת",
-    "date": "2026-02-04",
-    "date_display": "חלק מ-101 חוויות חינם",
-    "location": "חוף אילת",
-    "city": "Eilat",
-    "latitude": 29.55,
-    "longitude": 34.9519,
-    "event_type": "yoga",
-    "description": "שיעורי יוגה חינם בחוף אילת כחלק מתכנית 101 חוויות חינם. שיעורי זריחה ושקיעה.",
-    "is_free": true,
-    "source": "eilat.city"
-  },
-  {
-    "title": "פילאטיס חינם בשקיעה - אילת",
-    "date": "2026-02-04",
-    "date_display": "חלק מ-101 חוויות חינם",
-    "location": "טיילת אילת",
-    "city": "Eilat",
-    "latitude": 29.552,
-    "longitude": 34.95,
-    "event_type": "yoga",
-    "description": "שיעורי פילאטיס בשקיעה בחינם בטיילת אילת. חלק מתכנית 101 חוויות החורף.",
-    "is_free": true,
-    "source": "eilat.city"
-  },
-  {
     "title": "טיולים בהרי אילת - חינם",
     "date": "2026-02-04",
     "date_display": "פתוח יומי, שעות אור יום",
@@ -831,19 +571,6 @@
     "source": "eilat.city"
   },
   {
-    "title": "מופעי החלקה חינם באייס מול",
-    "date": "2026-02-04",
-    "date_display": "ערבי קיץ - בדקו לוח",
-    "location": "אייס מול, אילת",
-    "city": "Eilat",
-    "latitude": 29.555,
-    "longitude": 34.958,
-    "event_type": "family",
-    "description": "מופעי החלקה על קרח חינם באייס מול בערבי קיץ חמים. 150 חנויות פטורות ממע\"מ לסיור.",
-    "is_free": true,
-    "source": "icemalleilat.co.il"
-  },
-  {
     "title": "סדנת סודות נדידת הציפורים",
     "date": "2026-03-15",
     "date_display": "עונת נדידת האביב",
@@ -855,19 +582,6 @@
     "description": "סדנה חינוכית חינם על נדידת ציפורים בהנחיית אורניתולוגים מקצועיים. ראו ציפורים מקרוב בתחנת המחקר.",
     "is_free": true,
     "source": "eilatbirds.com"
-  },
-  {
-    "title": "טיול זריחה בהר צפחות - אילת",
-    "date": "2026-02-04",
-    "date_display": "שעות בוקר מוקדמות",
-    "location": "הר צפחות, אילת",
-    "city": "Eilat",
-    "latitude": 29.57,
-    "longitude": 34.94,
-    "event_type": "tour",
-    "description": "טיול זריחה מודרך חינם כחלק מתכנית 'אילת מתעוררת'. נופים מרהיבים של ארבע מדינות מהפסגה.",
-    "is_free": true,
-    "source": "eilat.city"
   },
   {
     "title": "המזרקה המוסיקלית - מופע חינם",
@@ -1026,19 +740,6 @@
     "source": "israel21c.org"
   },
   {
-    "title": "מוזיאוני חיפה - ימי כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "בדקו אתר לימים מיוחדים",
-    "location": "מוזיאוני חיפה, חיפה",
-    "city": "Haifa",
-    "latitude": 32.8191,
-    "longitude": 34.9983,
-    "event_type": "museum",
-    "description": "שישה מוזיאונים במסגרת אחת: מוזיאון חיפה לאמנות, המוזיאון הימי, מוזיאון טיקוטין לאמנות יפנית, מדעטק ועוד. ימי כניסה חינם מיוחדים.",
-    "is_free": true,
-    "source": "hms.org.il"
-  },
-  {
     "title": "סיור מודרך חינם בגני הבהאיים",
     "date": "2026-02-04",
     "date_display": "יומי בשעות קבועות",
@@ -1063,45 +764,6 @@
     "description": "פסטיבל חינם חוגג חנוכה, חג המולד ורמדאן יחד. אירועי תרבות, מוזיקה ואוכל במושבה הגרמנית וואדי ניסנאס.",
     "is_free": true,
     "source": "haifa.muni.il"
-  },
-  {
-    "title": "מוזיאון טיקוטין לאמנות יפנית",
-    "date": "2026-02-04",
-    "date_display": "א-ה 10:00-16:00, ש 10:00-15:00",
-    "location": "שדרות הנשיא 89, חיפה",
-    "city": "Haifa",
-    "latitude": 32.815,
-    "longitude": 34.99,
-    "event_type": "museum",
-    "description": "המוזיאון היחיד לאמנות יפנית במזרח התיכון. ימי כניסה חינם מיוחדים - בדקו באתר.",
-    "is_free": true,
-    "source": "hms.org.il"
-  },
-  {
-    "title": "מרכז מארק שאגל לאמנות - חיפה",
-    "date": "2026-02-04",
-    "date_display": "בדקו באתר לשעות",
-    "location": "ואדי ניסנאס, חיפה",
-    "city": "Haifa",
-    "latitude": 32.8167,
-    "longitude": 35.0,
-    "event_type": "art",
-    "description": "גלריה חינם לאמנות עכשווית בלב ואדי ניסנאס. תערוכות מתחלפות של אמנים ישראלים וערבים.",
-    "is_free": true,
-    "source": "israel21c.org"
-  },
-  {
-    "title": "פלורנטין - סיור אמנות רחוב חינם",
-    "date": "2026-02-04",
-    "date_display": "עצמאי בכל זמן",
-    "location": "שכונת פלורנטין, תל אביב",
-    "city": "Tel Aviv",
-    "latitude": 32.0561,
-    "longitude": 34.7683,
-    "event_type": "art",
-    "description": "סיור עצמאי חינם באמנות רחוב וגרפיטי בשכונת פלורנטין הצבעונית. גלריות, בתי קפה ואווירה בוהמיינית.",
-    "is_free": true,
-    "source": "secrettelaviv.com"
   },
   {
     "title": "מרתון תל אביב 2026",
@@ -1143,19 +805,6 @@
     "source": "tamuseum.org.il"
   },
   {
-    "title": "כיכר דיזנגוף - אירועי חוצות",
-    "date": "2026-02-04",
-    "date_display": "אירועים שונים לאורך השנה",
-    "location": "כיכר דיזנגוף, תל אביב",
-    "city": "Tel Aviv",
-    "latitude": 32.0775,
-    "longitude": 34.7747,
-    "event_type": "festival",
-    "description": "מרכז התרבות והבילוי של תל אביב. אירועי חוצות חינם, הופעות רחוב ומפגשים חברתיים.",
-    "is_free": true,
-    "source": "tel-aviv.gov.il"
-  },
-  {
     "title": "נמל תל אביב - טיילת וחופים",
     "date": "2026-02-04",
     "date_display": "פתוח 24/7",
@@ -1183,45 +832,6 @@
     "description": "סיור מודרך חינם בעיר הלבנה - אתר מורשת עולמית של אונסק\"ו. 4,000 מבנים בסגנון באוהאוס. מטעם אגודת תיירות תל אביב.",
     "is_free": true,
     "source": "tel-aviv.gov.il"
-  },
-  {
-    "title": "ביתן הלנה רובינשטיין לאמנות עכשווית",
-    "date": "2026-02-04",
-    "date_display": "א-ד/ש 10:00-18:00, ה 10:00-21:00",
-    "location": "שדרות שאול המלך 6, תל אביב",
-    "city": "Tel Aviv",
-    "latitude": 32.078,
-    "longitude": 34.785,
-    "event_type": "art",
-    "description": "כניסה חינם לביתן אמנות עכשווית. סניף של מוזיאון תל אביב לאמנות המציג תערוכות מתחלפות.",
-    "is_free": true,
-    "source": "tamuseum.org.il"
-  },
-  {
-    "title": "יוגה לעם - שיעורים בתרומה",
-    "date": "2026-02-04",
-    "date_display": "מספר יציאות שבועיות",
-    "location": "פארק הירקון / גן מאיר, תל אביב",
-    "city": "Tel Aviv",
-    "latitude": 32.0997,
-    "longitude": 34.8186,
-    "event_type": "yoga",
-    "description": "שיעורי יוגה בתרומה - שלמו כפי יכולתכם. יוגה לכל הרמות בפארקים ברחבי תל אביב.",
-    "is_free": true,
-    "source": "yogatothepeople.com"
-  },
-  {
-    "title": "יוגת צחוק תל אביב - חינם",
-    "date": "2026-02-04",
-    "date_display": "מפגשים שבועיים",
-    "location": "גן מאיר, תל אביב",
-    "city": "Tel Aviv",
-    "latitude": 32.0711,
-    "longitude": 34.7747,
-    "event_type": "yoga",
-    "description": "מפגשי יוגת צחוק חינם בגן מאיר. שילוב של תרגילי נשימה, צחוק ותנועה לשיפור מצב הרוח.",
-    "is_free": true,
-    "source": "laughteryoga.org"
   },
   {
     "title": "ספורטק - מתקני כושר חוצות חינם",
@@ -1276,19 +886,6 @@
     "source": "tel-aviv.gov.il"
   },
   {
-    "title": "יום פתוח אוניברסיטת תל אביב",
-    "date": "2026-02-05",
-    "date_display": "5 בפברואר 2026",
-    "location": "קמפוס אוניברסיטת תל אביב",
-    "city": "Tel Aviv",
-    "latitude": 32.1133,
-    "longitude": 34.8044,
-    "event_type": "lecture",
-    "description": "יום פתוח חינם לתואר ראשון ושני. סיורים בקמפוס, הרצאות פתוחות והיכרות עם הפקולטות.",
-    "is_free": true,
-    "source": "tau.ac.il"
-  },
-  {
     "title": "Walkative סיור חינם ביפו העתיקה",
     "date": "2026-02-04",
     "date_display": "סיורים יומיים",
@@ -1341,32 +938,6 @@
     "source": "tel-aviv.gov.il"
   },
   {
-    "title": "מרכז סוזן דלל - הופעות חוצות חינם",
-    "date": "2026-02-04",
-    "date_display": "בדקו לוח אירועים באתר",
-    "location": "מרכז סוזן דלל, נווה צדק",
-    "city": "Tel Aviv",
-    "latitude": 32.0589,
-    "longitude": 34.7656,
-    "event_type": "festival",
-    "description": "אירועי מחול ותיאטרון חוצות חינם במרכז סוזן דלל. בית הבמה לאמנויות בישראל.",
-    "is_free": true,
-    "source": "suzannedellal.org.il"
-  },
-  {
-    "title": "בית התפוצות - ימי כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "ימים מיוחדים - בדקו באתר",
-    "location": "קמפוס אוניברסיטת תל אביב",
-    "city": "Tel Aviv",
-    "latitude": 32.1133,
-    "longitude": 34.8044,
-    "event_type": "museum",
-    "description": "מוזיאון העם היהודי - ימי כניסה חינם בחגים ואירועים מיוחדים. תערוכות על ההיסטוריה והתרבות היהודית.",
-    "is_free": true,
-    "source": "anumuseum.org.il"
-  },
-  {
     "title": "לילה לבן תל אביב-יפו",
     "date": "2026-06-25",
     "date_display": "יוני 2026 (תאריך משוער)",
@@ -1394,19 +965,6 @@
     "description": "שוק איכרים אורגני שבועי בחינם. תוצרת מקומית טרייה, מאפים, גבינות, פירות וירקות אורגניים.",
     "is_free": true,
     "source": "namal.co.il"
-  },
-  {
-    "title": "מערת אליהו הנביא - כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ה 8:00-18:00, ו 8:00-13:00",
-    "location": "רגלי הר הכרמל, חיפה",
-    "city": "Haifa",
-    "latitude": 32.8358,
-    "longitude": 34.9583,
-    "event_type": "tour",
-    "description": "מערה קדושה ליהודים, מוסלמים, נוצרים ודרוזים. אתר עלייה לרגל עתיק שבו שהה אליהו הנביא. כניסה חינם.",
-    "is_free": true,
-    "source": "touristisrael.com"
   },
   {
     "title": "רחוב מסדה - אמנות רחוב חינם",
@@ -1461,32 +1019,6 @@
     "source": "parks.org.il"
   },
   {
-    "title": "מרכז המבקרים פולק - הטכניון",
-    "date": "2026-02-04",
-    "date_display": "א-ה בתיאום מראש (72 שעות)",
-    "location": "הטכניון, חיפה",
-    "city": "Haifa",
-    "latitude": 32.7768,
-    "longitude": 35.0237,
-    "event_type": "lecture",
-    "description": "סיור מודרך חינם בן 50 דקות בקמפוס הטכניון. סיפור החדשנות הישראלית ותערוכות טכנולוגיה. הזמנה מראש.",
-    "is_free": true,
-    "source": "technion.ac.il"
-  },
-  {
-    "title": "גלריית פירמידה - ואדי סאליב",
-    "date": "2026-02-04",
-    "date_display": "א-ה 10:00-17:00",
-    "location": "ואדי סאליב, חיפה",
-    "city": "Haifa",
-    "latitude": 32.815,
-    "longitude": 34.997,
-    "event_type": "art",
-    "description": "גלריית אמנות עכשווית חינם בשכונת ואדי סאליב ההיסטורית. תערוכות מתחלפות של אמנים מקומיים.",
-    "is_free": true,
-    "source": "visit-haifa.org"
-  },
-  {
     "title": "שבילי המדרגות של חיפה - סיורים צבעוניים",
     "date": "2026-02-04",
     "date_display": "פתוח 24/7",
@@ -1498,19 +1030,6 @@
     "description": "ארבעה מסלולים צבעוניים מסומנים העוברים במדרגות האבן של חיפה. מהעיר התחתית דרך גני הבהאיים למרכז הכרמל. חינם.",
     "is_free": true,
     "source": "visit-haifa.org"
-  },
-  {
-    "title": "מוזיאון הרכבת חיפה - כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ה 9:00-16:00",
-    "location": "תחנת הרכבת ההיסטורית, חיפה מזרח",
-    "city": "Haifa",
-    "latitude": 32.81,
-    "longitude": 35.015,
-    "event_type": "museum",
-    "description": "מוזיאון חינם בתחנת הרכבת ההיסטורית. קטרים, קרונות ותצוגות על היסטוריית הרכבת בארץ ישראל.",
-    "is_free": true,
-    "source": "rail.co.il"
   },
   {
     "title": "תל שקמונה - אתר ארכיאולוגי חינם",
@@ -1548,19 +1067,6 @@
     "longitude": 34.96,
     "event_type": "family",
     "description": "פארק חוף ים עם שבילי אופניים וסקייטפארק חינם. מושלם למשפחות עם ילדים. מגרשי ספורט ואזורי פיקניק.",
-    "is_free": true,
-    "source": "visit-haifa.org"
-  },
-  {
-    "title": "שוק תלפיות - השוק החיפאי",
-    "date": "2026-02-04",
-    "date_display": "א-ו בוקר עד אחה\"צ",
-    "location": "שוק תלפיות, חיפה",
-    "city": "Haifa",
-    "latitude": 32.81,
-    "longitude": 35.0,
-    "event_type": "market",
-    "description": "השוק ההיסטורי של חיפה. דוכני מזון, תבלינים ופריטים מקומיים. כניסה חינם לאווירה חיפאית אותנטית.",
     "is_free": true,
     "source": "visit-haifa.org"
   },
@@ -1610,45 +1116,6 @@
     "source": "visit-haifa.org"
   },
   {
-    "title": "המוזיאון הארכיאולוגי רוקפלר - כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ש 10:00-15:00",
-    "location": "רחוב סולטן סולימאן, מזרח ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.7836,
-    "longitude": 35.2358,
-    "event_type": "museum",
-    "description": "מוזיאון ארכיאולוגי חינם במבנה מנדטורי מרהיב. פסיפסים רומיים, כלי אוסואריום ומחצרות עם עתיקות. שקט ומרגיע.",
-    "is_free": true,
-    "source": "imj.org.il"
-  },
-  {
-    "title": "בית טיכו - גלריית אמנות חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ה 10:00-17:00, ו 10:00-14:00",
-    "location": "רחוב הרב קוק 9, ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.781,
-    "longitude": 35.22,
-    "event_type": "art",
-    "description": "גלריה חינם בביתם ההיסטורי של ד\"ר אברהם ואנה טיכו. ציורי נופי ירושלים, אוסף חנוכיות ותערוכות עכשוויות.",
-    "is_free": true,
-    "source": "imj.org.il"
-  },
-  {
-    "title": "בית הנסן - מרכז עיצוב וטכנולוגיה",
-    "date": "2026-02-04",
-    "date_display": "א-ה 10:00-22:00, ו-ש 10:00-16:00",
-    "location": "רחוב גדרה 14, ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.7672,
-    "longitude": 35.2139,
-    "event_type": "art",
-    "description": "מרכז עיצוב, מדיה וטכנולוגיה בבניין היסטורי מהמאה ה-19. תערוכות חינם, סדנאות ואירועי תרבות.",
-    "is_free": true,
-    "source": "hansen.co.il"
-  },
-  {
     "title": "תצפית הר הזיתים - חינם",
     "date": "2026-02-04",
     "date_display": "פתוח 24/7",
@@ -1675,19 +1142,6 @@
     "source": "custodia.org"
   },
   {
-    "title": "טיילת החומות - סיור עצמאי",
-    "date": "2026-02-04",
-    "date_display": "א-ה 9:00-16:00, ו 9:00-14:00",
-    "location": "שער יפו, העיר העתיקה, ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.7767,
-    "longitude": 35.2279,
-    "event_type": "tour",
-    "description": "הליכה על חומות העיר העתיקה עם נופים מרהיבים. שני מסלולים: צפוני ודרומי. כרטיס בתשלום סמלי.",
-    "is_free": true,
-    "source": "itraveljerusalem.com"
-  },
-  {
     "title": "ויה דולורוזה - דרך הייסורים",
     "date": "2026-02-04",
     "date_display": "פתוח 24/7",
@@ -1701,32 +1155,6 @@
     "source": "tripadvisor.com"
   },
   {
-    "title": "תצפית טחנת הרוח מונטיפיורי",
-    "date": "2026-02-04",
-    "date_display": "א-ה 9:00-16:30, ו 9:00-13:00",
-    "location": "ימין משה, ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.7717,
-    "longitude": 35.2239,
-    "event_type": "museum",
-    "description": "טחנת רוח היסטורית עם תצוגה חינם על סיפורו של משה מונטיפיורי ושכונת ימין משה. נוף מרהיב לחומות העיר.",
-    "is_free": true,
-    "source": "itraveljerusalem.com"
-  },
-  {
-    "title": "מצפה הציפורים ירושלים - כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ה 9:00-16:00",
-    "location": "ליד הכנסת ובית המשפט העליון, ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.7805,
-    "longitude": 35.205,
-    "event_type": "tour",
-    "description": "מצפה ציפורים עירוני חינם בלב ירושלים. תצפית, טבעות ופעילויות חינוכיות. נקודת ציפרות ייחודית.",
-    "is_free": true,
-    "source": "jbo.org.il"
-  },
-  {
     "title": "הר ציון - אתרים חינם",
     "date": "2026-02-04",
     "date_display": "פתוח יומי",
@@ -1738,45 +1166,6 @@
     "description": "קבר דוד המלך, עליית חדר האחרונה וכנסיית הדורמיציון. כניסה חינם לכל האתרים בהר ציון.",
     "is_free": true,
     "source": "tripadvisor.com"
-  },
-  {
-    "title": "שכונת ימין משה ומשכנות שאננים - סיור חינם",
-    "date": "2026-02-04",
-    "date_display": "עצמאי בכל זמן",
-    "location": "ימין משה, ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.7717,
-    "longitude": 35.2239,
-    "event_type": "tour",
-    "description": "סיור עצמאי חינם בשכונות הציוריות ביותר בירושלים. בתי אבן, סמטאות מקסימות ונופים לעיר העתיקה.",
-    "is_free": true,
-    "source": "itraveljerusalem.com"
-  },
-  {
-    "title": "גבעת התחמושת - כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ה 9:00-17:00, ו 9:00-13:00",
-    "location": "גבעת התחמושת, ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.7929,
-    "longitude": 35.2314,
-    "event_type": "museum",
-    "description": "אתר הנצחה לקרב על ירושלים ב-1967. התערוכה המרכזית חינם. עמדות לחימה משוחזרות, סרטון ותצוגה מרגשת.",
-    "is_free": true,
-    "source": "g-h.org.il"
-  },
-  {
-    "title": "בית האמנים ירושלים - גלריה חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ה 10:00-17:00, ש 11:00-14:00",
-    "location": "רחוב שמואל הנגיד 12, ירושלים",
-    "city": "Jerusalem",
-    "latitude": 31.78,
-    "longitude": 35.219,
-    "event_type": "art",
-    "description": "גלריה חינם לאמנות עכשווית ישראלית. תערוכות מתחלפות, ערבי אמנים והרצאות.",
-    "is_free": true,
-    "source": "art.org.il"
   },
   {
     "title": "Walkative סיור חינם - ירושלים",
@@ -1883,19 +1272,6 @@
     "source": "timeout.com"
   },
   {
-    "title": "מופע מים אור ולייזר - טבריה חינם",
-    "date": "2026-02-04",
-    "date_display": "שלושה מופעים בערב 19:00-21:00",
-    "location": "דרום טיילת יגאל אלון, טבריה",
-    "city": "Tiberias",
-    "latitude": 32.79,
-    "longitude": 35.53,
-    "event_type": "festival",
-    "description": "מופע מים, אור ולייזר מרהיב וחינם. מסכי ענק, עשרות מזרקות רוקדות, לייזרים וזיקוקים. שלוש פעמים בערב.",
-    "is_free": true,
-    "source": "eilat.city"
-  },
-  {
     "title": "קבר הרמב\"ם - כניסה חינם",
     "date": "2026-02-04",
     "date_display": "פתוח יומי",
@@ -1931,19 +1307,6 @@
     "longitude": 35.528,
     "event_type": "museum",
     "description": "פארק ארכיאולוגי חינם עם שער רומי, גשר ותיאטרון בן 7,000 מושבים. שרידים מימי הרומאים בגבעת ברניקי.",
-    "is_free": true,
-    "source": "israel21c.org"
-  },
-  {
-    "title": "שוק הדגים טבריה - סיור חינם",
-    "date": "2026-02-04",
-    "date_display": "שעות בוקר מוקדמות",
-    "location": "נמל הדייגים, טבריה",
-    "city": "Tiberias",
-    "latitude": 32.793,
-    "longitude": 35.532,
-    "event_type": "market",
-    "description": "שוק הדגים הטרי של טבריה. צפו בסירות הדייגים חוזרות עם הדגים הטריים מהכנרת. חינם לסייר.",
     "is_free": true,
     "source": "israel21c.org"
   },
@@ -2013,19 +1376,6 @@
     "source": "tripadvisor.com"
   },
   {
-    "title": "רובע האמנים צפת - גלריות חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ה 10:00-18:00, ו 10:00-14:00",
-    "location": "רובע האמנים, העיר העתיקה, צפת",
-    "city": "Safed",
-    "latitude": 32.9646,
-    "longitude": 35.4967,
-    "event_type": "art",
-    "description": "יותר מ-50 גלריות אמנות חינם בסמטאות עתיקות. ציור, פיסול, תכשיטים, יודאיקה וזכוכית. מהרובע האמנותי הייחודי בישראל.",
-    "is_free": true,
-    "source": "safed.co.il"
-  },
-  {
     "title": "העיר העתיקה צפת - סיור חינם",
     "date": "2026-02-04",
     "date_display": "פתוח 24/7",
@@ -2037,19 +1387,6 @@
     "description": "סיור עצמאי חינם בסמטאות האבן העתיקות של צפת. בתי כנסת מהמאה ה-16, נופים מרהיבים והיסטוריה קבלית.",
     "is_free": true,
     "source": "touristisrael.com"
-  },
-  {
-    "title": "בתי כנסת עתיקים בצפת - כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ה בשעות הפתיחה",
-    "location": "העיר העתיקה, צפת",
-    "city": "Safed",
-    "latitude": 32.965,
-    "longitude": 35.4975,
-    "event_type": "tour",
-    "description": "כניסה חינם לבתי כנסת עתיקים: האר\"י הספרדי, האר\"י האשכנזי, בית הכנסת של יוסף קארו ועוד. אדריכלות ייחודית.",
-    "is_free": true,
-    "source": "safed.co.il"
   },
   {
     "title": "כנסיית הבשורה - נצרת חינם",
@@ -2076,19 +1413,6 @@
     "description": "סיור הליכה חינם בעיר העתיקה עם מקומיים. כנסיית הבשורה, באר מרים, השוק, המסגד הלבן. מודל תשר.",
     "is_free": true,
     "source": "abrahamtours.com"
-  },
-  {
-    "title": "השוק של נצרת - כניסה חינם",
-    "date": "2026-02-04",
-    "date_display": "א-ש בוקר עד אחה\"צ",
-    "location": "השוק, העיר העתיקה, נצרת",
-    "city": "Nazareth",
-    "latitude": 32.7025,
-    "longitude": 35.2985,
-    "event_type": "market",
-    "description": "השוק הערבי ההיסטורי של נצרת. דוכני תבלינים, מאפים, בשר ומזכרות. אווירה מזרחית אותנטית. כניסה חינם.",
-    "is_free": true,
-    "source": "tripadvisor.com"
   },
   {
     "title": "באר מרים - כניסה חינם",
@@ -2167,19 +1491,6 @@
     "description": "נמל דייגים פעיל ועתיק. צפו בסירות דייגים, אכלו דגים טריים והתהלכו בין הגלים. כניסה חינם.",
     "is_free": true,
     "source": "touristisrael.com"
-  },
-  {
-    "title": "יום פתוח לתואר ראשון ושני - אוניברסיטת תל אביב",
-    "date": "2026-02-05",
-    "date_display": "5 בפברואר 2026, 11:00-18:00",
-    "location": "אוניברסיטת תל אביב, רמת אביב",
-    "city": "Tel Aviv",
-    "latitude": 32.1133,
-    "longitude": 34.8045,
-    "event_type": "lecture",
-    "description": "יום פתוח חינמי להכרות עם האוניברסיטה ומחלקות הלימוד השונות. הזדמנות לפגוש מרצים ולקבל מידע על תוכניות הלימוד.",
-    "is_free": true,
-    "source": "https://www.tau.ac.il/main-event"
   },
   {
     "title": "גלריה לאמנות מיכל קיקוין - כניסה חופשית",
@@ -5122,5 +4433,122 @@
     "description": "תפילות חגיגיות ליום העצמאות בכותל המערבי",
     "is_free": true,
     "source": "https://www.itraveljerusalem.com/article/independence-day-in-jerusalem"
+  },
+  {
+    "title": "סיור חינם בגנים הבהאיים וטיילת לואי",
+    "date": "2026-03-12",
+    "date_display": "כל רביעי 14:00",
+    "location": "גנים הבהאיים, שדרות הנשיא 119, מרכז הכרמל",
+    "city": "Haifa",
+    "latitude": 32.8154,
+    "longitude": 34.989,
+    "event_type": "tour",
+    "description": "סיור רגלי חינם באתרים היפים של חיפה הרב-תרבותית. הגנים הבהאיים וסיפור הדת הייחודית, טיילת לואי עם נוף מדהים וסיפורים מעניינים.",
+    "is_free": true,
+    "source": "https://www.tripadvisor.com/Attraction_Review-g293982-d11044642-Reviews-Free_Tours_Haifa-Haifa_Haifa_District.html"
+  },
+  {
+    "title": "הדרכות וירטואליות במוזיאוני חיפה",
+    "date": "2026-03-08",
+    "date_display": "זמינות קבועות באינטרנט",
+    "location": "מוזיאוני חיפה - אתר האינטרנט",
+    "city": "Haifa",
+    "latitude": 32.794,
+    "longitude": 34.9896,
+    "event_type": "museum",
+    "description": "סיורים וירטואליים חינם בתערוכות, הרצאות טעימות, סדנאות יצירה ותכנים תרבותיים מקוונים למשפחות.",
+    "is_free": true,
+    "source": "https://www.ias.co.il/סצנת-האוכל/מוזיאוני-חיפה-איתכם-בממד/"
+  },
+  {
+    "title": "גלריית ברקת בעיר העתיקה",
+    "date": "2026-03-15",
+    "date_display": "ראשון-חמישי 9:00-17:00",
+    "location": "גלריית ברקת, העיר העתיקה ירושלים",
+    "city": "Jerusalem",
+    "latitude": 31.7767,
+    "longitude": 35.2345,
+    "event_type": "museum",
+    "description": "גלריה בניהול משפחתי בדור החמישי הממוקמת בירושלים מעל 125 שנה, המתמחה באמנות עתיקה איכותית ברמת מוזיאונים.",
+    "is_free": true,
+    "source": "https://www.tripadvisor.com/Attractions-g293983-Activities-zft11292-Jerusalem_Jerusalem_District.html"
+  },
+  {
+    "title": "מוזיאון רוקפלר",
+    "date": "2026-03-20",
+    "date_display": "ראשון-חמישי 10:00-15:00",
+    "location": "מוזיאון רוקפלר, סולטן סולימאן 27, ירושלים",
+    "city": "Jerusalem",
+    "latitude": 31.7831,
+    "longitude": 35.2346,
+    "event_type": "museum",
+    "description": "מוזיאון ארכיאולוגי חינם הכולל ממצאים מהתקופות העתיקות של ארץ ישראל, שוכן בבניין מנדטורי מרהיב משנות השלושים.",
+    "is_free": true,
+    "source": "https://www.tripadvisor.com/Attractions-g293983-Activities-zft11292-Jerusalem_Jerusalem_District.html"
+  },
+  {
+    "title": "ביקור בעיר העתיקה של יפו",
+    "date": "2026-03-25",
+    "date_display": "כל יום, בהתאם למזג האוויר",
+    "location": "יפו העתיקה, תל אביב-יפו",
+    "city": "Tel Aviv",
+    "latitude": 32.0535,
+    "longitude": 34.7518,
+    "event_type": "culture",
+    "description": "טיול חופשי בסמטאות יפו העתיקה, נמל עתיק עם חשיבות היסטורית מהתנ\"ך, גלריות אמנות ושוק הפשפשים.",
+    "is_free": true,
+    "source": "https://www.tripadvisor.com/Attractions-g293984-Activities-Tel_Aviv_Tel_Aviv_District.html"
+  },
+  {
+    "title": "ביקור בבית בו",
+    "date": "2026-03-10",
+    "date_display": "ראשון-חמישי 9:00-14:00",
+    "location": "בית בו, רחוב בו, תל אביב",
+    "city": "Tel Aviv",
+    "latitude": 32.0668,
+    "longitude": 34.7748,
+    "event_type": "museum",
+    "description": "בית המוזיאון של יוסף בו, אמן ומעצב גרפי ידוע, המציג את עבודותיו ותרומתו לתרבות הישראלית.",
+    "is_free": true,
+    "source": "https://www.tripadvisor.com/Attractions-g293984-Activities-Tel_Aviv_Tel_Aviv_District.html"
+  },
+  {
+    "title": "גן הגתשמני",
+    "date": "2026-03-16",
+    "date_display": "כל יום 8:00-12:00, 14:00-17:00",
+    "location": "גן הגתשמני, הר הזיתים, ירושלים",
+    "city": "Jerusalem",
+    "latitude": 31.7749,
+    "longitude": 35.2426,
+    "event_type": "nature",
+    "description": "גן היסטורי בתחתית הר הזיתים, מקום קדוש לנצרות עם עצי זית עתיקים ונוף מרהיב של העיר העתיקה.",
+    "is_free": true,
+    "source": "https://www.tripadvisor.com/Attractions-g293983-Activities-zft11292-Jerusalem_Jerusalem_District.html"
+  },
+  {
+    "title": "מוזיאון העיר חיפה - תערוכות קבע",
+    "date": "2026-03-05",
+    "date_display": "ראשון-חמישי 10:00-13:00, 16:00-19:00",
+    "location": "מוזיאון העיר, רחוב פלמח 11, חיפה",
+    "city": "Haifa",
+    "latitude": 32.794,
+    "longitude": 34.9896,
+    "event_type": "museum",
+    "description": "תערוכות קבועות על תולדות חיפה, התרבות החומרית של יהודי מרוקו, אמנות הטמפלרים ויונקים ימיים באזורנו.",
+    "is_free": true,
+    "source": "https://www.hcm.org.il/לוח_אירועים/1772488800"
+  },
+  {
+    "title": "סיורים עצמיים בצפת העתיקה",
+    "date": "2026-03-07",
+    "date_display": "כל יום לפי בחירה אישית",
+    "location": "צפת העתיקה, רובע האמנים וברט הקבלה",
+    "city": "Safed",
+    "latitude": 32.9644,
+    "longitude": 35.4952,
+    "event_type": "tour",
+    "description": "סיורים עצמיים חינם באתרים היסטוריים, דתיים ותרבותיים של צפת, כולל בתי כנסת עתיקים ורובע האמנים.",
+    "is_free": true,
+    "source": "https://www.safed-home.com/selfguidedtoursofsafed.html"
   }
 ]
