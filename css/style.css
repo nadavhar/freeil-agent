@@ -131,7 +131,7 @@ header h1 span { color: #00d4aa; }
 }
 @media (max-width: 400px) { .user-name-short { display: none; } }
 .user-dropdown {
-    display: none; position: absolute; left: 0; top: calc(100% + 8px);
+    display: none; position: absolute; right: 0; left: auto; top: calc(100% + 8px);
     background: white; border: 1px solid #e2e8f0; border-radius: 14px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.14); overflow: hidden; min-width: 180px; z-index: 2000;
 }
