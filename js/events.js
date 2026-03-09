@@ -156,7 +156,7 @@ function renderEvents(events) {
             // ── Private card layout ──
             if (ev.thumbnail) card.classList.add('has-thumb');
             card.innerHTML = `
-                ${ev.thumbnail ? `<div class="card-img-wrap"><img class="card-thumb" src="${ev.thumbnail}" alt="${escHtml(ev.title || '')}" loading="lazy" onerror="this.style.display='none'"><span class="badge-free-img">${t('free')}</span><div class="card-top-left"><button class="favorite-btn fav-overlay${isFavorite ? ' active' : ''}" data-event-id="${eventId}">${isFavorite ? heartFilled : heartOutline}</button><span class="participants-badge pcount-overlay" id="pcount-${ev.id}">${usersIcon} ${ev.registrations_count || 0}</span></div></div>` : `<div class="card-top-left"><button class="favorite-btn fav-overlay${isFavorite ? ' active' : ''}" data-event-id="${eventId}">${isFavorite ? heartFilled : heartOutline}</button><span class="participants-badge pcount-overlay" id="pcount-${ev.id}">${usersIcon} ${ev.registrations_count || 0}</span></div>`}
+                ${ev.thumbnail ? `<div class="card-img-wrap"><img class="card-thumb" src="${ev.thumbnail}" alt="${escHtml(ev.title || '')}" loading="lazy" onerror="this.style.display='none'"><span class="badge-free-img">${t('free')}</span></div>` : ''}
                 <div class="card-body">
                     <div class="card-tags">${typeTag}${cityTag}</div>
                     <h3 class="private-card-title">${escHtml(ev.title || t('noTitle'))}</h3>
@@ -164,16 +164,16 @@ function renderEvents(events) {
                         <div class="meta-item">${calendarIcon}<span>${escHtml(privateDateStr)}</span></div>
                         <div class="meta-item location-meta">
                             ${locationIcon}<span>${escHtml(ev.location || '')}</span>
+                            ${hasAddress ? `<button class="navigate-inline" title="ניווט">${navigateIcon}</button>` : ''}
                         </div>
                     </div>
                     <div class="card-desc">${escHtml(ev.description || '')}</div>
                     <div class="card-footer private-footer">
-                        <div class="action-group">
-                            <button class="action-btn add-cal" title="הוספה ליומן">${calPlusIcon}</button>
-                            <button class="action-btn share" title="שתף">${shareIcon}</button>
-                            ${hasAddress ? `<button class="action-btn navigate" title="ניווט">${navigateIcon}</button>` : ''}
-                        </div>
+                        <span class="participants-badge" id="pcount-${ev.id}">${usersIcon} ${ev.registrations_count || 0}</span>
                         ${regBtn}
+                        <button class="action-btn add-cal" title="הוספה ליומן">${calPlusIcon}</button>
+                        <button class="action-btn share" title="שתף">${shareIcon}</button>
+                        <button class="favorite-btn fav-overlay${isFavorite ? ' active' : ''}" data-event-id="${eventId}">${isFavorite ? heartFilled : heartOutline}</button>
                     </div>
                 </div>
             `;
@@ -222,7 +222,7 @@ function renderEvents(events) {
                 e.stopPropagation();
                 addToGoogleCalendar(ev);
             });
-            card.querySelector('.action-btn.navigate')?.addEventListener('click', e => {
+            card.querySelector('.navigate-inline')?.addEventListener('click', e => {
                 e.stopPropagation();
                 const query = encodeURIComponent((ev.location || '') + (ev.city ? ' ' + ev.city : ''));
                 window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank', 'noopener');
