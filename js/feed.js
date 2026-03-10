@@ -247,23 +247,20 @@ function renderFeedSections() {
     if (feedComments.length) {
         feedEl.appendChild(feedSectionEl('🔔 פעילות אחרונה'));
         feedComments.forEach(c => {
-            const ev  = allFeedEvents.find(e => e.id === c.event_id);
+            const ev  = c._event;
             const el  = document.createElement('div');
             el.className = 'social-item social-item-clickable';
             el.innerHTML = `
                 <div class="social-icon comment-icon">💬</div>
                 <div class="social-content">
-                    <p><strong>${escHtml(c.user_name || 'אורח')}</strong> הגיב/ה על <strong>"${escHtml(c.user_events?.title || '')}"</strong></p>
+                    <p><strong>${escHtml(c.user_name || 'אורח')}</strong> הגיב/ה על <strong>"${escHtml(ev?.title || '')}"</strong></p>
                     <p class="social-comment-preview">${escHtml(c.body)}</p>
-                    <span class="social-time">${escHtml(formatTimeAgo(c.created_at))}${c.user_events?.city ? ' · ' + escHtml(getCityLabel(c.user_events.city)) : ''}</span>
+                    <span class="social-time">${escHtml(formatTimeAgo(c.created_at))}${ev?.city ? ' · ' + escHtml(getCityLabel(ev.city)) : ''}</span>
                 </div>`;
             el.addEventListener('click', () => {
-                const card = ev
-                    ? document.getElementById(`pcount-feed-${ev.id}`)?.closest('.event-card')
-                    : null;
+                const card = document.getElementById(`pcount-feed-${ev.id}`)?.closest('.event-card');
                 if (card) {
                     card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    // Small delay so scroll completes before opening comments
                     setTimeout(() => card.querySelector('.comment-toggle-btn')?.click(), 400);
                 }
             });
@@ -316,7 +313,7 @@ async function loadSocialFeed() {
     try {
         const [{ data: comments }, { data: events }] = await Promise.all([
             sb.from('event_comments')
-                .select('id, body, user_name, created_at, event_id, user_events(id, title, city)')
+                .select('id, body, user_name, created_at, event_id')
                 .order('created_at', { ascending: false })
                 .limit(20),   // fetch extra so we can filter to navigable ones
             sb.from('user_events')
@@ -327,12 +324,14 @@ async function loadSocialFeed() {
         ]);
 
         allFeedEvents = (events || []);
-        const loadedIds = new Set(allFeedEvents.map(e => e.id));
+        // Join comments client-side — no FK dependency in DB
+        const eventsById = new Map(allFeedEvents.map(e => [e.id, e]));
 
         // Only keep comments whose event card will be in the feed, max 3
         feedComments = (comments || [])
-            .filter(c => c.user_events && loadedIds.has(c.event_id))
-            .slice(0, 3);
+            .filter(c => eventsById.has(c.event_id))
+            .slice(0, 3)
+            .map(c => ({ ...c, _event: eventsById.get(c.event_id) }));
         allEvents     = allFeedEvents;  // so buildFilters uses community cities/types
 
         buildFilters();
