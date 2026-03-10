@@ -271,7 +271,11 @@ function applyFilter() {
         filtered = filtered.filter(e => matchesSearch(e, searchQuery));
     }
 
-    renderEvents(filtered);
+    if (activeTab === 'social') {
+        renderFeedFiltered(filtered);
+    } else {
+        renderEvents(filtered);
+    }
 }
 
 function resetAllFilters() {

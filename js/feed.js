@@ -229,9 +229,77 @@ function feedSectionEl(label) {
     return el;
 }
 
+// ── Render the unfiltered sectioned feed ──
+function renderFeedSections() {
+    const feedEl  = document.getElementById('social-feed');
+    const searches = JSON.parse(localStorage.getItem('freeil-searches') || '[]');
+    const scored   = allFeedEvents.map(ev => ({ ...ev, _score: feedRelevanceScore(ev, searches) }));
+    const recommended = scored.filter(e => e._score > 0).sort((a, b) => b._score - a._score);
+    const recent      = scored.filter(e => e._score === 0);
+
+    feedEl.innerHTML = '';
+
+    if (recommended.length) {
+        feedEl.appendChild(feedSectionEl('⭐ מומלץ עבורך'));
+        recommended.forEach(ev => feedEl.appendChild(buildFeedEventCard(ev, true)));
+    }
+
+    if (feedRegs.length) {
+        feedEl.appendChild(feedSectionEl('🔔 פעילות אחרונה'));
+        feedRegs.forEach(r => {
+            const el = document.createElement('div');
+            el.className = 'social-item';
+            el.innerHTML = `
+                <div class="social-icon reg-icon">👥</div>
+                <div class="social-content">
+                    <p>מישהו נרשם ל<strong>"${escHtml(r.user_events.title)}"</strong></p>
+                    <span class="social-time">${escHtml(formatTimeAgo(r.created_at))}${r.user_events.city ? ' · ' + escHtml(getCityLabel(r.user_events.city)) : ''}</span>
+                </div>`;
+            feedEl.appendChild(el);
+        });
+    }
+
+    if (recent.length) {
+        feedEl.appendChild(feedSectionEl('🆕 אירועים חדשים'));
+        recent.forEach(ev => feedEl.appendChild(buildFeedEventCard(ev, false)));
+    }
+
+    if (!feedEl.children.length) {
+        feedEl.innerHTML = '<p class="social-empty">אין פעילות עדיין</p>';
+    }
+
+    const liveCounter = document.getElementById('live-counter');
+    liveCounter.textContent = t('statsFormat').replace('{count}', allFeedEvents.length);
+}
+
+// ── Render filtered community events (called by applyFilter when on social tab) ──
+function renderFeedFiltered(events) {
+    const feedEl      = document.getElementById('social-feed');
+    const liveCounter = document.getElementById('live-counter');
+    const hasFilters  = activeDateFilters.size > 0 || activeCityFilters.size > 0 ||
+                        activeTypeFilters.size > 0  || activeRegionFilters.size > 0 || searchQuery;
+
+    liveCounter.textContent = t('statsFormat').replace('{count}', hasFilters ? events.length : allFeedEvents.length);
+    liveCounter.classList.remove('pulse');
+    void liveCounter.offsetWidth;
+    liveCounter.classList.add('pulse');
+
+    if (!hasFilters) {
+        renderFeedSections();
+        return;
+    }
+
+    feedEl.innerHTML = '';
+    if (!events.length) {
+        feedEl.innerHTML = '<p class="social-empty">לא נמצאו אירועים תואמים</p>';
+        return;
+    }
+    events.forEach(ev => feedEl.appendChild(buildFeedEventCard(ev, false)));
+}
+
 async function loadSocialFeed() {
     const feedEl = document.getElementById('social-feed');
-    feedEl.innerHTML = '<p class="social-loading">טוען פיד...</p>';
+    feedEl.innerHTML = '<p class="social-loading">טוען קהילה...</p>';
 
     try {
         const [{ data: regs }, { data: events }] = await Promise.all([
@@ -246,47 +314,14 @@ async function loadSocialFeed() {
                 .limit(30),
         ]);
 
-        const searches    = JSON.parse(localStorage.getItem('freeil-searches') || '[]');
-        const evArr       = (events || []).map(ev => ({ ...ev, _score: feedRelevanceScore(ev, searches) }));
-        const recommended = evArr.filter(e => e._score > 0).sort((a, b) => b._score - a._score);
-        const recent      = evArr.filter(e => e._score === 0);
+        allFeedEvents = (events || []);
+        feedRegs      = (regs || []).filter(r => r.user_events);
+        allEvents     = allFeedEvents;  // so buildFilters uses community cities/types
 
-        feedEl.innerHTML = '';
-
-        // Recommended section
-        if (recommended.length) {
-            feedEl.appendChild(feedSectionEl('⭐ מומלץ עבורך'));
-            recommended.forEach(ev => feedEl.appendChild(buildFeedEventCard(ev, true)));
-        }
-
-        // Recent registrations (compact)
-        const regItems = (regs || []).filter(r => r.user_events);
-        if (regItems.length) {
-            feedEl.appendChild(feedSectionEl('🔔 פעילות אחרונה'));
-            regItems.forEach(r => {
-                const el = document.createElement('div');
-                el.className = 'social-item';
-                el.innerHTML = `
-                    <div class="social-icon reg-icon">👥</div>
-                    <div class="social-content">
-                        <p>מישהו נרשם ל<strong>"${escHtml(r.user_events.title)}"</strong></p>
-                        <span class="social-time">${escHtml(formatTimeAgo(r.created_at))}${r.user_events.city ? ' · ' + escHtml(getCityLabel(r.user_events.city)) : ''}</span>
-                    </div>`;
-                feedEl.appendChild(el);
-            });
-        }
-
-        // New events section
-        if (recent.length) {
-            feedEl.appendChild(feedSectionEl('🆕 אירועים חדשים'));
-            recent.forEach(ev => feedEl.appendChild(buildFeedEventCard(ev, false)));
-        }
-
-        if (!feedEl.children.length) {
-            feedEl.innerHTML = '<p class="social-empty">אין פעילות עדיין</p>';
-        }
+        buildFilters();
+        renderFeedSections();
 
     } catch (e) {
-        feedEl.innerHTML = '<p class="social-empty">שגיאה בטעינת הפיד</p>';
+        feedEl.innerHTML = '<p class="social-empty">שגיאה בטעינת הקהילה</p>';
     }
 }
