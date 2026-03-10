@@ -27,6 +27,7 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  if (!event.request.url.startsWith('http')) return;
   // Network-first for events.json so data stays fresh
   if (event.request.url.includes('events.json')) {
     event.respondWith(
