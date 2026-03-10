@@ -257,15 +257,16 @@ function renderFeedSections() {
                     <p class="social-comment-preview">${escHtml(c.body)}</p>
                     <span class="social-time">${escHtml(formatTimeAgo(c.created_at))}${c.user_events?.city ? ' · ' + escHtml(getCityLabel(c.user_events.city)) : ''}</span>
                 </div>`;
-            if (ev) {
-                el.addEventListener('click', () => {
-                    const card = document.getElementById(`pcount-feed-${ev.id}`)?.closest('.event-card');
-                    if (card) {
-                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        card.querySelector('.comment-toggle-btn')?.click();
-                    }
-                });
-            }
+            el.addEventListener('click', () => {
+                const card = ev
+                    ? document.getElementById(`pcount-feed-${ev.id}`)?.closest('.event-card')
+                    : null;
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Small delay so scroll completes before opening comments
+                    setTimeout(() => card.querySelector('.comment-toggle-btn')?.click(), 400);
+                }
+            });
             feedEl.appendChild(el);
         });
     }
@@ -317,7 +318,7 @@ async function loadSocialFeed() {
             sb.from('event_comments')
                 .select('id, body, user_name, created_at, event_id, user_events(id, title, city)')
                 .order('created_at', { ascending: false })
-                .limit(3),
+                .limit(20),   // fetch extra so we can filter to navigable ones
             sb.from('user_events')
                 .select('*')
                 .eq('status', 'published')
@@ -326,7 +327,12 @@ async function loadSocialFeed() {
         ]);
 
         allFeedEvents = (events || []);
-        feedComments  = (comments || []).filter(c => c.user_events);
+        const loadedIds = new Set(allFeedEvents.map(e => e.id));
+
+        // Only keep comments whose event card will be in the feed, max 3
+        feedComments = (comments || [])
+            .filter(c => c.user_events && loadedIds.has(c.event_id))
+            .slice(0, 3);
         allEvents     = allFeedEvents;  // so buildFilters uses community cities/types
 
         buildFilters();
