@@ -588,58 +588,6 @@
         .ai-image-btn.loading .ai-spinner { display: block; }
         .ai-image-btn.loading .ai-btn-text { opacity: 0.6; }
 
-        /* ── AI Create Event ── */
-        .ai-create-banner {
-            background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(168,85,247,0.06));
-            border: 1.5px solid rgba(124,58,237,0.2); border-radius: 14px;
-            padding: 14px 16px; margin-bottom: 2px;
-        }
-        .ai-create-banner-top {
-            display: flex; align-items: center; justify-content: space-between; gap: 10px;
-        }
-        .ai-create-banner-label {
-            display: flex; align-items: center; gap: 8px;
-            font-size: 0.82rem; font-weight: 700; color: #7c3aed;
-        }
-        .ai-create-banner-label svg { flex-shrink: 0; }
-        .ai-create-toggle-btn {
-            background: linear-gradient(135deg, #7c3aed, #a855f7);
-            color: white; border: none; border-radius: 8px;
-            padding: 6px 14px; font-size: 0.78rem; font-weight: 700;
-            cursor: pointer; font-family: inherit; transition: opacity 0.15s, transform 0.1s;
-            white-space: nowrap; flex-shrink: 0;
-        }
-        .ai-create-toggle-btn:hover { opacity: 0.9; }
-        .ai-create-toggle-btn:active { transform: scale(0.98); }
-        .ai-create-body { margin-top: 12px; display: none; }
-        .ai-create-body.open { display: block; }
-        .ai-create-hint { font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px; }
-        .ai-create-input {
-            width: 100%; box-sizing: border-box; border: 1.5px solid #e8edf4;
-            border-radius: 10px; background: #fff; font-size: 14px; color: #0f172a;
-            font-family: inherit; outline: none; padding: 10px 12px; resize: none;
-            min-height: 72px; line-height: 1.5; transition: border-color 0.2s;
-        }
-        .ai-create-input:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
-        .ai-create-run-btn {
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-            width: 100%; margin-top: 8px; padding: 10px 16px;
-            background: linear-gradient(135deg, #7c3aed, #a855f7);
-            color: #fff; border: none; border-radius: 10px;
-            font-size: 0.85rem; font-weight: 700; font-family: inherit;
-            cursor: pointer; transition: opacity 0.15s, transform 0.1s;
-        }
-        .ai-create-run-btn:hover { opacity: 0.9; }
-        .ai-create-run-btn:active { transform: scale(0.98); }
-        .ai-create-run-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-        .ai-create-spinner {
-            width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4);
-            border-top-color: #fff; border-radius: 50%;
-            animation: spin 0.7s linear infinite; display: none; flex-shrink: 0;
-        }
-        .ai-create-run-btn.loading .ai-create-spinner { display: block; }
-        .ai-create-run-btn.loading .ai-create-run-label { opacity: 0.7; }
-
         .btn-submit-event {
             width: 100%; height: 52px;
             background: linear-gradient(135deg, #00d4aa, #00b894);
@@ -947,27 +895,6 @@
 
         <form class="add-form" id="add-event-form" novalidate onsubmit="handleAddEventSubmit(event)">
 
-            <!-- AI Create Event -->
-            <div class="ai-create-banner">
-                <div class="ai-create-banner-top">
-                    <span class="ai-create-banner-label">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-                        צור אירוע עם AI
-                    </span>
-                    <button type="button" class="ai-create-toggle-btn" onclick="toggleAICreate()">פתח</button>
-                </div>
-                <div class="ai-create-body" id="ai-create-body">
-                    <p class="ai-create-hint">תאר את האירוע שלך בחופשיות — ה-AI ימלא את הפרטים עבורך</p>
-                    <textarea class="ai-create-input" id="ai-create-prompt" placeholder="למשל: מפגש יוגה בחוף הים בתל אביב, חינם לכולם, מתאים למתחילים..." rows="3"></textarea>
-                    <button type="button" class="ai-create-run-btn" id="ai-create-run-btn" onclick="generateEventFromAI()">
-                        <div class="ai-create-spinner"></div>
-                        <span class="ai-create-run-label">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-                            מלא פרטים אוטומטית
-                        </span>
-                    </button>
-                </div>
-            </div>
 
             <div class="field">
                 <label for="ae-title">שם האירוע <span class="required">*</span></label>
@@ -1550,54 +1477,6 @@ async function uploadImage(file, userId) {
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   AI CREATE EVENT
-══════════════════════════════════════════════════════════════ */
-function toggleAICreate() {
-    const body = document.getElementById('ai-create-body');
-    const btn  = document.querySelector('.ai-create-toggle-btn');
-    const open = body.classList.toggle('open');
-    btn.textContent = open ? 'סגור' : 'פתח';
-    if (open) document.getElementById('ai-create-prompt').focus();
-}
-
-async function generateEventFromAI() {
-    const prompt = document.getElementById('ai-create-prompt').value.trim();
-    if (!prompt) {
-        showToast('נא לתאר את האירוע תחילה', 'error');
-        document.getElementById('ai-create-prompt').focus();
-        return;
-    }
-
-    const btn = document.getElementById('ai-create-run-btn');
-    btn.disabled = true;
-    btn.classList.add('loading');
-
-    try {
-        const res = await fetch('/api/generate-event', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt }),
-        });
-        if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            throw new Error(err.error || 'שגיאה ביצירת האירוע');
-        }
-        const data = await res.json();
-        if (data.title)       document.getElementById('ae-title').value = data.title;
-        if (data.category)    document.getElementById('ae-type').value  = data.category;
-        if (data.description) document.getElementById('ae-desc').value  = data.description;
-        showToast('פרטי האירוע מולאו! ניתן להמשיך ולערוך 🎉');
-        // Collapse the AI panel
-        document.getElementById('ai-create-body').classList.remove('open');
-        document.querySelector('.ai-create-toggle-btn').textContent = 'פתח';
-    } catch (err) {
-        showToast(err.message || 'שגיאה ביצירת האירוע', 'error');
-    } finally {
-        btn.disabled = false;
-        btn.classList.remove('loading');
-    }
-}
-
 async function generateAIImage() {
     const title = document.getElementById('ae-title').value.trim();
     const desc  = document.getElementById('ae-desc').value.trim();
