@@ -244,17 +244,28 @@ function renderFeedSections() {
         recommended.forEach(ev => feedEl.appendChild(buildFeedEventCard(ev, true)));
     }
 
-    if (feedRegs.length) {
+    if (feedComments.length) {
         feedEl.appendChild(feedSectionEl('🔔 פעילות אחרונה'));
-        feedRegs.forEach(r => {
-            const el = document.createElement('div');
-            el.className = 'social-item';
+        feedComments.forEach(c => {
+            const ev  = allFeedEvents.find(e => e.id === c.event_id);
+            const el  = document.createElement('div');
+            el.className = 'social-item social-item-clickable';
             el.innerHTML = `
-                <div class="social-icon reg-icon">👥</div>
+                <div class="social-icon comment-icon">💬</div>
                 <div class="social-content">
-                    <p>מישהו נרשם ל<strong>"${escHtml(r.user_events.title)}"</strong></p>
-                    <span class="social-time">${escHtml(formatTimeAgo(r.created_at))}${r.user_events.city ? ' · ' + escHtml(getCityLabel(r.user_events.city)) : ''}</span>
+                    <p><strong>${escHtml(c.user_name || 'אורח')}</strong> הגיב/ה על <strong>"${escHtml(c.user_events?.title || '')}"</strong></p>
+                    <p class="social-comment-preview">${escHtml(c.body)}</p>
+                    <span class="social-time">${escHtml(formatTimeAgo(c.created_at))}${c.user_events?.city ? ' · ' + escHtml(getCityLabel(c.user_events.city)) : ''}</span>
                 </div>`;
+            if (ev) {
+                el.addEventListener('click', () => {
+                    const card = document.getElementById(`pcount-feed-${ev.id}`)?.closest('.event-card');
+                    if (card) {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        card.querySelector('.comment-toggle-btn')?.click();
+                    }
+                });
+            }
             feedEl.appendChild(el);
         });
     }
@@ -302,11 +313,11 @@ async function loadSocialFeed() {
     feedEl.innerHTML = '<p class="social-loading">טוען קהילה...</p>';
 
     try {
-        const [{ data: regs }, { data: events }] = await Promise.all([
-            sb.from('event_registrations')
-                .select('created_at, user_events(title, city)')
+        const [{ data: comments }, { data: events }] = await Promise.all([
+            sb.from('event_comments')
+                .select('id, body, user_name, created_at, event_id, user_events(id, title, city)')
                 .order('created_at', { ascending: false })
-                .limit(10),
+                .limit(3),
             sb.from('user_events')
                 .select('*')
                 .eq('status', 'published')
@@ -315,7 +326,7 @@ async function loadSocialFeed() {
         ]);
 
         allFeedEvents = (events || []);
-        feedRegs      = (regs || []).filter(r => r.user_events);
+        feedComments  = (comments || []).filter(c => c.user_events);
         allEvents     = allFeedEvents;  // so buildFilters uses community cities/types
 
         buildFilters();

@@ -7,8 +7,8 @@
 let allEvents     = [];
 let publicEvents  = [];
 let privateEvents = [];
-let allFeedEvents = [];   // community tab — full unfiltered list
-let feedRegs      = [];   // community tab — recent registrations activity
+let allFeedEvents  = [];   // community tab — full unfiltered list
+let feedComments   = [];   // community tab — recent comments for activity section
 let activeTab     = 'public';
 
 // ── Filter state (multi-select — empty Set means "all") ──

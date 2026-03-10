@@ -519,9 +519,13 @@ header h1 span { color: #00d4aa; }
 }
 .social-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
 .social-icon.reg-icon { background: #eff6ff; }
+.social-icon.comment-icon { background: #f5f3ff; }
 .social-icon.new-icon { background: #f0fdf4; }
 .social-content p { margin: 0 0 3px; font-size: 0.85rem; color: #1e293b; line-height: 1.4; }
+.social-comment-preview { color: #64748b !important; font-style: italic; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
 .social-time { font-size: 0.73rem; color: #94a3b8; }
+.social-item-clickable { cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+.social-item-clickable:hover { background: #f8fafc; border-color: #c7d2fe; }
 .social-empty { text-align: center; color: #94a3b8; padding: 3rem 1rem; }
 .social-loading { text-align: center; color: #94a3b8; padding: 2rem; }
 
