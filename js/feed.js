@@ -27,9 +27,9 @@ function getLocalComments(rawId) {
     return JSON.parse(localStorage.getItem(localCommentsKey(rawId)) || '[]');
 }
 
-function saveLocalComment(rawId, body, name) {
+function saveLocalComment(rawId, content, name) {
     const list = getLocalComments(rawId);
-    list.push({ id: 'local-' + Date.now(), body, user_name: name, created_at: new Date().toISOString() });
+    list.push({ id: 'local-' + Date.now(), content, user_name: name, created_at: new Date().toISOString() });
     localStorage.setItem(localCommentsKey(rawId), JSON.stringify(list));
 }
 
@@ -39,14 +39,14 @@ function renderCommentList(comments, listEl) {
         return;
     }
     listEl.innerHTML = comments.map(c => {
-        const initials = (c.user_name || '?').trim().split(' ')
-            .map(w => w[0]).slice(0, 2).join('').toUpperCase();
+        const name     = c.user_name || 'אורח';
+        const initials = name.trim().split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
         return `
             <div class="comment-item">
                 <div class="comment-avatar">${escHtml(initials)}</div>
                 <div class="comment-body-wrap">
-                    <span class="comment-author">${escHtml(c.user_name || 'אורח')}</span>
-                    <p class="comment-text">${escHtml(c.body)}</p>
+                    <span class="comment-author">${escHtml(name)}</span>
+                    <p class="comment-text">${escHtml(c.content || '')}</p>
                     <span class="comment-time">${escHtml(formatTimeAgo(c.created_at))}</span>
                 </div>
             </div>`;
@@ -59,16 +59,16 @@ async function loadComments(rawId, listEl) {
     let remote = [];
     try {
         const { data } = await sb.from('event_comments')
-            .select('id, body, user_name, created_at')
+            .select('id, content, created_at')
             .eq('event_id', rawId)
             .order('created_at', { ascending: true });
         remote = data || [];
     } catch (_) {}
 
     // Merge remote + local (local fills gap when table missing/insert failed)
-    const local  = getLocalComments(rawId);
-    const remoteIds = new Set(remote.map(c => c.id));
-    const merged = [...remote, ...local.filter(c => !remoteIds.has(c.id))]
+    const local     = getLocalComments(rawId);
+    const remoteIds = new Set(remote.map(c => String(c.id)));
+    const merged    = [...remote, ...local.filter(c => !remoteIds.has(String(c.id)))]
         .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
     renderCommentList(merged, listEl);
@@ -84,7 +84,7 @@ async function submitComment(rawId, body, listEl, inputEl, countEl) {
         : 'אורח';
 
     // Try Supabase; fall back to localStorage silently
-    const row = { event_id: rawId, body: body.trim(), user_name: name };
+    const row = { event_id: rawId, content: body.trim() };
     if (user) row.user_id = user.id;
     const { error } = await sb.from('event_comments').insert(row);
     if (error) saveLocalComment(rawId, body.trim(), name);
@@ -253,8 +253,8 @@ function renderFeedSections() {
             el.innerHTML = `
                 <div class="social-icon comment-icon">💬</div>
                 <div class="social-content">
-                    <p><strong>${escHtml(c.user_name || 'אורח')}</strong> הגיב/ה על <strong>"${escHtml(ev?.title || '')}"</strong></p>
-                    <p class="social-comment-preview">${escHtml(c.body)}</p>
+                    <p>תגובה על <strong>"${escHtml(ev?.title || '')}"</strong></p>
+                    <p class="social-comment-preview">${escHtml(c.content || '')}</p>
                     <span class="social-time">${escHtml(formatTimeAgo(c.created_at))}${ev?.city ? ' · ' + escHtml(getCityLabel(ev.city)) : ''}</span>
                 </div>`;
             el.addEventListener('click', () => {
@@ -313,7 +313,7 @@ async function loadSocialFeed() {
     try {
         const [{ data: comments }, { data: events }] = await Promise.all([
             sb.from('event_comments')
-                .select('id, body, user_name, created_at, event_id')
+                .select('id, content, created_at, event_id')
                 .order('created_at', { ascending: false })
                 .limit(20),   // fetch extra so we can filter to navigable ones
             sb.from('user_events')

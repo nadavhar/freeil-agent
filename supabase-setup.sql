@@ -74,8 +74,7 @@ create table if not exists event_comments (
   id         bigserial   primary key,
   event_id   uuid        references user_events(id) on delete cascade not null,
   user_id    uuid        references auth.users(id) on delete set null,
-  user_name  text,
-  body       text        not null,
+  content    text        not null,
   created_at timestamptz default now()
 );
 
