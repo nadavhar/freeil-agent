@@ -387,22 +387,22 @@
             <div class="footer-section">
                 <h3>ערים פופולריות</h3>
                 <nav aria-label="ערים">
-                    <a href="#" onclick="activeCityFilter='Tel Aviv';applyFilter();return false;">אירועים חינם בתל אביב</a>
-                    <a href="#" onclick="activeCityFilter='Jerusalem';applyFilter();return false;">אירועים חינם בירושלים</a>
-                    <a href="#" onclick="activeCityFilter='Haifa';applyFilter();return false;">אירועים חינם בחיפה</a>
-                    <a href="#" onclick="activeCityFilter='Beer Sheva';applyFilter();return false;">אירועים חינם בבאר שבע</a>
-                    <a href="#" onclick="activeCityFilter='Eilat';applyFilter();return false;">אירועים חינם באילת</a>
+                    <a href="#" onclick="activeCityFilters.clear();activeCityFilters.add('Tel Aviv');applyFilter();return false;">אירועים חינם בתל אביב</a>
+                    <a href="#" onclick="activeCityFilters.clear();activeCityFilters.add('Jerusalem');applyFilter();return false;">אירועים חינם בירושלים</a>
+                    <a href="#" onclick="activeCityFilters.clear();activeCityFilters.add('Haifa');applyFilter();return false;">אירועים חינם בחיפה</a>
+                    <a href="#" onclick="activeCityFilters.clear();activeCityFilters.add('Beer Sheva');applyFilter();return false;">אירועים חינם בבאר שבע</a>
+                    <a href="#" onclick="activeCityFilters.clear();activeCityFilters.add('Eilat');applyFilter();return false;">אירועים חינם באילת</a>
                 </nav>
             </div>
             <div class="footer-section">
                 <h3>קטגוריות אירועים</h3>
                 <nav aria-label="קטגוריות">
-                    <a href="#" onclick="activeTypeFilter='concert';applyFilter();return false;">קונצרטים חינם</a>
-                    <a href="#" onclick="activeTypeFilter='festival';applyFilter();return false;">פסטיבלים חינם</a>
-                    <a href="#" onclick="activeTypeFilter='tour';applyFilter();return false;">סיורים חינם</a>
-                    <a href="#" onclick="activeTypeFilter='workshop';applyFilter();return false;">סדנאות חינם</a>
-                    <a href="#" onclick="activeTypeFilter='food';applyFilter();return false;">אירועי אוכל חינם</a>
-                    <a href="#" onclick="activeTypeFilter='nature';applyFilter();return false;">טיולים בטבע חינם</a>
+                    <a href="#" onclick="activeTypeFilters.clear();activeTypeFilters.add('concert');applyFilter();return false;">קונצרטים חינם</a>
+                    <a href="#" onclick="activeTypeFilters.clear();activeTypeFilters.add('festival');applyFilter();return false;">פסטיבלים חינם</a>
+                    <a href="#" onclick="activeTypeFilters.clear();activeTypeFilters.add('tour');applyFilter();return false;">סיורים חינם</a>
+                    <a href="#" onclick="activeTypeFilters.clear();activeTypeFilters.add('workshop');applyFilter();return false;">סדנאות חינם</a>
+                    <a href="#" onclick="activeTypeFilters.clear();activeTypeFilters.add('food');applyFilter();return false;">אירועי אוכל חינם</a>
+                    <a href="#" onclick="activeTypeFilters.clear();activeTypeFilters.add('nature');applyFilter();return false;">טיולים בטבע חינם</a>
                 </nav>
             </div>
         </div>

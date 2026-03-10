@@ -9,12 +9,12 @@ let publicEvents  = [];
 let privateEvents = [];
 let activeTab     = 'public';
 
-// ── Filter state ──
-let activeTypeFilter   = 'all';
-let activeCityFilter   = 'all';
-let activeDateFilter   = 'all';
-let activeRegionFilter = 'all';
-let searchQuery        = '';
+// ── Filter state (multi-select — empty Set means "all") ──
+let activeDateFilters   = new Set();
+let activeCityFilters   = new Set();
+let activeTypeFilters   = new Set();
+let activeRegionFilters = new Set();
+let searchQuery         = '';
 let searchDebounceTimer = null;
 
 // ── User preferences ──

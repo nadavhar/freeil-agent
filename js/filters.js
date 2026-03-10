@@ -12,7 +12,7 @@ const regionCities = {
 };
 
 function getCitiesForRegion(region) {
-    return region === 'all' ? null : (regionCities[region] || null);
+    return regionCities[region] || null;
 }
 
 // ── Date helpers (Israel timezone) ──
@@ -55,6 +55,13 @@ function isThisMonth(dateStr) {
     const end  = new Date(now); end.setDate(now.getDate() + 30);
     const ev   = getDateInIsrael(new Date(dateStr.includes('T') ? dateStr : dateStr + 'T12:00:00'));
     return ev >= getDateInIsrael(now) && ev < getDateInIsrael(end);
+}
+
+function matchesDateFilter(event, key) {
+    if (key === 'today') return isToday(event.date, event.recurringDays);
+    if (key === 'week')  return isThisWeek(event.date);
+    if (key === 'month') return isThisMonth(event.date);
+    return true;
 }
 
 // ── Search ──
@@ -113,22 +120,27 @@ function getSortedCategories(types) {
     return [...favs, ...nonFavs];
 }
 
+// ── Multi-select toggle helper ──
+function toggleFilterValue(filterSet, key) {
+    if (filterSet.has(key)) filterSet.delete(key);
+    else                    filterSet.add(key);
+}
+
 // ── Filter builders ──
 function buildFilters() {
     // Date chips
     const dateBar = document.getElementById('date-filters');
     dateBar.innerHTML = '';
     [
-        { key: 'all',   label: t('filterAll') },
         { key: 'today', label: t('filterToday') },
         { key: 'week',  label: t('filterWeek') },
         { key: 'month', label: t('filterMonth') }
     ].forEach(opt => {
         const btn = document.createElement('button');
-        btn.className = 'filter-chip date-chip' + (activeDateFilter === opt.key ? ' active' : '');
+        btn.className = 'filter-chip date-chip' + (activeDateFilters.has(opt.key) ? ' active' : '');
         btn.dataset.date = opt.key;
         btn.textContent = opt.label;
-        btn.onclick = () => { activeDateFilter = opt.key; applyFilter(); };
+        btn.onclick = () => { toggleFilterValue(activeDateFilters, opt.key); applyFilter(); };
         dateBar.appendChild(btn);
     });
 
@@ -136,22 +148,16 @@ function buildFilters() {
     const regionBar = document.getElementById('region-filters');
     regionBar.innerHTML = '';
     [
-        { key: 'all',       label: t('filterAll') },
         { key: 'north',     label: t('regionNorth') },
         { key: 'center',    label: t('regionCenter') },
         { key: 'jerusalem', label: t('regionJerusalem') },
         { key: 'south',     label: t('regionSouth') }
     ].forEach(opt => {
         const btn = document.createElement('button');
-        btn.className = 'filter-chip region-chip' + (activeRegionFilter === opt.key ? ' active' : '');
+        btn.className = 'filter-chip region-chip' + (activeRegionFilters.has(opt.key) ? ' active' : '');
         btn.dataset.region = opt.key;
         btn.textContent = opt.label;
-        btn.onclick = () => {
-            activeRegionFilter = opt.key;
-            activeCityFilter   = 'all';
-            buildCityFilters();
-            applyFilter();
-        };
+        btn.onclick = () => { toggleFilterValue(activeRegionFilters, opt.key); buildCityFilters(); applyFilter(); };
         regionBar.appendChild(btn);
     });
 
@@ -159,28 +165,25 @@ function buildFilters() {
 }
 
 function buildCityFilters() {
-    const knownCities  = Object.keys(translations.he.cities).filter(c => c !== 'Other');
-    const eventCities  = allEvents.map(e => e.city).filter(Boolean);
-    let   cities       = [...new Set([...knownCities, ...eventCities])];
-    const regionList   = getCitiesForRegion(activeRegionFilter);
-    if (regionList) cities = cities.filter(c => regionList.includes(c));
+    const knownCities = Object.keys(translations.he.cities).filter(c => c !== 'Other');
+    const eventCities = allEvents.map(e => e.city).filter(Boolean);
+    let   cities      = [...new Set([...knownCities, ...eventCities])];
+
+    // If regions are selected, show only cities in those regions
+    if (activeRegionFilters.size > 0) {
+        const allowed = new Set([...activeRegionFilters].flatMap(r => getCitiesForRegion(r) || []));
+        cities = cities.filter(c => allowed.has(c));
+    }
 
     const cityBar = document.getElementById('city-filters');
     cityBar.innerHTML = '';
 
-    const allBtn = document.createElement('button');
-    allBtn.className = 'filter-chip city-chip' + (activeCityFilter === 'all' ? ' active' : '');
-    allBtn.dataset.city = 'all';
-    allBtn.textContent = t('filterAll');
-    allBtn.onclick = () => { activeCityFilter = 'all'; applyFilter(); };
-    cityBar.appendChild(allBtn);
-
     cities.forEach(c => {
         const btn = document.createElement('button');
-        btn.className = 'filter-chip city-chip' + (activeCityFilter === c ? ' active' : '');
+        btn.className = 'filter-chip city-chip' + (activeCityFilters.has(c) ? ' active' : '');
         btn.dataset.city = c;
         btn.textContent = getCityLabel(c);
-        btn.onclick = () => { activeCityFilter = c; applyFilter(); };
+        btn.onclick = () => { toggleFilterValue(activeCityFilters, c); applyFilter(); };
         cityBar.appendChild(btn);
     });
 
@@ -196,16 +199,9 @@ function buildCategoryFilters() {
     const typeBar = document.getElementById('type-filters');
     typeBar.innerHTML = '';
 
-    const allBtn = document.createElement('button');
-    allBtn.className = 'filter-chip' + (activeTypeFilter === 'all' ? ' active' : '');
-    allBtn.dataset.type = 'all';
-    allBtn.textContent = t('filterAll');
-    allBtn.onclick = () => { activeTypeFilter = 'all'; applyFilter(); };
-    typeBar.appendChild(allBtn);
-
     sortedTypes.forEach(type => {
         const isFav    = favoriteCategories.includes(type);
-        const isActive = activeTypeFilter === type;
+        const isActive = activeTypeFilters.has(type);
         const btn      = document.createElement('button');
         btn.className  = 'filter-chip' + (isActive ? ' active' : '') + (isFav ? ' favorited' : '');
         btn.dataset.type = type;
@@ -216,7 +212,7 @@ function buildCategoryFilters() {
 
         btn.onclick = (e) => {
             if (e.target.classList.contains('fav-star')) return;
-            activeTypeFilter = type;
+            toggleFilterValue(activeTypeFilters, type);
             applyFilter();
         };
         btn.querySelector('.fav-star').onclick = (e) => {
@@ -230,43 +226,47 @@ function buildCategoryFilters() {
 
 // ── Apply & reset ──
 function updateResetButton() {
-    const isFiltered = activeDateFilter !== 'all' || activeRegionFilter !== 'all' ||
-                       activeCityFilter !== 'all' || activeTypeFilter !== 'all' || searchQuery !== '';
+    const isFiltered = activeDateFilters.size > 0 || activeRegionFilters.size > 0 ||
+                       activeCityFilters.size > 0  || activeTypeFilters.size > 0  || searchQuery !== '';
     document.getElementById('reset-filters').classList.toggle('visible', isFiltered);
 }
 
 function applyFilter() {
     // Sync active state on chips
     document.querySelectorAll('#date-filters .filter-chip').forEach(b =>
-        b.classList.toggle('active', (b.dataset.date || 'all') === activeDateFilter));
+        b.classList.toggle('active', activeDateFilters.has(b.dataset.date)));
     document.querySelectorAll('#region-filters .filter-chip').forEach(b =>
-        b.classList.toggle('active', (b.dataset.region || 'all') === activeRegionFilter));
+        b.classList.toggle('active', activeRegionFilters.has(b.dataset.region)));
     document.querySelectorAll('#city-filters .filter-chip').forEach(b =>
-        b.classList.toggle('active', (b.dataset.city || 'all') === activeCityFilter));
+        b.classList.toggle('active', activeCityFilters.has(b.dataset.city)));
     document.querySelectorAll('#type-filters .filter-chip').forEach(b =>
-        b.classList.toggle('active', (b.dataset.type || 'all') === activeTypeFilter));
+        b.classList.toggle('active', activeTypeFilters.has(b.dataset.type)));
     updateResetButton();
 
     let filtered = allEvents;
 
-    if (activeDateFilter === 'today') {
-        filtered = filtered.filter(e => isToday(e.date, e.recurringDays));
-    } else if (activeDateFilter === 'week') {
-        filtered = filtered.filter(e => isThisWeek(e.date));
-    } else if (activeDateFilter === 'month') {
-        filtered = filtered.filter(e => isThisMonth(e.date));
+    // Date: OR across selected date filters
+    if (activeDateFilters.size > 0) {
+        filtered = filtered.filter(e =>
+            [...activeDateFilters].some(key => matchesDateFilter(e, key)));
     }
 
-    if (activeRegionFilter !== 'all' && activeCityFilter === 'all') {
-        const regionList = getCitiesForRegion(activeRegionFilter);
-        if (regionList) filtered = filtered.filter(e => regionList.includes(e.city));
+    // Region: OR across selected regions (only when no cities are selected)
+    if (activeRegionFilters.size > 0 && activeCityFilters.size === 0) {
+        const allowed = new Set([...activeRegionFilters].flatMap(r => getCitiesForRegion(r) || []));
+        filtered = filtered.filter(e => allowed.has(e.city));
     }
-    if (activeCityFilter !== 'all') {
-        filtered = filtered.filter(e => e.city === activeCityFilter);
+
+    // City: OR across selected cities
+    if (activeCityFilters.size > 0) {
+        filtered = filtered.filter(e => activeCityFilters.has(e.city));
     }
-    if (activeTypeFilter !== 'all') {
-        filtered = filtered.filter(e => e.event_type === activeTypeFilter);
+
+    // Type: OR across selected types
+    if (activeTypeFilters.size > 0) {
+        filtered = filtered.filter(e => activeTypeFilters.has(e.event_type));
     }
+
     if (searchQuery) {
         filtered = filtered.filter(e => matchesSearch(e, searchQuery));
     }
@@ -275,7 +275,10 @@ function applyFilter() {
 }
 
 function resetAllFilters() {
-    activeDateFilter = activeCityFilter = activeRegionFilter = activeTypeFilter = 'all';
+    activeDateFilters.clear();
+    activeCityFilters.clear();
+    activeTypeFilters.clear();
+    activeRegionFilters.clear();
     searchQuery = '';
     const input = document.getElementById('search-input');
     if (input) input.value = '';

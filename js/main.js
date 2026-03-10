@@ -45,7 +45,8 @@ function switchTab(tab) {
 
     if (showFilters) {
         allEvents = tab === 'private' ? privateEvents : publicEvents;
-        activeDateFilter = activeCityFilter = activeRegionFilter = activeTypeFilter = 'all';
+        activeDateFilters.clear(); activeCityFilters.clear();
+        activeTypeFilters.clear(); activeRegionFilters.clear();
         searchQuery = '';
         const si = document.getElementById('search-input');
         if (si) si.value = '';
