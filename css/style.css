@@ -642,7 +642,10 @@ header h1 span { color: #00d4aa; }
 ══════════════════════════════════════════════════════════════ */
 .seo-footer {
     background: linear-gradient(135deg, #1a1a2e, #16213e);
-    color: white; padding: 2rem 1rem 1rem; margin-top: 2rem;
+    color: white; padding: 2rem 1rem calc(1rem + 72px + env(safe-area-inset-bottom)); margin-top: 2rem;
+}
+@media (min-width: 768px) {
+    .seo-footer { padding-bottom: 1rem; }
 }
 .footer-content {
     max-width: 1200px; margin: 0 auto;
