@@ -38,10 +38,10 @@ REJECTED_FILE   = BASE_DIR / "rejected_events.json"
 LOG_FILE        = BASE_DIR / "ai_validation.log"
 
 IL_TZ           = zoneinfo.ZoneInfo("Asia/Jerusalem")
-MODEL           = "claude-sonnet-4-20250514"
-BATCH_SIZE      = 3       # events per Claude call (keep low to stay within token budget)
+MODEL           = "claude-haiku-4-5-20251001"
+BATCH_SIZE      = 5       # events per Claude call (keep low to stay within token budget)
 MAX_SEARCH_USES = 10      # web_search calls per batch
-SLEEP_BETWEEN_BATCHES = 65 # seconds — avoid 30k tokens/min rate limit
+SLEEP_BETWEEN_BATCHES = 30 # seconds — avoid rate limits
 
 # ── Logging ──────────────────────────────────────────────────────────────────
 
