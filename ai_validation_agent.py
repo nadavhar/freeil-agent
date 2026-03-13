@@ -39,9 +39,9 @@ LOG_FILE        = BASE_DIR / "ai_validation.log"
 
 IL_TZ           = zoneinfo.ZoneInfo("Asia/Jerusalem")
 MODEL           = "claude-sonnet-4-20250514"
-BATCH_SIZE      = 10      # events per Claude call (keep low to stay within token budget)
-MAX_SEARCH_USES = 15      # web_search calls per batch
-SLEEP_BETWEEN_BATCHES = 3 # seconds — avoid rate limits
+BATCH_SIZE      = 3       # events per Claude call (keep low to stay within token budget)
+MAX_SEARCH_USES = 10      # web_search calls per batch
+SLEEP_BETWEEN_BATCHES = 65 # seconds — avoid 30k tokens/min rate limit
 
 # ── Logging ──────────────────────────────────────────────────────────────────
 
@@ -123,7 +123,7 @@ Return ONLY the JSON object. No markdown fences, no extra text."""
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
-def _extract_json_object(text: str) -> dict | None:
+def _extract_json_object(text: str):
     """Extract a JSON object from text that may have surrounding content."""
     if "```" in text:
         lines = text.split("\n")
