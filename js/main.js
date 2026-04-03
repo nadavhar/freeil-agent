@@ -31,27 +31,34 @@ function setLanguage(lang) {
 // ── Tab switching ──
 function switchTab(tab) {
     activeTab = tab;
+    window.scrollTo(0, 0);
 
     document.querySelectorAll('.dtab, .bnav-btn').forEach(b => {
         b.classList.toggle('active', b.dataset.tab === tab);
     });
 
-    const showFilters = tab === 'public' || tab === 'private';
-    document.querySelector('.filters-container').style.display = showFilters      ? 'block' : 'none';
-    document.getElementById('view-events').style.display       = showFilters      ? 'block' : 'none';
+    const showFilters   = tab === 'public' || tab === 'private' || tab === 'social';
+    const showEventList = tab === 'public' || tab === 'private';
+    document.querySelector('.filters-container').style.display = showFilters   ? 'block' : 'none';
+    document.getElementById('view-events').style.display       = showEventList ? 'block' : 'none';
     document.getElementById('view-social').style.display       = tab === 'social' ? 'block' : 'none';
     document.getElementById('view-map').style.display          = tab === 'map'    ? 'block' : 'none';
 
+    const si = document.getElementById('search-input');
     if (showFilters) {
-        allEvents = tab === 'private' ? privateEvents : publicEvents;
-        activeDateFilter = activeCityFilter = activeRegionFilter = activeTypeFilter = 'all';
+        activeDateFilters.clear(); activeCityFilters.clear();
+        activeTypeFilters.clear(); activeRegionFilters.clear();
         searchQuery = '';
-        const si = document.getElementById('search-input');
         if (si) si.value = '';
+        document.getElementById('search-clear')?.classList.remove('visible');
+    }
+
+    if (showEventList) {
+        allEvents = tab === 'private' ? privateEvents : publicEvents;
         buildFilters();
         applyFilter();
     } else if (tab === 'social') {
-        loadSocialFeed();
+        loadSocialFeed();  // sets allFeedEvents, allEvents, then calls buildFilters + renderFeedSections
     } else if (tab === 'map') {
         initMap();
     }
@@ -66,6 +73,10 @@ window.onAuthRefreshPrivate = async function () {
         applyFilter();
     }
 };
+
+// ── Scroll to top on page load and hash/param changes ──
+window.scrollTo(0, 0);
+window.addEventListener('hashchange', () => window.scrollTo(0, 0));
 
 // ── Bootstrap ──
 (function init() {

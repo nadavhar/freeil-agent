@@ -338,10 +338,9 @@
 
     <!-- ══ DESKTOP TAB BAR ══ -->
     <div class="desktop-tabs">
-        <button class="dtab active" data-tab="public"  onclick="switchTab('public')">🌐 ציבורי</button>
-        <button class="dtab"        data-tab="private" onclick="switchTab('private')">✨ קהילה</button>
-        <button class="dtab"        data-tab="social"  onclick="switchTab('social')">📢 פיד</button>
-        <button class="dtab"        data-tab="map"     onclick="switchTab('map')">🗺️ מפה</button>
+        <button class="dtab active" data-tab="public"  onclick="switchTab('public')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> ציבורי</button>
+        <button class="dtab"        data-tab="social"  onclick="switchTab('social')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> קהילה</button>
+        <button class="dtab"        data-tab="map"     onclick="switchTab('map')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg> מפה</button>
     </div>
 
     <!-- ══ VIEWS ══ -->
@@ -355,7 +354,7 @@
 
     <div id="view-map" style="display:none;">
         <div class="map-controls">
-            <span>📍 רדיוס:</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg> רדיוס:</span>
             <input type="range" id="radius-slider" min="1" max="10" value="5" step="1" oninput="updateMapRadius(this.value)">
             <span id="radius-val">5</span><span> ק"מ</span>
         </div>
@@ -368,13 +367,9 @@
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             <span>ציבורי</span>
         </button>
-        <button class="bnav-btn" data-tab="private" onclick="switchTab('private')">
+        <button class="bnav-btn" data-tab="social" onclick="switchTab('social')">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             <span>קהילה</span>
-        </button>
-        <button class="bnav-btn" data-tab="social" onclick="switchTab('social')">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <span>פיד</span>
         </button>
         <button class="bnav-btn" data-tab="map" onclick="switchTab('map')">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
@@ -392,27 +387,27 @@
             <div class="footer-section">
                 <h3>ערים פופולריות</h3>
                 <nav aria-label="ערים">
-                    <a href="#" onclick="activeCityFilter='Tel Aviv';applyFilter();return false;">אירועים חינם בתל אביב</a>
-                    <a href="#" onclick="activeCityFilter='Jerusalem';applyFilter();return false;">אירועים חינם בירושלים</a>
-                    <a href="#" onclick="activeCityFilter='Haifa';applyFilter();return false;">אירועים חינם בחיפה</a>
-                    <a href="#" onclick="activeCityFilter='Beer Sheva';applyFilter();return false;">אירועים חינם בבאר שבע</a>
-                    <a href="#" onclick="activeCityFilter='Eilat';applyFilter();return false;">אירועים חינם באילת</a>
+                    <a href="#" onclick="activeCityFilters.clear();activeCityFilters.add('Tel Aviv');applyFilter();return false;">אירועים חינם בתל אביב</a>
+                    <a href="#" onclick="activeCityFilters.clear();activeCityFilters.add('Jerusalem');applyFilter();return false;">אירועים חינם בירושלים</a>
+                    <a href="#" onclick="activeCityFilters.clear();activeCityFilters.add('Haifa');applyFilter();return false;">אירועים חינם בחיפה</a>
+                    <a href="#" onclick="activeCityFilters.clear();activeCityFilters.add('Beer Sheva');applyFilter();return false;">אירועים חינם בבאר שבע</a>
+                    <a href="#" onclick="activeCityFilters.clear();activeCityFilters.add('Eilat');applyFilter();return false;">אירועים חינם באילת</a>
                 </nav>
             </div>
             <div class="footer-section">
                 <h3>קטגוריות אירועים</h3>
                 <nav aria-label="קטגוריות">
-                    <a href="#" onclick="activeTypeFilter='concert';applyFilter();return false;">קונצרטים חינם</a>
-                    <a href="#" onclick="activeTypeFilter='festival';applyFilter();return false;">פסטיבלים חינם</a>
-                    <a href="#" onclick="activeTypeFilter='tour';applyFilter();return false;">סיורים חינם</a>
-                    <a href="#" onclick="activeTypeFilter='workshop';applyFilter();return false;">סדנאות חינם</a>
-                    <a href="#" onclick="activeTypeFilter='food';applyFilter();return false;">אירועי אוכל חינם</a>
-                    <a href="#" onclick="activeTypeFilter='nature';applyFilter();return false;">טיולים בטבע חינם</a>
+                    <a href="#" onclick="activeTypeFilters.clear();activeTypeFilters.add('concert');applyFilter();return false;">קונצרטים חינם</a>
+                    <a href="#" onclick="activeTypeFilters.clear();activeTypeFilters.add('festival');applyFilter();return false;">פסטיבלים חינם</a>
+                    <a href="#" onclick="activeTypeFilters.clear();activeTypeFilters.add('tour');applyFilter();return false;">סיורים חינם</a>
+                    <a href="#" onclick="activeTypeFilters.clear();activeTypeFilters.add('workshop');applyFilter();return false;">סדנאות חינם</a>
+                    <a href="#" onclick="activeTypeFilters.clear();activeTypeFilters.add('food');applyFilter();return false;">אירועי אוכל חינם</a>
+                    <a href="#" onclick="activeTypeFilters.clear();activeTypeFilters.add('nature');applyFilter();return false;">טיולים בטבע חינם</a>
                 </nav>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2026 FreeIL. כל הזכויות שמורות. | <span id="event-count-footer"></span></p>
+            <p>© 2026 FreeIL. כל הזכויות שמורות. | <span id="event-count-footer"></span> | <a href="/terms.html" style="color:inherit;opacity:0.7;text-decoration:none;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">תנאי שימוש / Terms of Use</a></p>
         </div>
     </footer>
 

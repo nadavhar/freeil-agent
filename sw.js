@@ -1,4 +1,4 @@
-const CACHE_NAME = 'freeil-v3';
+const CACHE_NAME = 'freeil-v15';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -27,6 +27,7 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  if (!event.request.url.startsWith('http')) return;
   // Network-first for events.json so data stays fresh
   if (event.request.url.includes('events.json')) {
     event.respondWith(
@@ -41,7 +42,21 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Cache-first for everything else
+  // Network-first for JS/CSS so code updates are picked up immediately
+  if (event.request.url.match(/\.(js|css)(\?|$)/)) {
+    event.respondWith(
+      fetch(event.request)
+        .then(res => {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          return res;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // Cache-first for everything else (images, fonts, etc.)
   event.respondWith(
     caches.match(event.request).then(cached => cached || fetch(event.request))
   );

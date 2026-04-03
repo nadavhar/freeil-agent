@@ -443,16 +443,16 @@
         }
 
         /* Date & Time row */
-        .dt-row { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        .dt-row { display: flex; flex-direction: column; gap: 12px; width: 100%; overflow: hidden; }
         @media (min-width: 640px) { .dt-row { flex-direction: row; } .dt-row .field { flex: 1; min-width: 0; } }
         .dt-row input[type="date"], .dt-row input[type="time"] {
-            width: 100%; box-sizing: border-box; font-size: 16px;
-            min-height: 44px; -webkit-appearance: none; padding-left: 40px;
+            width: 100%; max-width: 100%; box-sizing: border-box; font-size: 16px;
+            min-height: 48px; -webkit-appearance: none; padding-right: 40px; padding-left: 12px;
         }
-        .dt-icon-wrap { position: relative; width: 100%; }
+        .dt-icon-wrap { position: relative; width: 100%; min-width: 0; overflow: hidden; display: block; }
         .dt-icon-wrap .dt-icon {
-            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-            width: 16px; height: 16px; color: #9ca3af; pointer-events: none;
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            width: 16px; height: 16px; color: #9ca3af; pointer-events: none; flex-shrink: 0;
         }
         .add-form .field-row { display: flex; flex-direction: column; gap: 12px; }
         .add-form .field-row .field { width: 100%; }
@@ -860,7 +860,7 @@
 
     <!-- Empty state (shown when no events) -->
     <div class="empty-state" id="empty-state">
-        <div class="empty-illustration">🎪</div>
+        <div class="empty-illustration"><svg width="64" height="64" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="60" r="50" fill="rgba(0,212,170,0.1)"/><rect x="30" y="38" width="50" height="46" rx="8" fill="rgba(0,212,170,0.12)" stroke="#00d4aa" stroke-width="2.5"/><path d="M30 50h50" stroke="#00d4aa" stroke-width="2.5"/><path d="M42 34v8M68 34v8" stroke="#00d4aa" stroke-width="2.5" stroke-linecap="round"/><path d="M44 63h8M44 72h14" stroke="#00d4aa" stroke-width="2.5" stroke-linecap="round"/></svg></div>
         <h2>עוד לא הוספת אירועים</h2>
         <p>שתף אירוע חינמי עם הקהילה ועזור לאחרים למצוא חוויות נהדרות בחינם!</p>
         <button class="cta-btn" onclick="openAddEvent()">
@@ -894,6 +894,7 @@
         </div>
 
         <form class="add-form" id="add-event-form" novalidate onsubmit="handleAddEventSubmit(event)">
+
 
             <div class="field">
                 <label for="ae-title">שם האירוע <span class="required">*</span></label>
@@ -1389,6 +1390,56 @@ async function uploadImage(file, userId) {
 /* ══════════════════════════════════════════════════════════════
    AI IMAGE GENERATION
 ══════════════════════════════════════════════════════════════ */
+async function generateAIImage() {
+    const title = document.getElementById('ae-title').value.trim();
+    const desc  = document.getElementById('ae-desc').value.trim();
+
+    if (!title) {
+        showToast('נא להזין שם לאירוע תחילה', 'error');
+        document.getElementById('ae-title').focus();
+        return;
+    }
+    if (desc.length < 20) {
+        showToast('נא להוסיף תיאור מפורט יותר (לפחות 20 תווים) לפני יצירת תמונה', 'error');
+        document.getElementById('ae-desc').focus();
+        return;
+    }
+
+    const btn = document.getElementById('ae-ai-image-btn');
+    btn.disabled = true;
+    btn.classList.add('loading');
+
+    try {
+        const res = await fetch('/api/generate-image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, description: desc }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.url) {
+            showToast(data.error || 'שגיאה ביצירת תמונה', 'error');
+            return;
+        }
+
+        // Convert data URL → Blob → treat as uploaded file
+        const res2 = await fetch(data.url);
+        const blob = await res2.blob();
+        const file = new File([blob], 'ai-generated.png', { type: blob.type || 'image/png' });
+        window.selectedImageFile = file;
+        window.aiGeneratedImageUrl = null;
+        document.getElementById('ae-img-preview').src = data.url;
+        document.getElementById('ae-img-preview-wrap').classList.add('visible');
+        document.getElementById('ae-upload-zone').style.display = 'none';
+        btn.style.display = 'none';
+        showToast('התמונה נוצרה בהצלחה!', 'success');
+    } catch (e) {
+        showToast('שגיאה ביצירת תמונה — נסה שוב', 'error');
+    } finally {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+    }
+}
+
 /* ══════════════════════════════════════════════════════════════
    LOCATION AUTOCOMPLETE — OpenStreetMap Nominatim (no API key)
 ══════════════════════════════════════════════════════════════ */
@@ -1475,55 +1526,7 @@ async function uploadImage(file, userId) {
     });
 })();
 
-async function generateAIImage() {
-    const title = document.getElementById('ae-title').value.trim();
-    const desc  = document.getElementById('ae-desc').value.trim();
-
-    if (!title) {
-        showToast('נא להזין שם לאירוע תחילה', 'error');
-        document.getElementById('ae-title').focus();
-        return;
-    }
-    if (desc.length < 20) {
-        showToast('נא להוסיף תיאור מפורט יותר (לפחות 20 תווים) לפני יצירת תמונה', 'error');
-        document.getElementById('ae-desc').focus();
-        return;
-    }
-
-    const btn = document.getElementById('ae-ai-image-btn');
-    btn.disabled = true;
-    btn.classList.add('loading');
-
-    try {
-        const res = await fetch('/api/generate-image', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, description: desc }),
-        });
-        const data = await res.json();
-        if (!res.ok || !data.url) {
-            showToast(data.error || 'שגיאה ביצירת תמונה', 'error');
-            return;
-        }
-
-        // Convert base64 data URL → Blob → treat as uploaded file
-        const res2 = await fetch(data.url);
-        const blob = await res2.blob();
-        const file = new File([blob], 'ai-generated.png', { type: blob.type || 'image/png' });
-        window.selectedImageFile = file;
-        window.aiGeneratedImageUrl = null;
-        document.getElementById('ae-img-preview').src = data.url;
-        document.getElementById('ae-img-preview-wrap').classList.add('visible');
-        document.getElementById('ae-upload-zone').style.display = 'none';
-        btn.style.display = 'none';
-        showToast('התמונה נוצרה בהצלחה!', 'success');
-    } catch (e) {
-        showToast('שגיאה ביצירת תמונה — נסה שוב', 'error');
-    } finally {
-        btn.disabled = false;
-        btn.classList.remove('loading');
-    }
-}
+/* ══════════════════════════════════════════════════════════════
 
 /* ══════════════════════════════════════════════════════════════
    ADD EVENT FORM SUBMIT
@@ -1552,7 +1555,6 @@ async function handleAddEventSubmit(e) {
     btn.classList.add('loading');
     btn.disabled = true;
 
-    // Upload image if selected (includes AI-generated images converted to Blob)
     let thumbnailUrl = null;
     if (window.selectedImageFile) {
         thumbnailUrl = await uploadImage(window.selectedImageFile, currentUser.id);
@@ -1765,13 +1767,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             <span>ציבורי</span>
         </a>
-        <a class="bnav-btn" href="/?tab=private">
+        <a class="bnav-btn" href="/?tab=social">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             <span>קהילה</span>
-        </a>
-        <a class="bnav-btn" href="/?tab=social">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <span>פיד</span>
         </a>
         <a class="bnav-btn" href="/?tab=map">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>

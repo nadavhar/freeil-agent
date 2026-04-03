@@ -65,6 +65,27 @@ create policy "insert_own" on event_registrations
 create policy "select_own" on event_registrations
   for select to authenticated using (auth.uid() = user_id);
 
+-- Allow anyone to read published events (needed for community feed)
+create policy "select_published" on user_events
+  for select using (status = 'published');
+
+-- Event comments table
+create table if not exists event_comments (
+  id         bigserial   primary key,
+  event_id   uuid        references user_events(id) on delete cascade not null,
+  user_id    uuid        references auth.users(id) on delete set null,
+  content    text        not null,
+  created_at timestamptz default now()
+);
+
+alter table event_comments enable row level security;
+
+create policy "select_all" on event_comments
+  for select using (true);
+
+create policy "insert_any" on event_comments
+  for insert with check (true);
+
 -- Increment registrations count RPC
 create or replace function increment_registrations(event_id uuid)
 returns void language plpgsql security definer as $$

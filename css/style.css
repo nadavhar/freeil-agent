@@ -321,12 +321,10 @@ header h1 span { color: #00d4aa; }
 .navigate-inline:hover { background: #3b82f6; color: white; }
 .navigate-inline svg { width: 11px; height: 11px; }
 .private-footer {
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center; justify-content: center;
     padding-top: 0.75rem; margin-top: 0.75rem; border-top: 1px solid #f1f5f9;
-    gap: 4px;
+    gap: 8px; flex-wrap: wrap;
 }
-.private-footer .action-group { display: flex; align-items: center; gap: 6px; }
-.private-footer .participants-badge { display: flex; align-items: center; gap: 5px; }
 
 .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0.6rem; }
 .tag { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 500; }
@@ -426,6 +424,7 @@ header h1 span { color: #00d4aa; }
     border-radius: 12px; background: #f8fafc; color: #64748b;
     font-size: 0.9rem; font-weight: 700; cursor: pointer;
     transition: all 0.2s ease; font-family: inherit;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
 }
 .dtab.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; box-shadow: 0 4px 12px rgba(26,26,46,0.25); }
 .dtab:not(.active):hover { border-color: #1a1a2e; color: #1a1a2e; }
@@ -520,9 +519,13 @@ header h1 span { color: #00d4aa; }
 }
 .social-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
 .social-icon.reg-icon { background: #eff6ff; }
+.social-icon.comment-icon { background: #f5f3ff; }
 .social-icon.new-icon { background: #f0fdf4; }
 .social-content p { margin: 0 0 3px; font-size: 0.85rem; color: #1e293b; line-height: 1.4; }
+.social-comment-preview { color: #64748b !important; font-style: italic; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
 .social-time { font-size: 0.73rem; color: #94a3b8; }
+.social-item-clickable { cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+.social-item-clickable:hover { background: #f8fafc; border-color: #c7d2fe; }
 .social-empty { text-align: center; color: #94a3b8; padding: 3rem 1rem; }
 .social-loading { text-align: center; color: #94a3b8; padding: 2rem; }
 
@@ -639,7 +642,10 @@ header h1 span { color: #00d4aa; }
 ══════════════════════════════════════════════════════════════ */
 .seo-footer {
     background: linear-gradient(135deg, #1a1a2e, #16213e);
-    color: white; padding: 2rem 1rem 1rem; margin-top: 2rem;
+    color: white; padding: 2rem 1rem calc(1rem + 72px + env(safe-area-inset-bottom)); margin-top: 2rem;
+}
+@media (min-width: 768px) {
+    .seo-footer { padding-bottom: 1rem; }
 }
 .footer-content {
     max-width: 1200px; margin: 0 auto;

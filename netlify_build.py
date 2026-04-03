@@ -15,6 +15,7 @@ import requests
 # Import auto_scan from same directory
 sys.path.insert(0, str(Path(__file__).parent))
 import auto_scan
+import ai_validation_agent
 
 REPO = "nadavhar/freeil-agent"
 EVENTS_FILE = Path(__file__).parent / "events.json"
@@ -94,6 +95,30 @@ def sync_gh_pages(token):
         print(f"[netlify_build] sync_gh_pages: ref update failed ({r.status_code})")
 
 
+def run_validation(events):
+    """Validate events using AI agent. Returns only verified events."""
+    import zoneinfo
+    from datetime import datetime
+    client = __import__("anthropic").Anthropic()
+    today = datetime.now(zoneinfo.ZoneInfo("Asia/Jerusalem")).strftime("%Y-%m-%d")
+    batch_size = ai_validation_agent.BATCH_SIZE
+    sleep_secs = ai_validation_agent.SLEEP_BETWEEN_BATCHES
+    all_verified = []
+    batches = [events[i:i + batch_size] for i in range(0, len(events), batch_size)]
+    print(f"[validation] Validating {len(events)} events in {len(batches)} batches...")
+    for idx, batch in enumerate(batches, 1):
+        verified, rejected = ai_validation_agent.validate_batch(client, batch, today)
+        all_verified.extend(verified)
+        print(f"[validation] Batch {idx}/{len(batches)}: {len(verified)} verified, {len(rejected)} rejected")
+        for r in rejected:
+            print(f"[validation]   ✗ {r.get('event_name')} — {r.get('rejection_reason')}: {r.get('rejection_detail', '')[:80]}")
+        if idx < len(batches):
+            import time
+            time.sleep(sleep_secs)
+    print(f"[validation] Done: {len(all_verified)}/{len(events)} events passed validation")
+    return all_verified
+
+
 if __name__ == "__main__":
     github_token = os.environ.get("GITHUB_TOKEN")
     if not github_token:
@@ -105,8 +130,13 @@ if __name__ == "__main__":
     auto_scan.main()
 
     events = json.loads(EVENTS_FILE.read_text(encoding="utf-8"))
+
+    # Validate events with AI agent before publishing
+    validated = run_validation(events)
+    EVENTS_FILE.write_text(json.dumps(validated, ensure_ascii=False, indent=2), encoding="utf-8")
+
     if sha:
-        push_to_github(github_token, sha, len(events))
+        push_to_github(github_token, sha, len(validated))
 
     sync_gh_pages(github_token)
-    print(f"[netlify_build] Done. {len(events)} total events.")
+    print(f"[netlify_build] Done. {len(validated)} validated events published.")

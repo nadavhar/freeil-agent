@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>תנאי שימוש | Terms of Use — FreeIL</title>
+<style>
+  :root {
+    --brand: #00d4aa;
+    --purple: #7c3aed;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans Hebrew', Arial, sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.7; font-size: 15px;
+  }
+
+  /* ── Header ── */
+  .page-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    padding: 20px 24px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: rgba(255,255,255,0.75); text-decoration: none;
+    font-size: 0.85rem; font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.18); border-radius: 8px;
+    padding: 7px 14px; transition: all 0.15s; white-space: nowrap;
+  }
+  .back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.07); }
+  .header-title { color: #fff; font-size: 1.1rem; font-weight: 800; }
+  .header-sub   { color: rgba(255,255,255,0.5); font-size: 0.78rem; margin-top: 2px; }
+
+  /* ── Layout ── */
+  .container {
+    max-width: 820px; margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+  .lang-toggle {
+    display: flex; gap: 8px; margin-bottom: 28px; justify-content: flex-end;
+  }
+  .lang-btn {
+    padding: 6px 16px; border-radius: 20px; border: 1.5px solid var(--border);
+    background: var(--card); font-size: 0.8rem; font-weight: 700;
+    cursor: pointer; color: var(--muted); transition: all 0.15s;
+  }
+  .lang-btn.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+
+  /* ── Document sections ── */
+  .doc { display: none; }
+  .doc.active { display: block; }
+
+  .doc-title {
+    font-size: 1.6rem; font-weight: 900; color: var(--text);
+    margin-bottom: 6px;
+  }
+  .doc-meta {
+    color: var(--muted); font-size: 0.82rem; margin-bottom: 28px;
+    padding-bottom: 20px; border-bottom: 2px solid var(--border);
+  }
+  .doc-intro {
+    background: linear-gradient(135deg, rgba(124,58,237,0.06), rgba(0,212,170,0.05));
+    border: 1.5px solid rgba(124,58,237,0.15);
+    border-radius: var(--radius); padding: 16px 20px;
+    margin-bottom: 28px; font-size: 0.9rem; color: var(--muted);
+  }
+
+  .section {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px 24px;
+    margin-bottom: 14px;
+  }
+  .section-num {
+    display: inline-block; background: var(--purple); color: #fff;
+    font-size: 0.7rem; font-weight: 800; border-radius: 6px;
+    padding: 2px 8px; margin-bottom: 8px; letter-spacing: 0.5px;
+  }
+  .section h2 {
+    font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 10px;
+  }
+  .section p { color: var(--muted); font-size: 0.9rem; margin-bottom: 8px; }
+  .section p:last-child { margin-bottom: 0; }
+  .section ul {
+    padding-inline-start: 18px; color: var(--muted); font-size: 0.9rem;
+  }
+  .section ul li { margin-bottom: 5px; }
+
+  .warning-box {
+    background: #fff7ed; border: 1.5px solid #fed7aa;
+    border-radius: var(--radius); padding: 16px 20px; margin-bottom: 14px;
+    font-size: 0.88rem; color: #9a3412;
+  }
+  .warning-box strong { display: block; margin-bottom: 4px; font-size: 0.92rem; }
+
+  .footer-note {
+    text-align: center; color: var(--muted); font-size: 0.8rem;
+    margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border);
+  }
+  .footer-note a { color: var(--purple); text-decoration: none; }
+
+  /* ── English doc is LTR ── */
+  #doc-en { direction: ltr; text-align: left; }
+
+  @media (max-width: 480px) {
+    .container { padding: 20px 14px 48px; }
+    .section { padding: 16px 16px; }
+    .doc-title { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <a class="back-btn" href="/">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    חזרה הביתה
+  </a>
+  <div>
+    <div class="header-title">תנאי שימוש — FreeIL</div>
+    <div class="header-sub">Terms of Use</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="showDoc('he')">עברית</button>
+    <button class="lang-btn"        onclick="showDoc('en')">English</button>
+  </div>
+
+  <!-- ══ HEBREW ══ -->
+  <div class="doc active" id="doc-he">
+
+    <div class="doc-title">תנאי שימוש</div>
+    <div class="doc-meta">עדכון אחרון: מרץ 2026 | FreeIL — freeil.vercel.app</div>
+
+    <div class="doc-intro">
+      ברוכים הבאים ל-FreeIL. השימוש באפליקציה מהווה הסכמה מלאה לתנאים המפורטים להלן. אם אינך מסכים/ה לתנאים אלו, אנא הפסק/י את השימוש באפליקציה.
+    </div>
+
+    <div class="section">
+      <span class="section-num">סעיף 1</span>
+      <h2>תיאור השירות</h2>
+      <p>FreeIL היא פלטפורמת אגרגציה המאתרת ומציגה אירועים חינמיים בישראל ממקורות ציבוריים וממשתמשים. האפליקציה מוצעת "כפי שהיא" (As-Is), ללא כל התחייבות לדיוק, שלמות, זמינות, או עדכניות של המידע המוצג.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">סעיף 2</span>
+      <h2>פטור מאחריות מוחלט</h2>
+      <p>FreeIL ויוצריה אינם נושאים בשום אחריות, ישירה או עקיפה, בגין:</p>
+      <ul>
+        <li>פציעות גופניות, נזקי רכוש, או כל נזק אחר שייגרם כתוצאה מהגעה לאירוע שפורסם באפליקציה.</li>
+        <li>ביטול, שינוי, או אי-קיום של אירועים.</li>
+        <li>מידע שגוי, חסר, או מטעה המופיע בכרטיסי האירועים.</li>
+        <li>כל נזק ישיר, עקיף, מקרי, מיוחד, תוצאתי, או עונשי הנובע משימוש בשירות.</li>
+        <li>פעולות של משתמשים אחרים בפלטפורמה.</li>
+      </ul>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠️ שים לב</strong>
+      FreeIL אינה מארגנת את האירועים ואינה צד להם. המידע נאסף מהאינטרנט ומשתמשים. תמיד ודא/י פרטים ישירות מול המארגן לפני הגעה לאירוע.
+    </div>
+
+    <div class="section">
+      <span class="section-num">סעיף 3</span>
+      <h2>תוכן שנוצר על-ידי משתמשים (UGC)</h2>
+      <p>משתמשים רשאים להוסיף אירועים ותגובות לפלטפורמה. בעת פרסום תוכן, המשתמש מצהיר כי:</p>
+      <ul>
+        <li>הוא אחראי באופן מלא ובלעדי על כל תוכן שהעלה.</li>
+        <li>התוכן אינו מפר זכויות יוצרים, פרטיות, או כל דין אחר.</li>
+        <li>התוכן אינו מכיל מידע כוזב, מטעה, פוגעני, שנאה, או לא חוקי.</li>
+      </ul>
+      <p>מנהל האפליקציה שומר לעצמו את הזכות להסיר כל תוכן ולהשעות או לחסום כל משתמש, בכל עת וללא הודעה מוקדמת, לפי שיקול דעתו הבלעדי.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">סעיף 4</span>
+      <h2>שירות "כפי שהוא" (As-Is)</h2>
+      <p>השירות ניתן ללא כל אחריות, מפורשת או משתמעת, לרבות:</p>
+      <ul>
+        <li>אין הבטחה לזמינות רציפה — האפליקציה עשויה להיות לא זמינה בכל עת.</li>
+        <li>אין הבטחה לשמירת נתונים — מידע עשוי להימחק ללא הודעה מוקדמת.</li>
+        <li>אין הבטחה לחוויה נטולת שגיאות — האפליקציה עשויה להכיל באגים.</li>
+        <li>אין הבטחה להמשכיות השירות — FreeIL שומרת את הזכות להפסיק את השירות בכל עת.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <span class="section-num">סעיף 5</span>
+      <h2>שיפוי ופיצוי</h2>
+      <p>המשתמש מתחייב לשפות ולפצות את FreeIL, יוצריה, מפעיליה ושותפיה מפני כל תביעה, נזק, הפסד, עלות, או הוצאה (לרבות שכ"ט עורכי דין) הנובעים מ:</p>
+      <ul>
+        <li>שימוש המשתמש בפלטפורמה.</li>
+        <li>תוכן שהמשתמש פרסם באפליקציה.</li>
+        <li>הפרת תנאים אלו על-ידי המשתמש.</li>
+        <li>הפרת זכויות צד שלישי.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <span class="section-num">סעיף 6</span>
+      <h2>קניין רוחני</h2>
+      <p>כל הזכויות בעיצוב, בקוד, ובתוכן המקורי של FreeIL שמורות ליוצריה. אין לשכפל, לשנות, להפיץ, או ליצור יצירות נגזרות ללא אישור מפורש בכתב.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">סעיף 7</span>
+      <h2>פרטיות</h2>
+      <p>FreeIL אוספת מינימום מידע הכרחי לתפעול השירות (כתובת אימייל לצורך הרשמה). המידע אינו נמכר לצדדים שלישיים. השימוש ב-Supabase לניהול אימות כפוף למדיניות הפרטיות של Supabase.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">סעיף 8</span>
+      <h2>שינויים בתנאים</h2>
+      <p>FreeIL שומרת לעצמה את הזכות לשנות תנאים אלו בכל עת. המשך השימוש באפליקציה לאחר פרסום שינויים מהווה הסכמה לתנאים המעודכנים.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">סעיף 9</span>
+      <h2>דין וסמכות שיפוטית</h2>
+      <p>תנאים אלו כפופים לדיני מדינת ישראל. סמכות השיפוט הבלעדית לכל סכסוך הנובע מתנאים אלו תהיה לבתי המשפט המוסמכים במחוז תל אביב-יפו.</p>
+    </div>
+
+    <div class="footer-note">
+      FreeIL &mdash; freeil.vercel.app &nbsp;|&nbsp; © 2026 &nbsp;|&nbsp;
+      <a href="/">חזרה לאפליקציה</a>
+    </div>
+
+  </div><!-- end doc-he -->
+
+  <!-- ══ ENGLISH ══ -->
+  <div class="doc" id="doc-en">
+
+    <div class="doc-title">Terms of Use</div>
+    <div class="doc-meta">Last updated: March 2026 | FreeIL — freeil.vercel.app</div>
+
+    <div class="doc-intro">
+      Welcome to FreeIL. By using this application you fully agree to the terms set out below. If you do not agree, please stop using the application immediately.
+    </div>
+
+    <div class="section">
+      <span class="section-num">§ 1</span>
+      <h2>Description of Service</h2>
+      <p>FreeIL is an aggregation platform that locates and displays free events in Israel from public sources and user submissions. The application is provided <strong>"As-Is"</strong> with no warranties as to accuracy, completeness, availability, or timeliness of the information presented.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">§ 2</span>
+      <h2>Complete Disclaimer of Liability</h2>
+      <p>FreeIL and its creators bear no liability whatsoever, direct or indirect, for:</p>
+      <ul>
+        <li>Personal injuries, property damage, or any other harm resulting from attending an event listed on the platform.</li>
+        <li>Cancellation, modification, or non-occurrence of any event.</li>
+        <li>Inaccurate, incomplete, or misleading information displayed on event cards.</li>
+        <li>Any direct, indirect, incidental, special, consequential, or punitive damages arising from use of the service.</li>
+        <li>Actions of other users on the platform.</li>
+      </ul>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠️ Important Notice</strong>
+      FreeIL does not organize events and is not a party to them. Information is collected from the internet and from users. Always verify details directly with the event organizer before attending.
+    </div>
+
+    <div class="section">
+      <span class="section-num">§ 3</span>
+      <h2>User-Generated Content (UGC)</h2>
+      <p>Users may submit events and comments to the platform. By posting content, the user represents that:</p>
+      <ul>
+        <li>They are solely and fully responsible for all content they upload.</li>
+        <li>The content does not infringe any copyright, privacy right, or applicable law.</li>
+        <li>The content does not contain false, misleading, offensive, hateful, or illegal material.</li>
+      </ul>
+      <p>The application administrator reserves the right to remove any content and to suspend or ban any user at any time, without prior notice, at their sole discretion.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">§ 4</span>
+      <h2>"As-Is" Service</h2>
+      <p>The service is provided without any warranty, express or implied, including:</p>
+      <ul>
+        <li>No guarantee of continuous availability — the application may be unavailable at any time.</li>
+        <li>No guarantee of data retention — data may be deleted without notice.</li>
+        <li>No guarantee of a bug-free experience — the application may contain errors.</li>
+        <li>No guarantee of continuity — FreeIL reserves the right to discontinue the service at any time.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <span class="section-num">§ 5</span>
+      <h2>Indemnification</h2>
+      <p>The user agrees to fully indemnify and hold harmless FreeIL, its creators, operators, and partners from any claim, damage, loss, cost, or expense (including reasonable attorneys' fees) arising from:</p>
+      <ul>
+        <li>The user's use of the platform.</li>
+        <li>Content the user posted on the application.</li>
+        <li>The user's breach of these Terms.</li>
+        <li>Infringement of any third-party rights.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <span class="section-num">§ 6</span>
+      <h2>Intellectual Property</h2>
+      <p>All rights in the design, code, and original content of FreeIL are reserved to its creators. Reproduction, modification, distribution, or creation of derivative works is prohibited without explicit written permission.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">§ 7</span>
+      <h2>Privacy</h2>
+      <p>FreeIL collects the minimum information necessary to operate the service (email address for registration). This information is not sold to third parties. Authentication is managed through Supabase, subject to Supabase's own privacy policy.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">§ 8</span>
+      <h2>Changes to These Terms</h2>
+      <p>FreeIL reserves the right to modify these Terms at any time. Continued use of the application after changes are posted constitutes acceptance of the updated Terms.</p>
+    </div>
+
+    <div class="section">
+      <span class="section-num">§ 9</span>
+      <h2>Governing Law &amp; Jurisdiction</h2>
+      <p>These Terms are governed by the laws of the State of Israel. Exclusive jurisdiction over any dispute arising from these Terms shall vest in the competent courts of the Tel Aviv-Jaffa district.</p>
+    </div>
+
+    <div class="footer-note">
+      FreeIL &mdash; freeil.vercel.app &nbsp;|&nbsp; © 2026 &nbsp;|&nbsp;
+      <a href="/">Back to App</a>
+    </div>
+
+  </div><!-- end doc-en -->
+
+</div><!-- container -->
+
+<script>
+function showDoc(lang) {
+  document.querySelectorAll('.doc').forEach(d => d.classList.remove('active'));
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('doc-' + lang).classList.add('active');
+  document.querySelector(`[onclick="showDoc('${lang}')"]`).classList.add('active');
+  document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+  document.documentElement.lang = lang;
+}
+</script>
+</body>
+</html>

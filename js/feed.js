@@ -27,9 +27,9 @@ function getLocalComments(rawId) {
     return JSON.parse(localStorage.getItem(localCommentsKey(rawId)) || '[]');
 }
 
-function saveLocalComment(rawId, body, name) {
+function saveLocalComment(rawId, content, name) {
     const list = getLocalComments(rawId);
-    list.push({ id: 'local-' + Date.now(), body, user_name: name, created_at: new Date().toISOString() });
+    list.push({ id: 'local-' + Date.now(), content, user_name: name, created_at: new Date().toISOString() });
     localStorage.setItem(localCommentsKey(rawId), JSON.stringify(list));
 }
 
@@ -39,14 +39,14 @@ function renderCommentList(comments, listEl) {
         return;
     }
     listEl.innerHTML = comments.map(c => {
-        const initials = (c.user_name || '?').trim().split(' ')
-            .map(w => w[0]).slice(0, 2).join('').toUpperCase();
+        const name     = c.user_name || 'אורח';
+        const initials = name.trim().split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
         return `
             <div class="comment-item">
                 <div class="comment-avatar">${escHtml(initials)}</div>
                 <div class="comment-body-wrap">
-                    <span class="comment-author">${escHtml(c.user_name || 'אורח')}</span>
-                    <p class="comment-text">${escHtml(c.body)}</p>
+                    <span class="comment-author">${escHtml(name)}</span>
+                    <p class="comment-text">${escHtml(c.content || '')}</p>
                     <span class="comment-time">${escHtml(formatTimeAgo(c.created_at))}</span>
                 </div>
             </div>`;
@@ -59,16 +59,16 @@ async function loadComments(rawId, listEl) {
     let remote = [];
     try {
         const { data } = await sb.from('event_comments')
-            .select('id, body, user_name, created_at')
+            .select('id, content, created_at')
             .eq('event_id', rawId)
             .order('created_at', { ascending: true });
         remote = data || [];
     } catch (_) {}
 
     // Merge remote + local (local fills gap when table missing/insert failed)
-    const local  = getLocalComments(rawId);
-    const remoteIds = new Set(remote.map(c => c.id));
-    const merged = [...remote, ...local.filter(c => !remoteIds.has(c.id))]
+    const local     = getLocalComments(rawId);
+    const remoteIds = new Set(remote.map(c => String(c.id)));
+    const merged    = [...remote, ...local.filter(c => !remoteIds.has(String(c.id)))]
         .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
     renderCommentList(merged, listEl);
@@ -84,7 +84,7 @@ async function submitComment(rawId, body, listEl, inputEl, countEl) {
         : 'אורח';
 
     // Try Supabase; fall back to localStorage silently
-    const row = { event_id: rawId, body: body.trim(), user_name: name };
+    const row = { event_id: rawId, content: body.trim() };
     if (user) row.user_id = user.id;
     const { error } = await sb.from('event_comments').insert(row);
     if (error) saveLocalComment(rawId, body.trim(), name);
@@ -229,16 +229,93 @@ function feedSectionEl(label) {
     return el;
 }
 
+// ── Render the unfiltered sectioned feed ──
+function renderFeedSections() {
+    const feedEl  = document.getElementById('social-feed');
+    const searches = JSON.parse(localStorage.getItem('freeil-searches') || '[]');
+    const scored   = allFeedEvents.map(ev => ({ ...ev, _score: feedRelevanceScore(ev, searches) }));
+    const recommended = scored.filter(e => e._score > 0).sort((a, b) => b._score - a._score);
+    const recent      = scored.filter(e => e._score === 0);
+
+    feedEl.innerHTML = '';
+
+    if (recommended.length) {
+        feedEl.appendChild(feedSectionEl('⭐ מומלץ עבורך'));
+        recommended.forEach(ev => feedEl.appendChild(buildFeedEventCard(ev, true)));
+    }
+
+    if (feedComments.length) {
+        feedEl.appendChild(feedSectionEl('🔔 פעילות אחרונה'));
+        feedComments.forEach(c => {
+            const ev  = c._event;
+            const el  = document.createElement('div');
+            el.className = 'social-item social-item-clickable';
+            el.innerHTML = `
+                <div class="social-icon comment-icon">💬</div>
+                <div class="social-content">
+                    <p>תגובה על <strong>"${escHtml(ev?.title || '')}"</strong></p>
+                    <p class="social-comment-preview">${escHtml(c.content || '')}</p>
+                    <span class="social-time">${escHtml(formatTimeAgo(c.created_at))}${ev?.city ? ' · ' + escHtml(getCityLabel(ev.city)) : ''}</span>
+                </div>`;
+            el.addEventListener('click', () => {
+                const card = document.getElementById(`pcount-feed-${ev.id}`)?.closest('.event-card');
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => card.querySelector('.comment-toggle-btn')?.click(), 400);
+                }
+            });
+            feedEl.appendChild(el);
+        });
+    }
+
+    if (recent.length) {
+        feedEl.appendChild(feedSectionEl('🆕 אירועים חדשים'));
+        recent.forEach(ev => feedEl.appendChild(buildFeedEventCard(ev, false)));
+    }
+
+    if (!feedEl.children.length) {
+        feedEl.innerHTML = '<p class="social-empty">אין פעילות עדיין</p>';
+    }
+
+    const liveCounter = document.getElementById('live-counter');
+    liveCounter.textContent = t('statsFormat').replace('{count}', allFeedEvents.length);
+}
+
+// ── Render filtered community events (called by applyFilter when on social tab) ──
+function renderFeedFiltered(events) {
+    const feedEl      = document.getElementById('social-feed');
+    const liveCounter = document.getElementById('live-counter');
+    const hasFilters  = activeDateFilters.size > 0 || activeCityFilters.size > 0 ||
+                        activeTypeFilters.size > 0  || activeRegionFilters.size > 0 || searchQuery;
+
+    liveCounter.textContent = t('statsFormat').replace('{count}', hasFilters ? events.length : allFeedEvents.length);
+    liveCounter.classList.remove('pulse');
+    void liveCounter.offsetWidth;
+    liveCounter.classList.add('pulse');
+
+    if (!hasFilters) {
+        renderFeedSections();
+        return;
+    }
+
+    feedEl.innerHTML = '';
+    if (!events.length) {
+        feedEl.innerHTML = '<p class="social-empty">לא נמצאו אירועים תואמים</p>';
+        return;
+    }
+    events.forEach(ev => feedEl.appendChild(buildFeedEventCard(ev, false)));
+}
+
 async function loadSocialFeed() {
     const feedEl = document.getElementById('social-feed');
-    feedEl.innerHTML = '<p class="social-loading">טוען פיד...</p>';
+    feedEl.innerHTML = '<p class="social-loading">טוען קהילה...</p>';
 
     try {
-        const [{ data: regs }, { data: events }] = await Promise.all([
-            sb.from('event_registrations')
-                .select('created_at, user_events(title, city)')
+        const [{ data: comments }, { data: events }] = await Promise.all([
+            sb.from('event_comments')
+                .select('id, content, created_at, event_id')
                 .order('created_at', { ascending: false })
-                .limit(10),
+                .limit(20),   // fetch extra so we can filter to navigable ones
             sb.from('user_events')
                 .select('*')
                 .eq('status', 'published')
@@ -246,47 +323,21 @@ async function loadSocialFeed() {
                 .limit(30),
         ]);
 
-        const searches    = JSON.parse(localStorage.getItem('freeil-searches') || '[]');
-        const evArr       = (events || []).map(ev => ({ ...ev, _score: feedRelevanceScore(ev, searches) }));
-        const recommended = evArr.filter(e => e._score > 0).sort((a, b) => b._score - a._score);
-        const recent      = evArr.filter(e => e._score === 0);
+        allFeedEvents = (events || []);
+        // Join comments client-side — no FK dependency in DB
+        const eventsById = new Map(allFeedEvents.map(e => [e.id, e]));
 
-        feedEl.innerHTML = '';
+        // Only keep comments whose event card will be in the feed, max 3
+        feedComments = (comments || [])
+            .filter(c => eventsById.has(c.event_id))
+            .slice(0, 3)
+            .map(c => ({ ...c, _event: eventsById.get(c.event_id) }));
+        allEvents     = allFeedEvents;  // so buildFilters uses community cities/types
 
-        // Recommended section
-        if (recommended.length) {
-            feedEl.appendChild(feedSectionEl('⭐ מומלץ עבורך'));
-            recommended.forEach(ev => feedEl.appendChild(buildFeedEventCard(ev, true)));
-        }
-
-        // Recent registrations (compact)
-        const regItems = (regs || []).filter(r => r.user_events);
-        if (regItems.length) {
-            feedEl.appendChild(feedSectionEl('🔔 פעילות אחרונה'));
-            regItems.forEach(r => {
-                const el = document.createElement('div');
-                el.className = 'social-item';
-                el.innerHTML = `
-                    <div class="social-icon reg-icon">👥</div>
-                    <div class="social-content">
-                        <p>מישהו נרשם ל<strong>"${escHtml(r.user_events.title)}"</strong></p>
-                        <span class="social-time">${escHtml(formatTimeAgo(r.created_at))}${r.user_events.city ? ' · ' + escHtml(getCityLabel(r.user_events.city)) : ''}</span>
-                    </div>`;
-                feedEl.appendChild(el);
-            });
-        }
-
-        // New events section
-        if (recent.length) {
-            feedEl.appendChild(feedSectionEl('🆕 אירועים חדשים'));
-            recent.forEach(ev => feedEl.appendChild(buildFeedEventCard(ev, false)));
-        }
-
-        if (!feedEl.children.length) {
-            feedEl.innerHTML = '<p class="social-empty">אין פעילות עדיין</p>';
-        }
+        buildFilters();
+        renderFeedSections();
 
     } catch (e) {
-        feedEl.innerHTML = '<p class="social-empty">שגיאה בטעינת הפיד</p>';
+        feedEl.innerHTML = '<p class="social-empty">שגיאה בטעינת הקהילה</p>';
     }
 }
