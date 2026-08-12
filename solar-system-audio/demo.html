@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Solar Audio — Demo</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: radial-gradient(circle at 30% 20%, #131c3a, #05070f 60%);
+    color: #e8ecff; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding: 24px 18px 120px;
+  }
+  h1 { font-size: clamp(20px, 5vw, 28px); font-weight: 600; margin: 0 0 6px; }
+  p.sub { margin: 0 0 26px; color: #9aa6cc; font-size: 14px; max-width: 52ch; line-height: 1.5; }
+  .planets { display: flex; flex-wrap: wrap; gap: 12px; max-width: 760px; }
+  .planet {
+    -webkit-appearance: none; appearance: none; border: 1px solid rgba(255,255,255,.16);
+    background: rgba(255,255,255,.05); color: #e8ecff; border-radius: 999px;
+    padding: 12px 20px; font-size: 15px; cursor: pointer; min-height: 44px;
+    display: flex; align-items: center; gap: 9px; touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent; transition: background .18s, border-color .18s;
+  }
+  .planet:hover { background: rgba(255,255,255,.11); border-color: rgba(255,255,255,.3); }
+  .planet:active { transform: scale(.97); }
+  .dot { width: 15px; height: 15px; border-radius: 50%; flex: none; }
+  .status {
+    margin-top: 28px; font-size: 13px; color: #7f8bb4; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    line-height: 1.7; max-width: 62ch;
+  }
+</style>
+</head>
+<body>
+  <h1>Solar Audio — Demo</h1>
+  <p class="sub">
+    Tap any planet to hear its narration. The two round buttons at the bottom-right toggle
+    the ambient music and the narration voice; both settings persist across reloads.
+  </p>
+
+  <div class="planets">
+    <button class="planet" data-planet="Sun"><span class="dot" style="background:#ffcf5a"></span>Sun</button>
+    <button class="planet" data-planet="Mercury"><span class="dot" style="background:#a8a29e"></span>Mercury</button>
+    <button class="planet" data-planet="Venus"><span class="dot" style="background:#e6b980"></span>Venus</button>
+    <button class="planet" data-planet="Earth"><span class="dot" style="background:#4a8fd4"></span>Earth</button>
+    <button class="planet" data-planet="Moon"><span class="dot" style="background:#c9c9c4"></span>Moon</button>
+    <button class="planet" data-planet="Mars"><span class="dot" style="background:#c1440e"></span>Mars</button>
+    <button class="planet" data-planet="Jupiter"><span class="dot" style="background:#d8a06a"></span>Jupiter</button>
+    <button class="planet" data-planet="Saturn"><span class="dot" style="background:#e3d0a1"></span>Saturn</button>
+    <button class="planet" data-planet="Uranus"><span class="dot" style="background:#8fd3d8"></span>Uranus</button>
+    <button class="planet" data-planet="Neptune"><span class="dot" style="background:#3b5bd4"></span>Neptune</button>
+    <button class="planet" data-planet="Pluto"><span class="dot" style="background:#b3a08c"></span>Pluto</button>
+  </div>
+
+  <div class="status" id="status">initialising…</div>
+
+  <script src="solar-audio.js"></script>
+  <script>
+    var out = document.getElementById('status');
+    function render() {
+      var v = SolarAudio.getVoice();
+      out.textContent =
+        'music: ' + (SolarAudio.isMusicOn() ? 'on' : 'off') +
+        '   |   narration: ' + (SolarAudio.isVoiceOn() ? 'on' : 'off') +
+        '\nselected voice: ' + (v ? v.name + '  (' + v.lang + ')' : 'not resolved yet');
+    }
+    out.style.whiteSpace = 'pre';
+    SolarAudio.on('musictoggle', render);
+    SolarAudio.on('voicetoggle', render);
+    SolarAudio.on('planetnarrated', render);
+    setTimeout(render, 400);
+    render();
+  </script>
+</body>
+</html>
